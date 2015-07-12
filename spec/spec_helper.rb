@@ -1,6 +1,7 @@
 require 'rspec'
 require_relative '../lib/board'
 require_relative '../lib/player_interface'
+require_relative '../lib/computer_player'
 
 RSpec.shared_context "default_values" do
   BOARD_SIZE = 3
