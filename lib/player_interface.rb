@@ -3,7 +3,11 @@ module TicTacToe
     InterfaceError = Class.new(StandardError)
 
     def self.required_methods
-      [:move]
+      [:move, :mark]
+    end
+
+    def mark
+      raise InterfaceError, "#{self.class}#mark is not implemented"
     end
 
     def move

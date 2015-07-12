@@ -6,11 +6,18 @@ describe TicTacToe::PlayerInterface do
   describe '.requred_methods' do
 
     it 'provides the name of each method that must be implemented' do
-      methods = [:move]
+      methods = [:move, :mark]
       methods.each do |method|
         expect(described_class.required_methods.include?(method)).to be true
       end
       expect(described_class.required_methods - methods).to eq []
+    end
+  end
+
+  describe '#mark' do
+
+    it 'raises error if not implemented by subclass' do
+      expect{described_class.new.mark}.to raise_error(interface_error, /\w*/)
     end
   end
 
