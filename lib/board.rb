@@ -41,6 +41,10 @@ module TicTacToe
       @cells.flatten.all?(&:nil?)
     end
 
+    def filled?
+      !@cells.flatten.any?(&:nil?)
+    end
+
     private
 
     def generate_new_board

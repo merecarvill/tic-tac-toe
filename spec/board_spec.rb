@@ -112,4 +112,18 @@ describe TicTacToe::Board do
       expect(board.blank?).to be false
     end
   end
+
+  describe '#filled?' do
+
+    it 'checks if all cells in board are marked' do
+      expect(board.blank?).to be true
+
+      all_coordinates(board.size).each do |coordinate|
+        row, col = coordinate
+        board[row, col] = :x
+      end
+
+      expect(board.filled?).to be true
+    end
+  end
 end
