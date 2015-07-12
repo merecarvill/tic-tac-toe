@@ -5,6 +5,7 @@ require_relative '../lib/computer_player'
 
 RSpec.shared_context "default_values" do
   BOARD_SIZE = 3
+  PLAYER_MARKS = [:x, :o]
 end
 
 RSpec.shared_context "error_messages" do
