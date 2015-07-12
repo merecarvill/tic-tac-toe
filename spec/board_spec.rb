@@ -62,6 +62,18 @@ describe TicTacToe::Board do
     end
   end
 
+  describe '#lines' do
+
+    it 'returns all lines on board (rows, cols, and diagonals)' do
+      lines = board.lines
+
+      expect(lines.count).to eq board.size*2 + 2
+      lines.each do |line|
+        expect(line[:cells].count).to eq board.size
+      end
+    end
+  end
+
   describe '#intersecting_lines' do
 
     it 'returns all lines that include the cell at given row and col' do

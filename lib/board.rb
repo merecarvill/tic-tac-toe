@@ -20,6 +20,12 @@ module TicTacToe
       @cells[row][col]
     end
 
+    def lines
+      lines = [left_diag, right_diag]
+      (0...@size).each{ |index| lines << row_at(index) << col_at(index) }
+      lines
+    end
+
     def intersecting_lines(row, col)
       raise_error_if_out_of_bounds(row, col)
 
