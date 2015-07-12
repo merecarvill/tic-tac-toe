@@ -16,4 +16,8 @@ RSpec.shared_context "helper_methods" do
   def random_coordinate(board_size)
     [rand(board_size), rand(board_size)]
   end
+
+  def all_coordinates(board_size)
+    (0...board_size).to_a.repeated_permutation(2).to_a
+  end
 end

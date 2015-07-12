@@ -65,7 +65,7 @@ describe TicTacToe::Board do
   describe '#intersecting_lines' do
 
     it 'returns all lines that include the cell at given row and col' do
-      (0...board.size).to_a.repeated_permutation(2).each do |coordinate|
+      all_coordinates(board.size).each do |coordinate|
         row, col = coordinate
         lines = board.intersecting_lines(row, col)
 
@@ -86,7 +86,7 @@ describe TicTacToe::Board do
 
   describe '#marked?' do
 
-    it 'returns true if cell at given row and col has any player\'s mark' do
+    it 'checks if cell at given row and col has any player\'s mark' do
       row, col = random_coordinate(board.size)
 
       expect(board.marked?(row, col)).to be false
@@ -97,9 +97,9 @@ describe TicTacToe::Board do
 
   describe '#blank?' do
 
-    it 'returns true if no cell in board is marked' do
+    it 'checks if no cell in board is marked' do
       marked_cell = false
-      (0...board.size).to_a.repeated_permutation(2).each do |coordinate|
+      all_coordinates(board.size).each do |coordinate|
         row, col = coordinate
         marked_cell ||= board.marked?(row, col)
       end
