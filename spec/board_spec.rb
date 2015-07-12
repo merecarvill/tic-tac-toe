@@ -1,13 +1,13 @@
 require 'spec_helper'
 
 describe TicTacToe::Board do
+  include_context "default_values"
 
   describe '#initialize' do
+    let(:default_perameters) { {size: BOARD_SIZE} }
 
     it 'takes a perameters hash' do
-      perameters = {size: 3}
-
-      expect{TicTacToe::Board.new(perameters)}.not_to raise_error
+      expect{TicTacToe::Board.new(default_perameters)}.not_to raise_error
     end
 
     it 'generates a NxN board of the given size' do
