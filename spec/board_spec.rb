@@ -5,6 +5,7 @@ describe TicTacToe::Board do
   include_context "error_messages"
   include_context "helper_methods"
 
+  let(:board_error) { TicTacToe::Board::BoardError }
   let(:default_perameters) { {size: BOARD_SIZE} }
   let(:board) {described_class.new(default_perameters)}
 
@@ -42,7 +43,7 @@ describe TicTacToe::Board do
       row, col = random_coordinate(board.size)
       board[row, col] = :x
 
-      expect{board[row, col] = :o}.to raise_error(NON_EMPTY_CELL_ERROR_MSG)
+      expect{board[row, col] = :o}.to raise_error(board_error, NON_EMPTY_CELL_ERROR_MSG)
     end
   end
 
@@ -57,7 +58,7 @@ describe TicTacToe::Board do
     end
 
     it 'raises error if cell coordinates are out of bounds' do
-      expect{board[board.size, board.size]}.to raise_error(OUT_OF_BOUNDS_ERROR_MSG)
+      expect{board[board.size, board.size]}.to raise_error(board_error, OUT_OF_BOUNDS_ERROR_MSG)
     end
   end
 
@@ -79,7 +80,7 @@ describe TicTacToe::Board do
     end
 
     it 'raises error if cell coordinates are out of bounds' do
-      expect{board.intersecting_lines(board.size, board.size)}.to raise_error(OUT_OF_BOUNDS_ERROR_MSG)
+      expect{board.intersecting_lines(board.size, board.size)}.to raise_error(board_error, OUT_OF_BOUNDS_ERROR_MSG)
     end
   end
 end
