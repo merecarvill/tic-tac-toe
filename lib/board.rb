@@ -33,6 +33,10 @@ module TicTacToe
       @cells.flatten.count
     end
 
+    def marked?(row, col)
+      @cells[row][col] != nil
+    end
+
     def blank?
       @cells.flatten.all?(&:nil?)
     end

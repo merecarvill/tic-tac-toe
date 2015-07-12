@@ -83,4 +83,33 @@ describe TicTacToe::Board do
       expect{board.intersecting_lines(board.size, board.size)}.to raise_error(board_error, OUT_OF_BOUNDS_ERROR_MSG)
     end
   end
+
+  describe '#marked?' do
+
+    it 'returns true if cell at given row and col has any player\'s mark' do
+      row, col = random_coordinate(board.size)
+
+      expect(board.marked?(row, col)).to be false
+      board[row, col] = :x
+      expect(board.marked?(row, col)).to be true
+    end
+  end
+
+  describe '#blank?' do
+
+    it 'returns true if no cell in board is marked' do
+      marked_cell = false
+      (0...board.size).to_a.repeated_permutation(2).each do |coordinate|
+        row, col = coordinate
+        marked_cell ||= board.marked?(row, col)
+      end
+
+      expect(board.blank?).not_to eq marked_cell
+
+      row, col = random_coordinate(board.size)
+      board[row, col] = :x
+
+      expect(board.blank?).to be false
+    end
+  end
 end
