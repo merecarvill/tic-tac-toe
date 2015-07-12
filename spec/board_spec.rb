@@ -19,5 +19,9 @@ describe TicTacToe::Board do
         expect(board.num_cells).to eq size**2
       end
     end
+
+    it 'leaves the generated board blank' do
+      expect(described_class.new(default_perameters).blank?).to be true
+    end
   end
 end

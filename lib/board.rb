@@ -11,6 +11,10 @@ module TicTacToe
       @cells.flatten.count
     end
 
+    def blank?
+      @cells.flatten.all?(&:nil?)
+    end
+
     private
 
     def generate_new_board
