@@ -15,12 +15,14 @@ module TicTacToe
     end
 
     def [](row, col)
-      @cells.fetch(row).fetch(col)
-    rescue IndexError
-      raise BoardError, 'Cell coordinates are out of bounds'
+      raise_error_if_out_of_bounds(row, col)
+
+      @cells[row][col]
     end
 
     def intersecting_lines(row, col)
+      raise_error_if_out_of_bounds(row, col)
+
       lines = [row_at(row), col_at(col)]
       lines << left_diag if row == col
       lines << right_diag if row + col == @size - 1
@@ -58,6 +60,10 @@ module TicTacToe
 
     def right_diag
       {right_diag: true, cells: (0...@size).map{ |row| @cells[row][@size - row - 1] }}
+    end
+
+    def raise_error_if_out_of_bounds(row, col)
+      raise BoardError, 'Cell coordinates are out of bounds' if row >= @size || col >= @size
     end
   end
 end
