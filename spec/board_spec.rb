@@ -98,13 +98,13 @@ describe TicTacToe::Board do
   describe '#blank?' do
 
     it 'checks if no cell in board is marked' do
-      marked_cell = false
+      any_marked_cells = false
       all_coordinates(board.size).each do |coordinate|
         row, col = coordinate
-        marked_cell ||= board.marked?(row, col)
+        any_marked_cells ||= board.marked?(row, col)
       end
 
-      expect(board.blank?).not_to eq marked_cell
+      expect(board.blank?).not_to eq any_marked_cells
 
       row, col = random_coordinate(board.size)
       board[row, col] = :x
