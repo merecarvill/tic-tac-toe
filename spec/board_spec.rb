@@ -34,9 +34,10 @@ describe TicTacToe::Board do
 
     it 'sets the contents of an empty cell at the given row and column' do
       row, col = random_coordinate(board.size)
+      prior_contents = board[row,col]
       board[row, col] = :x
 
-      expect(board.blank?).to be false
+      expect(board[row,col]).not_to eq prior_contents
     end
 
     it 'raises error when attempting to change contents of non-empty cell' do
@@ -51,9 +52,8 @@ describe TicTacToe::Board do
 
     it 'gets the contents of cell at given row and column' do
       row, col = random_coordinate(board.size)
-
-      expect(board[row, col]).to be nil
       board[row, col] = :x
+
       expect(board[row, col]).to eq :x
     end
 
