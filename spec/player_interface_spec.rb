@@ -6,9 +6,11 @@ describe TicTacToe::PlayerInterface do
   describe '.requred_methods' do
 
     it 'provides the name of each method that must be implemented' do
-      [:move].each do |method|
+      methods = [:move]
+      methods.each do |method|
         expect(described_class.required_methods.include?(method)).to be true
       end
+      expect(described_class.required_methods - methods).to eq []
     end
   end
 
