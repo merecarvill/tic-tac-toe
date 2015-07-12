@@ -59,4 +59,22 @@ describe TicTacToe::Board do
       expect{board[board.size, board.size]}.to raise_error('Cell coordinates are out of bounds')
     end
   end
+
+  describe '#intersecting_lines' do
+
+    it 'returns all lines that include the cell at given row and col' do
+      (0...board.size).to_a.repeated_permutation(2).each do |coordinate|
+        row, col = coordinate
+        lines = board.intersecting_lines(row, col)
+
+        lines.each do |line|
+          expect(line[:cells].count).to eq board.size
+        end
+        expect(lines.any?{ |line| line[:row] == row }).to be true
+        expect(lines.any?{ |line| line[:col] == col }).to be true
+        expect(lines.any?{ |line| line.has_key?(:left_diag) }).to eq row == col
+        expect(lines.any?{ |line| line.has_key?(:right_diag) }).to eq row + col == board.size - 1
+      end
+    end
+  end
 end
