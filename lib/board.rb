@@ -14,6 +14,12 @@ module TicTacToe
       @cells[row][col] = mark
     end
 
+    def [](row, col)
+      @cells.fetch(row).fetch(col)
+    rescue IndexError
+      raise BoardError, 'Cell coordinates are out of bounds'
+    end
+
     def num_cells
       @cells.flatten.count
     end

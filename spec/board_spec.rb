@@ -38,4 +38,17 @@ describe TicTacToe::Board do
       expect{board[0,0] = :o}.to raise_error('Cannot alter marked cell')
     end
   end
+
+  describe '#[]' do
+
+    it 'gets the contents of cell at given row and column' do
+      expect(board[0,0]).to be nil
+      board[0,0] = :x
+      expect(board[0,0]).to eq :x
+    end
+
+    it 'raises error if cell coordinates are out of bounds' do
+      expect{board[board.size, board.size]}.to raise_error('Cell coordinates are out of bounds')
+    end
+  end
 end
