@@ -3,7 +3,8 @@ require 'spec_helper'
 describe TicTacToe::ComputerPlayer do
   shared_context "default_values"
 
-  let(:ai_as_x) { described_class.new(:x) }
+  let(:blank_board) { TicTacToe::Board.new({size: BOARD_SIZE}) }
+  let(:ai_as_x) { described_class.new({mark: :x, board: blank_board}) }
 
   it 'implements PlayerInterface' do
     TicTacToe::PlayerInterface.required_methods.each do |method|
@@ -13,9 +14,11 @@ describe TicTacToe::ComputerPlayer do
 
   describe '#initialize' do
 
-    it 'takes the player\'s mark' do
+    it 'takes a perameters hash with the player\'s mark and a reference to the game board' do
       mark = PLAYER_MARKS.shuffle
-      expect(described_class.new(mark).mark).to eq mark
+      ai = described_class.new({mark: mark, board: blank_board})
+
+      expect(ai.mark).to eq mark
     end
   end
 end

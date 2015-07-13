@@ -4,8 +4,9 @@ module TicTacToe
   class ComputerPlayer < PlayerInterface
     attr_reader :mark
 
-    def initialize(mark)
-      @mark = mark
+    def initialize(perameters)
+      @mark = perameters[:mark]
+      @board = perameters[:board]
     end
 
     def move
