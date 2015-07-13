@@ -6,27 +6,60 @@ describe TicTacToe::Board do
   include_context "helper_methods"
 
   let(:board_error) { TicTacToe::Board::BoardError }
-  let(:default_perameters) { {size: BOARD_SIZE} }
-  let(:board) {described_class.new(default_perameters)}
+  let(:board) {described_class.new({size: BOARD_SIZE, other_board: nil})}
 
   describe '#initialize' do
 
     it 'takes a perameters hash' do
-      expect{described_class.new(default_perameters)}.not_to raise_error
+      expect{described_class.new({size: BOARD_SIZE, other_board: nil})}.not_to raise_error
     end
 
-    it 'generates a NxN board of the given size' do
-      (1..3).each do |size|
-        perameters = {size: size}
-        custom_board = described_class.new(perameters)
+    context 'when NOT given another board to copy' do
 
-        expect(custom_board.size).to eq size
-        expect(custom_board.num_cells).to eq size**2
+      it 'generates a NxN board of the given size' do
+        (1..3).each do |size|
+          custom_board = described_class.new({size: size, other_board: nil})
+
+          expect(custom_board.size).to eq size
+          expect(custom_board.num_cells).to eq size**2
+        end
+      end
+
+      it 'leaves the generated board blank' do
+        expect(described_class.new({size: BOARD_SIZE, other_board: nil}).blank?).to be true
       end
     end
 
-    it 'leaves the generated board blank' do
-      expect(described_class.new(default_perameters).blank?).to be true
+    context 'when given another board to copy' do
+
+      it 'copies the cell values to a new board in the same configuration' do
+        other_board = described_class.new(size: BOARD_SIZE, other_board: nil)
+        (0...other_board.size).each do |row|
+          other_board[row, rand(other_board.size)] = [:x, :o].sample
+        end
+        other_board_copy = described_class.new(size: other_board.size, other_board: other_board)
+
+        all_coordinates(other_board.size).each do |coordinate|
+          row, col = coordinate
+          expect(other_board_copy[row, col]).to eq other_board[row, col]
+        end
+      end
+
+      it 'deep copies the cells' do
+        other_board = described_class.new(size: BOARD_SIZE, other_board: nil)
+        other_board_copy = described_class.new(size: other_board.size, other_board: other_board)
+        row, col = random_coordinate(other_board.size)
+        other_board[row, col] = :x
+
+        expect(other_board[row, col]).not_to eq other_board_copy[row, col]
+      end
+
+      it 'raises error if given board is not the right size' do
+        small_board = described_class.new({size: BOARD_SIZE - 1, other_board: nil})
+
+        error_info = [board_error, INCORRECT_BOARD_SIZE_ERROR_MSG]
+        expect{described_class.new({size: BOARD_SIZE, other_board: small_board})}.to raise_error(*error_info)
+      end
     end
   end
 
@@ -44,7 +77,8 @@ describe TicTacToe::Board do
       row, col = random_coordinate(board.size)
       board[row, col] = :x
 
-      expect{board[row, col] = :o}.to raise_error(board_error, NON_EMPTY_CELL_ERROR_MSG)
+      error_info = [board_error, NON_EMPTY_CELL_ERROR_MSG]
+      expect{board[row, col] = :o}.to raise_error(*error_info)
     end
   end
 
@@ -58,7 +92,8 @@ describe TicTacToe::Board do
     end
 
     it 'raises error if cell coordinates are out of bounds' do
-      expect{board[board.size, board.size]}.to raise_error(board_error, OUT_OF_BOUNDS_ERROR_MSG)
+      error_info = [board_error, OUT_OF_BOUNDS_ERROR_MSG]
+      expect{board[board.size, board.size]}.to raise_error(*error_info)
     end
   end
 
@@ -92,7 +127,8 @@ describe TicTacToe::Board do
     end
 
     it 'raises error if cell coordinates are out of bounds' do
-      expect{board.intersecting_lines(board.size, board.size)}.to raise_error(board_error, OUT_OF_BOUNDS_ERROR_MSG)
+      error_info = [board_error, OUT_OF_BOUNDS_ERROR_MSG]
+      expect{board.intersecting_lines(board.size, board.size)}.to raise_error(*error_info)
     end
   end
 

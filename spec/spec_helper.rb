@@ -11,6 +11,7 @@ end
 RSpec.shared_context "error_messages" do
   OUT_OF_BOUNDS_ERROR_MSG = 'Cell coordinates are out of bounds'
   NON_EMPTY_CELL_ERROR_MSG = 'Cannot alter marked cell'
+  INCORRECT_BOARD_SIZE_ERROR_MSG = 'Given board is incorrect size'
 end
 
 RSpec.shared_context "helper_methods" do

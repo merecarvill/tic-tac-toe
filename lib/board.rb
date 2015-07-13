@@ -5,8 +5,9 @@ module TicTacToe
     attr_reader :size
 
     def initialize(perameters)
-      @size = perameters[:size]
+      @size = perameters[:size] || 3
       generate_new_board
+      deep_copy_board(perameters[:other_board]) if perameters[:other_board]
     end
 
     def []=(row, col, mark)
@@ -54,9 +55,16 @@ module TicTacToe
     private
 
     def generate_new_board
-      @cells = []
-      @size.times do
-        @cells << (1..@size).map{nil}
+      @cells = (0...@size).map{ (0...@size).map{ nil } }
+    end
+
+    def deep_copy_board(board)
+      raise BoardError, 'Given board is incorrect size' if board.size != @size
+
+      (0...@size).each do |row|
+        (0...@size).each do |col|
+          self[row, col] = board[row, col]
+        end
       end
     end
 
