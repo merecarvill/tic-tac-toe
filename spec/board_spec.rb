@@ -132,6 +132,22 @@ describe TicTacToe::Board do
     end
   end
 
+  describe '#deep_copy' do
+
+    it 'returns a new board that is a deep copy of the original' do
+      other_board = described_class.new({size: BOARD_SIZE, other_board: nil})
+      row1, col1 = random_coordinate(other_board.size)
+      other_board[row1, col1] = :x
+
+      other_board_copy = other_board.deep_copy
+      begin row2, col2 = random_coordinate(other_board.size) end until row1 != row2
+      other_board[row2, col2] = :x
+
+      expect(other_board[row1, col1]).to eq other_board_copy[row1, col1]
+      expect(other_board[row2, col2]).not_to eq other_board_copy[row2, col2]
+    end
+  end
+
   describe '#marked?' do
 
     it 'checks if cell at given row and col has any player\'s mark' do

@@ -36,6 +36,10 @@ module TicTacToe
       lines
     end
 
+    def deep_copy
+      Board.new({size: @size, other_board: self})
+    end
+
     def num_cells
       @cells.flatten.count
     end
