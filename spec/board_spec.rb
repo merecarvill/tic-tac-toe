@@ -132,6 +132,32 @@ describe TicTacToe::Board do
     end
   end
 
+  describe '#blank_cell_coordinates' do
+
+    it 'returns all cell coordinates when board is blank' do
+      expect(board.blank_cell_coordinates).to match_array(all_coordinates(board.size))
+    end
+
+    it 'returns the coordinates of all blank cells in board' do
+      marked_coordinates = []
+      board.size.times do |index|
+        board[index, index] = :x
+        marked_coordinates << [index, index]
+      end
+      unmarked_coordinates = all_coordinates(board.size) - marked_coordinates
+
+      expect(board.blank_cell_coordinates).to match_array(unmarked_coordinates)
+    end
+
+    it 'returns empty array when no cells are blank' do
+      all_coordinates(board.size).each do |row, col|
+        board[row, col] = :x
+      end
+
+      expect(board.blank_cell_coordinates).to eq []
+    end
+  end
+
   describe '#deep_copy' do
 
     it 'returns a new board that is a deep copy of the original' do

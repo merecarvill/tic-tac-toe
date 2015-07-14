@@ -36,6 +36,16 @@ module TicTacToe
       lines
     end
 
+    def blank_cell_coordinates
+      coordinates = []
+      (0...@size).each do |row|
+        (0...@size).each do |col|
+          coordinates << [row, col] if @cells[row][col].nil?
+        end
+      end
+      coordinates
+    end
+
     def deep_copy
       Board.new({size: @size, other_board: self})
     end
