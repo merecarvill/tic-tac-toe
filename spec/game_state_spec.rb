@@ -15,6 +15,18 @@ describe TicTacToe::GameState do
     end
   end
 
+  describe '#score' do
+
+    it 'exposes an attribute for recording the result of evaluation by a minimax function' do
+      player_mark, opponent_mark = PLAYER_MARKS.shuffle
+      params = {board: board, player: player_mark, opponent: opponent_mark}
+      game_state = described_class.new(params)
+      game_state.rank = 1
+
+      expect(game_state.rank).to eq 1
+    end
+  end
+
   describe '#make_move' do
 
     context 'when board is blank at given coordinate' do
