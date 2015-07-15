@@ -66,6 +66,14 @@ module TicTacToe
       !@cells.flatten.any?(&:nil?)
     end
 
+    def has_winning_line?
+      self.lines.each do |line|
+        cells = line[:cells]
+        return true if !cells.first.nil? && cells.all?{ |cell| cell == cells.first }
+      end
+      return false
+    end
+
     private
 
     def generate_new_board

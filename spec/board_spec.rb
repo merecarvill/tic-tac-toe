@@ -216,4 +216,16 @@ describe TicTacToe::Board do
       expect(board.filled?).to be true
     end
   end
+
+  describe '#has_winning_line?' do
+
+    it 'checks if board has any winning lines' do
+      blank_board = board
+      won_board = board.deep_copy
+      (0...won_board.size).each{ |col| won_board[0, col] = :x }
+
+      expect(blank_board.has_winning_line?).to be false
+      expect(won_board.has_winning_line?).to be true
+    end
+  end
 end
