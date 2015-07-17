@@ -4,14 +4,15 @@ module TicTacToe
 
     attr_reader :size
 
-    def initialize(perameters)
-      @size = perameters[:size] || 3
+    def initialize(parameters)
+      @size = parameters[:size] || 3
       generate_new_board
-      deep_copy_board(perameters[:other_board]) if perameters[:other_board]
+      deep_copy_board(parameters[:other_board]) if parameters[:other_board]
     end
 
     def []=(row, col, mark)
       raise BoardError, 'Cannot alter marked cell' unless @cells[row][col].nil?
+
       @cells[row][col] = mark
     end
 
@@ -28,13 +29,11 @@ module TicTacToe
     end
 
     def blank_cell_coordinates
-      coordinates = []
-      (0...@size).each do |row|
+      (0...@size).each_with_object([]) do |row, coordinates|
         (0...@size).each do |col|
           coordinates << [row, col] if @cells[row][col].nil?
         end
       end
-      coordinates
     end
 
     def deep_copy
