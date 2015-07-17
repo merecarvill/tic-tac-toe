@@ -69,9 +69,10 @@ describe TicTacToe::Board do
     it 'sets the contents of an empty cell at the given row and column' do
       board = blank_board
       coordinate = random_coordinate(board.size)
-      board[*coordinate] = :x
+      mark = PLAYER_MARKS.sample
+      board[*coordinate] = mark
 
-      expect(board[*coordinate]).to eq :x
+      expect(board[*coordinate]).to eq mark
     end
 
     it 'raises error when attempting to change contents of non-empty cell' do
@@ -90,9 +91,10 @@ describe TicTacToe::Board do
     it 'gets the contents of cell at given row and column' do
       board = blank_board
       coordinate = random_coordinate(board.size)
-      board[*coordinate] = :x
+      mark = PLAYER_MARKS.sample
+      board[*coordinate] = mark
 
-      expect(board[*coordinate]).to eq :x
+      expect(board[*coordinate]).to eq mark
     end
 
     it 'raises error if cell coordinates are out of bounds' do
@@ -202,7 +204,8 @@ describe TicTacToe::Board do
 
     it 'checks if board has any winning lines' do
       won_board = blank_board.deep_copy
-      (0...won_board.size).each{ |col| won_board[0, col] = :x }
+      mark = PLAYER_MARKS.sample
+      (0...won_board.size).each{ |col| won_board[0, col] = mark }
 
       expect(blank_board.has_winning_line?).to be false
       expect(won_board.has_winning_line?).to be true
