@@ -27,15 +27,6 @@ module TicTacToe
       lines
     end
 
-    def intersecting_lines(row, col)
-      raise_error_if_out_of_bounds(row, col)
-
-      lines = [row_at(row), col_at(col)]
-      lines << left_diag if row == col
-      lines << right_diag if row + col == @size - 1
-      lines
-    end
-
     def blank_cell_coordinates
       coordinates = []
       (0...@size).each do |row|

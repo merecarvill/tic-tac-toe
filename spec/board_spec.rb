@@ -109,29 +109,6 @@ describe TicTacToe::Board do
     end
   end
 
-  describe '#intersecting_lines' do
-
-    it 'returns all lines that include the cell at given row and col' do
-      all_coordinates(board.size).each do |coordinate|
-        row, col = coordinate
-        lines = board.intersecting_lines(row, col)
-
-        lines.each do |line|
-          expect(line[:cells].count).to eq board.size
-        end
-        expect(lines.any?{ |line| line[:row] == row }).to be true
-        expect(lines.any?{ |line| line[:col] == col }).to be true
-        expect(lines.any?{ |line| line.has_key?(:left_diag) }).to eq row == col
-        expect(lines.any?{ |line| line.has_key?(:right_diag) }).to eq row + col == board.size - 1
-      end
-    end
-
-    it 'raises error if cell coordinates are out of bounds' do
-      error_info = [board_error, OUT_OF_BOUNDS_ERROR_MSG]
-      expect{board.intersecting_lines(board.size, board.size)}.to raise_error(*error_info)
-    end
-  end
-
   describe '#blank_cell_coordinates' do
 
     it 'returns all cell coordinates when board is blank' do
