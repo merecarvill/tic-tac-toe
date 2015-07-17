@@ -99,13 +99,13 @@ describe TicTacToe::Board do
 
   describe '#lines' do
 
-    it 'returns all lines on board (rows, cols, and diagonals)' do
+    it 'returns the contents of every board-length line (rows, cols, and diagonals)' do
       lines = board.lines
 
-      expect(lines.count).to eq board.size*2 + 2
       lines.each do |line|
-        expect(line[:cells].count).to eq board.size
+        expect(line.count).to eq board.size
       end
+      expect(lines.count).to eq board.size*2 + 2
     end
   end
 

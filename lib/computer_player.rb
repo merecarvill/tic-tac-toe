@@ -12,8 +12,8 @@ module TicTacToe
 
     def minimax_score(game_state)
       game_state.board.lines.each do |line|
-        return 1 if line[:cells].all?{ |cell| cell == @player_mark }
-        return -1 if line[:cells].all?{ |cell| cell == @opponent_mark }
+        return 1 if line.all?{ |cell| cell == @player_mark }
+        return -1 if line.all?{ |cell| cell == @opponent_mark }
       end
 
       return 0 if game_state.board.filled?

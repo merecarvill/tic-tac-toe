@@ -58,8 +58,7 @@ module TicTacToe
 
     def has_winning_line?
       self.lines.each do |line|
-        cells = line[:cells]
-        return true if !cells.first.nil? && cells.all?{ |cell| cell == cells.first }
+        return true if !line.first.nil? && line.all?{ |cell| cell == line.first }
       end
       return false
     end
@@ -81,19 +80,19 @@ module TicTacToe
     end
 
     def row_at(row)
-      {row: row, cells: @cells[row]}
+      @cells[row]
     end
 
     def col_at(col)
-      {col: col, cells: (0...@size).map{ |row| @cells[row][col] }}
+      (0...@size).map{ |row| @cells[row][col] }
     end
 
     def left_diag
-      {left_diag: true, cells: (0...@size).map{ |index| @cells[index][index] }}
+      (0...@size).map{ |index| @cells[index][index] }
     end
 
     def right_diag
-      {right_diag: true, cells: (0...@size).map{ |row| @cells[row][@size - row - 1] }}
+      (0...@size).map{ |row| @cells[row][@size - row - 1] }
     end
 
     def raise_error_if_out_of_bounds(row, col)
