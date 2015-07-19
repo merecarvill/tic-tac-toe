@@ -4,6 +4,8 @@ require 'game_state'
 module TicTacToe
   class ComputerPlayer < PlayerInterface
 
+    attr_reader :player_mark, :opponent_mark
+
     def initialize(parameters)
       @player_mark = parameters[:player]
       @opponent_mark = parameters[:opponent]
