@@ -75,6 +75,14 @@ describe TicTacToe::Board do
       expect(board[*coordinate]).to eq mark
     end
 
+    it 'raises error if cell coordinates are out of bounds' do
+      board = blank_board
+
+      error_info = [board_error, OUT_OF_BOUNDS_ERROR_MSG]
+
+      expect{ board[board.size, board.size] = PLAYER_MARKS.sample }.to raise_error(*error_info)
+    end
+
     it 'raises error when attempting to change contents of non-empty cell' do
       board = blank_board
       coordinate = random_coordinate(board.size)

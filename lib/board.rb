@@ -11,6 +11,7 @@ module TicTacToe
     end
 
     def []=(row, col, mark)
+      raise_error_if_out_of_bounds(row, col)
       raise BoardError, 'Cannot alter marked cell' unless @cells[row][col].nil?
 
       @cells[row][col] = mark
