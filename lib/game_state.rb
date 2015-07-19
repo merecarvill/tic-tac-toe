@@ -1,6 +1,6 @@
 module TicTacToe
   class GameState
-    attr_accessor :rank
+    attr_accessor :evaluation_score
     attr_reader :board, :last_move, :player_mark, :opponent_mark
 
     def initialize(parameters)

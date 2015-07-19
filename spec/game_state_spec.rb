@@ -20,13 +20,12 @@ describe TicTacToe::GameState do
     end
   end
 
-  describe '#score' do
+  describe '#evaluation_score' do
 
     it 'exposes an attribute for recording the result of evaluation by a minimax function' do
-      game_state = game_start_state
-      game_state.rank = 1
+      game_start_state.evaluation_score = 1
 
-      expect(game_state.rank).to eq 1
+      expect(game_start_state.evaluation_score).to eq 1
     end
   end
 
