@@ -46,7 +46,7 @@ describe TicTacToe::GameState do
         expect(modified_game_state.board).not_to eq game_start_state.board
       end
 
-      it 'marks the new game state board with player\'s mark at given coordinate' do
+      it 'marks the new game state board with current player\'s mark at given coordinate' do
         coordinate = random_coordinate(blank_board.size)
         modified_game_state = game_start_state.make_move(coordinate)
 
@@ -59,6 +59,13 @@ describe TicTacToe::GameState do
 
         expect(modified_game_state.last_move).to eq coordinate
         expect(game_start_state.last_move).not_to eq coordinate
+      end
+
+      it 'swaps the current player with the opponent in the new game state' do
+        modified_game_state = game_start_state.make_move(random_coordinate(blank_board.size))
+
+        expect(modified_game_state.player_mark).to eq game_start_state.opponent_mark
+        expect(modified_game_state.opponent_mark).to eq game_start_state.player_mark
       end
     end
   end

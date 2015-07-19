@@ -1,7 +1,7 @@
 module TicTacToe
   class GameState
     attr_accessor :rank
-    attr_reader :board, :last_move, :player_mark
+    attr_reader :board, :last_move, :player_mark, :opponent_mark
 
     def initialize(parameters)
       @board = parameters[:board]
@@ -15,8 +15,8 @@ module TicTacToe
       new_board[*coordinate] = @player_mark
       GameState.new(
         board: new_board,
-        current_player: @player_mark,
-        opponent: @opponent_mark,
+        current_player: @opponent_mark,
+        opponent: @player_mark,
         last_move: coordinate
       )
     end
