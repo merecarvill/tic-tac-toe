@@ -5,14 +5,22 @@ require_relative '../lib/computer_player'
 require_relative '../lib/game_state'
 
 RSpec.shared_context "default_values" do
-  BOARD_SIZE = 3
-  PLAYER_MARKS = [:x, :o]
+  before :all do
+    @default_board_size = 3
+    @default_first_player = :x
+    @default_second_player = :o
+    @default_player_marks = [:x, :o]
+  end
 end
 
 RSpec.shared_context "error_messages" do
-  OUT_OF_BOUNDS_ERROR_MSG = 'Cell coordinates are out of bounds'
-  NON_EMPTY_CELL_ERROR_MSG = 'Cannot alter marked cell'
-  INCORRECT_BOARD_SIZE_ERROR_MSG = 'Given board is incorrect size'
+  before :all do
+    board_error = TicTacToe::Board::BoardError
+
+    @incorrect_board_size_error_info = [board_error, 'Given board is incorrect size']
+    @out_of_bounds_error_info = [board_error, 'Cell coordinates are out of bounds']
+    @non_empty_cell_error_info = [board_error, 'Cannot alter marked cell']
+  end
 end
 
 RSpec.shared_context "helper_methods" do
@@ -25,7 +33,7 @@ RSpec.shared_context "helper_methods" do
   end
 
   def new_board(board_size)
-    TicTacToe::Board.new({size: board_size})
+    TicTacToe::Board.new(size: board_size)
   end
 
   def all_wins(board_size, winning_mark)

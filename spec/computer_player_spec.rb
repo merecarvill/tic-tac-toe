@@ -2,12 +2,13 @@ require 'spec_helper'
 
 describe TicTacToe::ComputerPlayer do
   include_context "helper_methods"
+  include_context "default_values"
 
-  let(:blank_board) { TicTacToe::Board.new({size: BOARD_SIZE}) }
+  # let(:blank_board) { TicTacToe::Board.new({size: @default_board_size}) }
 
   it 'implements PlayerInterface' do
-    player_mark, opponent_mark = PLAYER_MARKS.shuffle
-    ai = described_class.new(board: blank_board, player: player_mark, opponent: opponent_mark)
+    player_mark, opponent_mark = @default_player_marks.shuffle
+    ai = described_class.new(board: new_board(@default_board_size), player: player_mark, opponent: opponent_mark)
 
     TicTacToe::PlayerInterface.required_methods.each do |method|
       expect(ai).to respond_to(method)
@@ -17,8 +18,8 @@ describe TicTacToe::ComputerPlayer do
   describe '#initialize' do
 
     it 'takes a parameters hash with the player\'s mark, opponent\'s mark, and the game board' do
-      player_mark, opponent_mark = PLAYER_MARKS.shuffle
-      params = {board: blank_board, player: player_mark, opponent: opponent_mark}
+      player_mark, opponent_mark = @default_player_marks.shuffle
+      params = {board: new_board(@default_board_size), player: player_mark, opponent: opponent_mark}
 
       expect{described_class.new(params)}.not_to raise_error
     end
@@ -27,14 +28,14 @@ describe TicTacToe::ComputerPlayer do
   describe '#minimax_score' do
 
     it 'returns 1 when given game state is a win for computer player' do
-      player_mark, opponent_mark = PLAYER_MARKS.shuffle
+      player_mark, opponent_mark = @default_player_marks.shuffle
       ai = described_class.new(
-        board: new_board(BOARD_SIZE),
+        board: new_board(@default_board_size),
         player: player_mark,
         opponent: opponent_mark
       )
 
-      all_wins(BOARD_SIZE, player_mark).each do |winning_board|
+      all_wins(@default_board_size, player_mark).each do |winning_board|
         game_state = TicTacToe::GameState.new(
           board: winning_board,
           player: player_mark,
@@ -46,14 +47,14 @@ describe TicTacToe::ComputerPlayer do
     end
 
     it 'returns -1 when given game state is a win for opponent' do
-      player_mark, opponent_mark = PLAYER_MARKS.shuffle
+      player_mark, opponent_mark = @default_player_marks.shuffle
       ai = described_class.new(
-        board: new_board(BOARD_SIZE),
+        board: new_board(@default_board_size),
         player: player_mark,
         opponent: opponent_mark
       )
 
-      all_wins(BOARD_SIZE, opponent_mark).each do |winning_board|
+      all_wins(@default_board_size, opponent_mark).each do |winning_board|
         game_state = TicTacToe::GameState.new(
           board: winning_board,
           player: player_mark,
@@ -65,12 +66,12 @@ describe TicTacToe::ComputerPlayer do
     end
 
     it 'returns 0 if game state is a draw' do
-      player_mark, opponent_mark = PLAYER_MARKS.shuffle
-      ai = described_class.new(board: blank_board, player: player_mark, opponent: opponent_mark)
+      player_mark, opponent_mark = @default_player_marks.shuffle
+      ai = described_class.new(board: new_board(@default_board_size), player: player_mark, opponent: opponent_mark)
 
-      board = blank_board.deep_copy
-      (0...BOARD_SIZE).each do |row|
-        (0...BOARD_SIZE).each do |col|
+      board = new_board(@default_board_size)
+      (0...@default_board_size).each do |row|
+        (0...@default_board_size).each do |col|
           if row == 0
             board[row, col] = col.even? ? player_mark : opponent_mark
           else
@@ -84,9 +85,10 @@ describe TicTacToe::ComputerPlayer do
     end
 
     it 'returns nil if game state is unfinished' do
-      player_mark, opponent_mark = PLAYER_MARKS.shuffle
-      ai = described_class.new(board: blank_board, player: player_mark, opponent: opponent_mark)
-      game_state = TicTacToe::GameState.new(board: blank_board, player: player_mark, opponent: opponent_mark)
+      board = new_board(@default_board_size)
+      player_mark, opponent_mark = @default_player_marks.shuffle
+      ai = described_class.new(board: board, player: player_mark, opponent: opponent_mark)
+      game_state = TicTacToe::GameState.new(board: board, player: player_mark, opponent: opponent_mark)
 
       expect(ai.minimax_score(game_state)).to eq nil
     end
