@@ -2,7 +2,9 @@ require 'spec_helper'
 
 describe TicTacToe::GameState do
   include_context "helper_methods"
+  # include_context "error_messages"
 
+  let(:board_error) { TicTacToe::Board::BoardError }
   let(:blank_board) { TicTacToe::Board.new(size: BOARD_SIZE) }
   let(:game_start_state) {
     described_class.new(
@@ -31,7 +33,7 @@ describe TicTacToe::GameState do
 
   describe '#make_move' do
 
-    context 'when board is blank at given coordinate' do
+    context 'when given coordinate is valid and board is blank at coordinate' do
 
       it 'returns a new game state object' do
         modified_game_state = game_start_state.make_move(random_coordinate(blank_board.size))
@@ -65,6 +67,28 @@ describe TicTacToe::GameState do
 
         expect(modified_game_state.player_mark).to eq game_start_state.opponent_mark
         expect(modified_game_state.opponent_mark).to eq game_start_state.player_mark
+      end
+    end
+
+    context 'when given coordinate is out of board\'s boundaries' do
+
+      it 'raises an out of bounds board error' do
+        bad_coordinate = [blank_board.size, blank_board.size]
+
+        error_info = [board_error, OUT_OF_BOUNDS_ERROR_MSG]
+        expect{ game_start_state.make_move(bad_coordinate) }.to raise_error(*error_info)
+      end
+    end
+
+    context 'when board is not blank at given coordinate' do
+
+      it 'raises a non-blank cell board error' do
+        coordinate = random_coordinate(blank_board.size)
+        modified_game_state = game_start_state.make_move(coordinate)
+
+        error_info = [board_error, NON_EMPTY_CELL_ERROR_MSG]
+
+        expect{ modified_game_state.make_move(coordinate) }.to raise_error(*error_info)
       end
     end
   end
