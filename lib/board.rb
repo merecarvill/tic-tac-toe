@@ -7,7 +7,7 @@ module TicTacToe
     def initialize(parameters)
       @size = parameters[:size] || 3
       generate_new_board
-      deep_copy_board(parameters[:other_board]) if parameters[:other_board]
+      deep_copy_board(parameters[:board]) if parameters[:board]
     end
 
     def []=(row, col, mark)
@@ -37,7 +37,7 @@ module TicTacToe
     end
 
     def deep_copy
-      Board.new({size: @size, other_board: self})
+      Board.new({size: @size, board: self})
     end
 
     def num_cells

@@ -11,7 +11,7 @@ describe TicTacToe::Board do
   describe '#initialize' do
 
     it 'takes a perameters hash' do
-      expect{ described_class.new(size: BOARD_SIZE, other_board: nil) }.not_to raise_error
+      expect{ described_class.new(size: BOARD_SIZE, board: nil) }.not_to raise_error
     end
 
     context 'when NOT given another board to copy' do
@@ -37,7 +37,7 @@ describe TicTacToe::Board do
         all_coordinates(board.size).each do |coordinate|
           board[*coordinate] = PLAYER_MARKS.sample
         end
-        board_copy = described_class.new(size: board.size, other_board: board)
+        board_copy = described_class.new(size: board.size, board: board)
 
         all_coordinates(board.size).each do |coordinate|
           expect(board_copy[*coordinate]).to eq board[*coordinate]
@@ -46,7 +46,7 @@ describe TicTacToe::Board do
 
       it 'deep copies the cells' do
         board = blank_board
-        board_copy = described_class.new(size: board.size, other_board: board)
+        board_copy = described_class.new(size: board.size, board: board)
         coordinate = random_coordinate(board.size)
         board[*coordinate] = PLAYER_MARKS.sample
 
@@ -56,7 +56,7 @@ describe TicTacToe::Board do
       it 'raises error if given board is not the right size' do
         small_board = described_class.new(size: BOARD_SIZE - 1)
 
-        params = {size: BOARD_SIZE, other_board: small_board}
+        params = {size: BOARD_SIZE, board: small_board}
         error_info = [board_error, INCORRECT_BOARD_SIZE_ERROR_MSG]
 
         expect{ described_class.new(params) }.to raise_error(*error_info)
