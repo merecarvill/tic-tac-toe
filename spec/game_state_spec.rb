@@ -25,6 +25,35 @@ describe TicTacToe::GameState do
     end
   end
 
+  describe '#game_over?' do
+
+    it 'returns true if the game has ended in a draw' do
+      draw_board = board_with_draw(@default_board_size, @default_first_player, @default_second_player)
+      params = {
+        board: draw_board,
+        current_player: @default_first_player,
+        opponent: @default_second_player
+      }
+
+      expect(described_class.new(params).game_over?).to be true
+    end
+
+    it 'returns true if the game has been won' do
+      all_wins(@default_board_size, @default_first_player).each do |won_board|
+        game_state = described_class.new(
+          board: won_board,
+          current_player: @default_first_player,
+          opponent: @default_second_player)
+
+        expect(game_state.game_over?).to be true
+      end
+    end
+
+    it 'returns false if the game board is blank' do
+      expect(starting_game_state.game_over?).to be false
+    end
+  end
+
   describe '#evaluation_score' do
 
     it 'exposes an attribute for recording the result of evaluation by a minimax function' do

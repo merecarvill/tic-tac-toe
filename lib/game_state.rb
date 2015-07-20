@@ -20,5 +20,9 @@ module TicTacToe
         last_move: coordinate
       )
     end
+
+    def game_over?
+      @board.filled? || @board.has_winning_line?
+    end
   end
 end
