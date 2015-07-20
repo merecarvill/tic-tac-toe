@@ -36,6 +36,20 @@ RSpec.shared_context "helper_methods" do
     TicTacToe::Board.new(size: board_size)
   end
 
+  def board_with_draw(board_size, first_mark, second_mark)
+    board = new_board(board_size)
+    (0...board_size).each do |row|
+      (0...board_size).each do |col|
+        if row == 0
+          board[row, col] = col.odd? ? first_mark : second_mark
+        else
+          board[row, col] = col.even? ? first_mark : second_mark
+        end
+      end
+    end
+    board
+  end
+
   def all_wins(board_size, winning_mark)
     winning_boards = []
     winning_boards.concat horizontal_wins(board_size, winning_mark)
