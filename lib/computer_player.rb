@@ -12,14 +12,19 @@ module TicTacToe
       @board = parameters[:board]
     end
 
-    def minimax_score(game_state)
+    def minimax(game_state)
+      evaluate(game_state)
+    end
+
+    private
+
+    def evaluate(game_state)
       game_state.board.lines.each do |line|
         return 1 if line.all?{ |cell| cell == @player_mark }
         return -1 if line.all?{ |cell| cell == @opponent_mark }
       end
 
-      return 0 if game_state.board.filled?
-      return nil
+      game_state.board.filled? ? 0 : nil
     end
   end
 end

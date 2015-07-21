@@ -30,7 +30,7 @@ describe TicTacToe::ComputerPlayer do
     end
   end
 
-  describe '#minimax_score' do
+  describe '#minimax' do
 
     it 'returns 1 when given game state is a win for computer player' do
       all_wins(@default_board_size, ai.player_mark).each do |winning_board|
@@ -40,7 +40,7 @@ describe TicTacToe::ComputerPlayer do
           opponent: ai.opponent_mark
         )
 
-        expect(ai.minimax_score(game_state)).to eq 1
+        expect(ai.minimax(game_state)).to eq 1
       end
     end
 
@@ -52,27 +52,18 @@ describe TicTacToe::ComputerPlayer do
           opponent: ai.opponent_mark
         )
 
-        expect(ai.minimax_score(game_state)).to eq -1
+        expect(ai.minimax(game_state)).to eq -1
       end
     end
 
     it 'returns 0 if game state is a draw' do
-      board = new_board(@default_board_size)
-      (0...@default_board_size).each do |row|
-        (0...@default_board_size).each do |col|
-          if row == 0
-            board[row, col] = col.even? ? ai.player_mark : ai.opponent_mark
-          else
-            board[row, col] = col.odd? ? ai.player_mark : ai.opponent_mark
-          end
-        end
-      end
+      board = board_with_draw(@default_board_size, ai.player_mark, ai.opponent_mark)
       game_state = TicTacToe::GameState.new(
         board: board,
         player: ai.player_mark,
         opponent: ai.opponent_mark)
 
-      expect(ai.minimax_score(game_state)).to eq 0
+      expect(ai.minimax(game_state)).to eq 0
     end
 
     it 'returns nil if game state is unfinished' do
@@ -82,7 +73,7 @@ describe TicTacToe::ComputerPlayer do
         player: ai.player_mark,
         opponent: ai.opponent_mark)
 
-      expect(ai.minimax_score(game_state)).to be nil
+      expect(ai.minimax(game_state)).to be nil
     end
   end
 end
