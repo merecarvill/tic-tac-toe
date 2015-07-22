@@ -13,7 +13,13 @@ module TicTacToe
     end
 
     def minimax(game_state)
-      evaluate(game_state)
+      if game_state.game_over?
+        evaluate(game_state)
+      else
+        game_state.board.blank_cell_coordinates.map do |coordinate|
+          minimax(game_state.make_move(coordinate))
+        end.sample
+      end
     end
 
     private

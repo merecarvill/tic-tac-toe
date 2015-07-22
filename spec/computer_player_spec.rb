@@ -36,7 +36,7 @@ describe TicTacToe::ComputerPlayer do
       all_wins(@default_board_size, ai.player_mark).each do |winning_board|
         game_state = TicTacToe::GameState.new(
           board: winning_board,
-          player: ai.player_mark,
+          current_player: ai.player_mark,
           opponent: ai.opponent_mark
         )
 
@@ -48,7 +48,7 @@ describe TicTacToe::ComputerPlayer do
       all_wins(@default_board_size, ai.opponent_mark).each do |winning_board|
         game_state = TicTacToe::GameState.new(
           board: winning_board,
-          player: ai.player_mark,
+          current_player: ai.player_mark,
           opponent: ai.opponent_mark
         )
 
@@ -60,20 +60,33 @@ describe TicTacToe::ComputerPlayer do
       board = board_with_draw(@default_board_size, ai.player_mark, ai.opponent_mark)
       game_state = TicTacToe::GameState.new(
         board: board,
-        player: ai.player_mark,
+        current_player: ai.player_mark,
         opponent: ai.opponent_mark)
 
       expect(ai.minimax(game_state)).to eq 0
     end
 
-    it 'returns nil if game state is unfinished' do
-      board = new_board(@default_board_size)
-      game_state = TicTacToe::GameState.new(
-        board: board,
-        player: ai.player_mark,
-        opponent: ai.opponent_mark)
+    context 'when given a game state that is incomplete' do
 
-      expect(ai.minimax(game_state)).to be nil
+      it 'recursively calls minimax on possible subsequent game states to determine a score' do
+        board = new_board(@default_board_size)
+        board[0,0] = @default_first_player
+        board[0, board.size - 1] = @default_second_player
+        marked_coordinates = [[0, 0], [0, board.size - 1]]
+
+        initial_game_state = TicTacToe::GameState.new(
+          board: board,
+          current_player: ai.player_mark,
+          opponent: ai.opponent_mark)
+
+        expect(ai).to receive(:minimax).at_least(:twice)
+        allow(ai).to receive(:minimax).and_call_original do |game_state|
+          marked_coordinates.each do |coordinate|
+            expect(game_state.board[*coordinate]).to eq board[*coordinate]
+          end
+        end
+        expect(ai.minimax(initial_game_state)).not_to be nil
+      end
     end
   end
 end
