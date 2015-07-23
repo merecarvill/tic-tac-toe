@@ -87,6 +87,54 @@ describe TicTacToe::ComputerPlayer do
         end
         expect(ai.minimax(initial_game_state)).not_to be nil
       end
+
+      context 'when current player is computer player' do
+        it 'returns greatest score from among game states that can result from current turn' do
+          board = new_board(@default_board_size)
+          board[0, 0] = :x
+          board[1, 0] = :o
+          board[0, 1] = :x
+          board[1, 1] = :o
+          board[2, 0] = :x
+          board[2, 1] = :o
+
+          game_state = TicTacToe::GameState.new(
+            board: board,
+            current_player: ai.player_mark,
+            opponent: ai.opponent_mark)
+
+          child_state_scores = board.blank_cell_coordinates.map do |coord|
+            ai.minimax(game_state.make_move(coord))
+          end
+          highest_score = child_state_scores.max
+
+          expect(ai.minimax(game_state)).to eq highest_score
+        end
+      end
+
+      context 'when current player is not the computer player' do
+        it 'returns lowest score from among game states that can result from current turn' do
+          board = new_board(@default_board_size)
+          board[0, 0] = :x
+          board[1, 0] = :o
+          board[0, 1] = :x
+          board[1, 1] = :o
+          board[2, 0] = :x
+          board[2, 1] = :o
+
+          game_state = TicTacToe::GameState.new(
+            board: board,
+            current_player: ai.opponent_mark,
+            opponent: ai.player_mark)
+
+          child_state_scores = board.blank_cell_coordinates.map do |coord|
+            ai.minimax(game_state.make_move(coord))
+          end
+          lowest_score = child_state_scores.min
+
+          expect(ai.minimax(game_state)).to eq lowest_score
+        end
+      end
     end
   end
 end

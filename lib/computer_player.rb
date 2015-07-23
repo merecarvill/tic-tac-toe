@@ -16,9 +16,14 @@ module TicTacToe
       if game_state.game_over?
         evaluate(game_state)
       else
-        game_state.board.blank_cell_coordinates.map do |coordinate|
+        child_state_scores = game_state.board.blank_cell_coordinates.map do |coordinate|
           minimax(game_state.make_move(coordinate))
-        end.sample
+        end
+        if game_state.player_mark == @player_mark
+          child_state_scores.max
+        else
+          child_state_scores.min
+        end
       end
     end
 
