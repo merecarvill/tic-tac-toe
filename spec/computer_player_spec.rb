@@ -30,6 +30,26 @@ describe TicTacToe::ComputerPlayer do
     end
   end
 
+  describe '#move' do
+
+    it 'returns a move coordinate that is not already marked on the game board' do
+      all_coordinates(ai.board.size).each do |coordinate|
+        ai.board[*coordinate] = ai.player_mark unless coordinate == [0, 0]
+      end
+
+      expect(ai.move).to eq [0, 0]
+    end
+
+    it 'returns move coordinate that produces greatest scoring game state when passed to minimax' do
+      allow(ai).to receive(:minimax) do |game_state|
+        row, col = game_state.last_move
+        row + col
+      end
+
+      expect(ai.move).to eq [ai.board.size - 1, ai.board.size - 1]
+    end
+  end
+
   describe '#minimax' do
 
     it 'returns 1 when given game state is a win for computer player' do
