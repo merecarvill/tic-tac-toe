@@ -1,12 +1,23 @@
 require 'spec_helper'
 
 describe TicTacToe::PlayerInterface do
-  let(:interface_error) {TicTacToe::PlayerInterface::InterfaceError}
+  include_context 'helper_methods'
+  include_context 'default_values'
+
+  let(:interface_error) { TicTacToe::PlayerInterface::InterfaceError }
+  let(:computer_player) {
+    described_class.new(
+      type: :computer,
+      board: new_board(@default_board_size),
+      player: @default_first_player,
+      opponent: @default_second_player)
+  }
+  let(:player_examples) { [computer_player] }
 
   describe '.requred_methods' do
 
     it 'provides the name of each method that must be implemented' do
-      methods = [:move, :mark]
+      methods = [:move, :player_mark]
       methods.each do |method|
         expect(described_class.required_methods.include?(method)).to be true
       end
@@ -14,17 +25,35 @@ describe TicTacToe::PlayerInterface do
     end
   end
 
-  describe '#mark' do
+  describe '#initialize' do
 
-    it 'raises error if not implemented by subclass' do
-      expect{described_class.new.mark}.to raise_error(interface_error, /\w*/)
+    it 'takes a hash of parameters' do
+      params_for_computer_player = {
+        type: :computer,
+        board: new_board(@default_board_size),
+        player: @default_first_player,
+        opponent: @default_second_player
+      }
+
+      expect{ described_class.new(params_for_computer_player) }.not_to raise_error
+    end
+  end
+
+  describe '#player_mark' do
+
+    it 'is implemented' do
+      player_examples.each do |player|
+        expect{ player.player_mark }.not_to raise_error
+      end
     end
   end
 
   describe '#move' do
 
-    it 'raises error if not implemented by subclass' do
-      expect{described_class.new.move}.to raise_error(interface_error, /\w*/)
+    it 'is implemented' do
+      player_examples.each do |player|
+        expect{ player.move }.not_to raise_error
+      end
     end
   end
 end

@@ -1,8 +1,7 @@
-require 'player_interface'
 require 'game_state'
 
 module TicTacToe
-  class ComputerPlayer < PlayerInterface
+  class ComputerPlayer
 
     attr_reader :player_mark, :opponent_mark, :board
 

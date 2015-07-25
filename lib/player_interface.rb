@@ -1,17 +1,34 @@
+require 'computer_player'
+
 module TicTacToe
   class PlayerInterface
     InterfaceError = Class.new(StandardError)
 
     def self.required_methods
-      [:move, :mark]
+      [:move, :player_mark]
     end
 
-    def mark
-      raise InterfaceError, "#{self.class}#mark is not implemented"
+    def initialize(parameters)
+      case parameters[:type]
+      when :computer
+        @player = ComputerPlayer.new(parameters)
+      end
+    end
+
+    def player_mark
+      if @player.respond_to?(:player_mark)
+        @player.player_mark
+      else
+        raise InterfaceError, "#{self.class}#player_mark is not implemented"
+      end
     end
 
     def move
-      raise InterfaceError, "#{self.class}#move is not implemented"
+      if @player.respond_to?(:move)
+        @player.move
+      else
+        raise InterfaceError, "#{self.class}#move is not implemented"
+      end
     end
   end
 end
