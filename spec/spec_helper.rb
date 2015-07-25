@@ -1,4 +1,5 @@
 require 'rspec'
+require 'rspec/collection_matchers'
 require_relative '../lib/board'
 require_relative '../lib/player_interface'
 require_relative '../lib/computer_player'
@@ -12,6 +13,7 @@ RSpec.shared_context "default_values" do
     @default_first_player = :x
     @default_second_player = :o
     @default_player_marks = [:x, :o]
+    @default_player_types = [:human, :computer]
   end
 end
 
