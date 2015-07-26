@@ -1,10 +1,34 @@
 require 'spec_helper'
 
 describe TicTacToe::Interface do
+  include_context 'default_values'
+
+  before :all do
+    $stdin = StringIO.new
+    $stdout = StringIO.new
+  end
+
+  after do
+    $stdin.string = ""
+    $stdout.string = ""
+  end
+
+  after :all do
+    $stdin = STDIN
+    $stdout = STDOUT
+  end
+
+  let(:cli) { described_class.new(:command_line) }
 
   describe '#intialize' do
     it 'takes the interface type' do
-      expect{described_class.new(:command_line)}.not_to raise_error
+      expect{ described_class.new(:command_line) }.not_to raise_error
+    end
+  end
+
+  describe '#set_up_game' do
+    it 'is implemented' do
+      expect(cli.respond_to?(:set_up_game)).to be true
     end
   end
 end

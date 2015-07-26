@@ -28,6 +28,11 @@ RSpec.shared_context "error_messages" do
 end
 
 RSpec.shared_context "helper_methods" do
+  def has_at_least_one_repeated_line?(string)
+    lines = string.split("\n")
+    lines.uniq.length < lines.length
+  end
+
   def random_coordinate(board_size)
     [rand(board_size), rand(board_size)]
   end
