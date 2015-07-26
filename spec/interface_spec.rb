@@ -49,4 +49,10 @@ describe TicTacToe::Interface do
       expect(cli.respond_to?(:report_move)).to be true
     end
   end
+
+  describe '#report_win' do
+    it 'is implemented' do
+      expect(cli.respond_to?(:report_win)).to be true
+    end
+  end
 end

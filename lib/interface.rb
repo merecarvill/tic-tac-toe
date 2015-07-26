@@ -42,5 +42,13 @@ module TicTacToe
         raise InterfaceError, "#{self.class}#report_move is not implemented"
       end
     end
+
+    def report_win(player_mark)
+      if @interface.respond_to?(:report_win)
+        @interface.report_move(player_mark)
+      else
+        raise InterfaceError, "#{self.class}#report_win is not implemented"
+      end
+    end
   end
 end

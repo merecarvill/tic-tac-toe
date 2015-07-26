@@ -131,4 +131,14 @@ describe TicTacToe::CommandLineInterface do
       expect(cli_output.split("").count("0")).to eq 2
     end
   end
+
+  describe '#report_win' do
+    it 'prints a notification that the player using the given mark has won' do
+      cli.report_win(@default_first_player)
+      cli_output = $stdout.string
+
+      expect(cli_output).to include @default_first_player.to_s
+      expect(cli_output).to include "wins"
+    end
+  end
 end

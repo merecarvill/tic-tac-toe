@@ -49,6 +49,10 @@ module TicTacToe
       puts "Player #{player_mark} moved at row: #{row}, column: #{col}."
     end
 
+    def report_win(player_mark)
+      puts "Player #{player_mark} wins!"
+    end
+
     def instructions
       <<-EOS
 ~*~ Welcome to TIC TAC TOE ~*~
