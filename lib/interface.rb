@@ -27,11 +27,19 @@ module TicTacToe
       end
     end
 
-    def solicit_move
+    def solicit_move(player_mark)
       if @interface.respond_to?(:solicit_move)
-        @interface.solicit_move
+        @interface.solicit_move(player_mark)
       else
         raise InterfaceError, "#{self.class}#solicit_move is not implemented"
+      end
+    end
+
+    def report_move(player_mark, move_coordinates)
+      if @interface.respond_to?(:report_move)
+        @interface.report_move(player_mark, move_coordinates)
+      else
+        raise InterfaceError, "#{self.class}#report_move is not implemented"
       end
     end
   end

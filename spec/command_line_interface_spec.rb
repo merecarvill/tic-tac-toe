@@ -73,12 +73,12 @@ describe TicTacToe::CommandLineInterface do
     end
   end
 
-  describe 'solicit_player_move' do
+  describe 'solicit_move' do
     let(:valid_input) { "0, 0" }
 
     it 'prints a prompt to the command line' do
       $stdin.string = valid_input
-      cli.solicit_player_move(@default_first_player)
+      cli.solicit_move(@default_first_player)
 
       expect($stdout.string).not_to eq ""
     end
@@ -89,7 +89,7 @@ describe TicTacToe::CommandLineInterface do
         $stdin.string = valid_input
         valid_coordinate = valid_input.split(",").map{ |c| c.to_i }
 
-        expect(cli.solicit_player_move(@default_first_player)).to eq valid_coordinate
+        expect(cli.solicit_move(@default_first_player)).to eq valid_coordinate
       end
     end
 
@@ -98,7 +98,7 @@ describe TicTacToe::CommandLineInterface do
 
       it 'prompts the user until given valid input' do
         $stdin.string = invalid_input + "\n" + invalid_input + "\n" + valid_input
-        cli.solicit_player_move(@default_first_player)
+        cli.solicit_move(@default_first_player)
 
         expect(has_at_least_one_repeated_line?($stdout.string)).to be true
       end
@@ -118,6 +118,17 @@ describe TicTacToe::CommandLineInterface do
 
       expect(board_characters.count(@default_first_player.to_s)).to eq expected_first_mark_count
       expect(board_characters.count(@default_second_player.to_s)).to eq expected_second_mark_count
+    end
+  end
+
+  describe '#report_move' do
+
+    it 'prints a notification of the move made by the given mark at the given coordinates' do
+      cli.report_move(@default_first_player, [0, 0])
+      cli_output = $stdout.string
+
+      expect(cli_output).to include @default_first_player.to_s
+      expect(cli_output.split("").count("0")).to eq 2
     end
   end
 end

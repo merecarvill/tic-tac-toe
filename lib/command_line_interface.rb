@@ -20,7 +20,7 @@ module TicTacToe
       end
     end
 
-    def solicit_player_move(player_mark)
+    def solicit_move(player_mark)
       puts "Player #{player_mark}: select your move."
       puts "Enter your move coordinates in the format 'row, col' - eg. '0, 0'."
       begin
@@ -42,6 +42,11 @@ module TicTacToe
 
     def show_game_board(board)
       print board.to_s
+    end
+
+    def report_move(player_mark, move_coordinates)
+      row, col = move_coordinates
+      puts "Player #{player_mark} moved at row: #{row}, column: #{col}."
     end
 
     def instructions
