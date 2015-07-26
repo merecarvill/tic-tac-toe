@@ -65,14 +65,14 @@ module TicTacToe
     end
 
     def to_s
-      row_separator = "--"*@size + "-\n"
+      row_separator = "----"*@size + "-\n"
       col_separator = "|"
       output_string = row_separator
 
       (0...@size).each do |row|
         output_string += col_separator
         (0...@size).each do |col|
-          output_string += " #{self[row, col]} " + col_separator
+          output_string += " #{self[row, col] || " "} " + col_separator
         end
         output_string += "\n" + row_separator
       end
