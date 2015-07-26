@@ -1,10 +1,9 @@
 require 'spec_helper'
 
-describe TicTacToe::PlayerInterface do
+describe TicTacToe::Player do
   include_context 'helper_methods'
   include_context 'default_values'
 
-  let(:interface_error) { TicTacToe::PlayerInterface::InterfaceError }
   let(:computer_player) {
     described_class.new(
       type: :computer,
@@ -43,7 +42,7 @@ describe TicTacToe::PlayerInterface do
 
     it 'is implemented' do
       player_examples.each do |player|
-        expect{ player.player_mark }.not_to raise_error
+        expect(player.respond_to?(:player_mark)).to be true
       end
     end
   end
@@ -52,7 +51,7 @@ describe TicTacToe::PlayerInterface do
 
     it 'is implemented' do
       player_examples.each do |player|
-        expect{ player.move }.not_to raise_error
+        expect(player.respond_to?(:move)).to be true
       end
     end
   end

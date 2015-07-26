@@ -11,8 +11,8 @@ describe TicTacToe::ComputerPlayer do
       opponent: @default_second_player)
   }
 
-  it 'implements PlayerInterface' do
-    TicTacToe::PlayerInterface.required_methods.each do |method|
+  it 'implements methods required by Player interface' do
+    TicTacToe::Player.required_methods.each do |method|
       expect(ai).to respond_to(method)
     end
   end

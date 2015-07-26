@@ -1,8 +1,8 @@
 require 'computer_player'
 
 module TicTacToe
-  class PlayerInterface
-    InterfaceError = Class.new(StandardError)
+  class Player
+    PlayerError = Class.new(StandardError)
 
     def self.required_methods
       [:move, :player_mark]
@@ -12,6 +12,8 @@ module TicTacToe
       case parameters[:type]
       when :computer
         @player = ComputerPlayer.new(parameters)
+      else
+        raise PlayerError, "Attempted to initialize player with invalid type: #{parameters[:type]}"
       end
     end
 
@@ -19,7 +21,7 @@ module TicTacToe
       if @player.respond_to?(:player_mark)
         @player.player_mark
       else
-        raise InterfaceError, "#{self.class}#player_mark is not implemented"
+        raise PlayerError, "#{self.class}#player_mark is not implemented"
       end
     end
 
@@ -27,7 +29,7 @@ module TicTacToe
       if @player.respond_to?(:move)
         @player.move
       else
-        raise InterfaceError, "#{self.class}#move is not implemented"
+        raise PlayerError, "#{self.class}#move is not implemented"
       end
     end
   end
