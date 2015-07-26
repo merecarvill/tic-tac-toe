@@ -37,4 +37,10 @@ describe TicTacToe::Interface do
       expect(cli.respond_to?(:show_game_board)).to be true
     end
   end
+
+  describe '#solicit_move' do
+    it 'is implemented' do
+      expect(cli.respond_to?(:solicit_move)).to be true
+    end
+  end
 end

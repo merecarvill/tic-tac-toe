@@ -73,12 +73,36 @@ describe TicTacToe::CommandLineInterface do
     end
   end
 
-  describe '#game_turn_interaction' do
-
-  end
-
   describe 'solicit_player_move' do
+    let(:valid_input) { "0, 0" }
 
+    it 'prints a prompt to the command line' do
+      $stdin.string = valid_input
+      cli.solicit_player_move(@default_first_player)
+
+      expect($stdout.string).not_to eq ""
+    end
+
+    context 'when given valid input' do
+
+      it 'returns the move coordinates input by user' do
+        $stdin.string = valid_input
+        valid_coordinate = valid_input.split(",").map{ |c| c.to_i }
+
+        expect(cli.solicit_player_move(@default_first_player)).to eq valid_coordinate
+      end
+    end
+
+    context 'when given invalid input' do
+      let(:invalid_input) { "foo" }
+
+      it 'prompts the user until given valid input' do
+        $stdin.string = invalid_input + "\n" + invalid_input + "\n" + valid_input
+        cli.solicit_player_move(@default_first_player)
+
+        expect(has_at_least_one_repeated_line?($stdout.string)).to be true
+      end
+    end
   end
 
   describe '#show_game_board' do

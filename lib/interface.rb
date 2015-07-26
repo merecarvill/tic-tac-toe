@@ -21,9 +21,17 @@ module TicTacToe
 
     def show_game_board
       if @interface.respond_to?(:show_game_board)
-        @interface.show_game_board(player_marks)
+        @interface.show_game_board
       else
         raise InterfaceError, "#{self.class}#show_game_board is not implemented"
+      end
+    end
+
+    def solicit_move
+      if @interface.respond_to?(:solicit_move)
+        @interface.solicit_move
+      else
+        raise InterfaceError, "#{self.class}#solicit_move is not implemented"
       end
     end
   end

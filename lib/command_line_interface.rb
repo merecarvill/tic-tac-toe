@@ -13,19 +13,30 @@ module TicTacToe
       puts "Is player #{player_mark} a human or computer?"
       puts "Enter 'computer' or 'human'."
       begin
-        get_valid_input([:computer, :human])
+        get_valid_input(/^(computer|human)$/).to_sym
       rescue CommandLineInterfaceError => msg
         puts "Sorry, #{msg}. Please try again."
         retry
       end
     end
 
-    def get_valid_input(valid_inputs)
-      tokenized_input = gets.strip.downcase.to_sym
-      if valid_inputs.include?(tokenized_input)
-        tokenized_input
+    def solicit_player_move(player_mark)
+      puts "Player #{player_mark}: select your move."
+      puts "Enter your move coordinates in the format 'row, col' - eg. '0, 0'."
+      begin
+        get_valid_input(/^\s*\d+\s*,\s*\d+\s*$/).split(",").map{ |c| c.to_i }
+      rescue CommandLineInterfaceError => msg
+        puts "Sorry, #{msg}. Please try again."
+        retry
+      end
+    end
+
+    def get_valid_input(valid_input_pattern)
+      cleaned_input = gets.strip.downcase
+      if valid_input_pattern === cleaned_input
+        cleaned_input
       else
-        raise CommandLineInterfaceError, "'#{tokenized_input}' input is invalid"
+        raise CommandLineInterfaceError, "'#{cleaned_input}' input is invalid"
       end
     end
 
