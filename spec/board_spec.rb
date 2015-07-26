@@ -221,4 +221,24 @@ describe TicTacToe::Board do
       end
     end
   end
+
+  describe '#to_s' do
+
+    it 'returns a string representation of the board' do
+      board = new_board(@default_board_size)
+
+      expect(board.to_s).to be_a String
+    end
+
+    it 'contains a number of marks equal to the number of times they appear on the board' do
+      board = board_with_draw(@default_board_size, @default_first_player, @default_second_player)
+      board_characters = board.to_s.split("")
+      cell_count = board.size**2
+      expected_first_mark_count = cell_count.odd? ? cell_count/2 + 1 : cell_count/2
+      expected_second_mark_count = cell_count/2
+
+      expect(board_characters.count(@default_first_player.to_s)).to eq expected_first_mark_count
+      expect(board_characters.count(@default_second_player.to_s)).to eq expected_second_mark_count
+    end
+  end
 end
