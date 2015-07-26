@@ -2,7 +2,7 @@ module TicTacToe
   class CommandLineInterface
     CommandLineInterfaceError = Class.new(StandardError)
 
-    def set_up_game(player_marks)
+    def game_setup_interaction(player_marks)
       puts instructions
       player_marks.each_with_object([]) do |mark, player_types|
         player_types << solicit_player_type(mark)

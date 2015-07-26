@@ -26,9 +26,9 @@ describe TicTacToe::Interface do
     end
   end
 
-  describe '#set_up_game' do
+  describe '#game_setup_interaction' do
     it 'is implemented' do
-      expect(cli.respond_to?(:set_up_game)).to be true
+      expect(cli.respond_to?(:game_setup_interaction)).to be true
     end
   end
 end

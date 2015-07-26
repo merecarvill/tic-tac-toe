@@ -21,19 +21,19 @@ describe TicTacToe::CommandLineInterface do
 
   let(:cli) { described_class.new }
 
-  describe '#set_up_game' do
+  describe '#game_setup_interaction' do
     let(:example_inputs) { ["human", "computer"] }
 
     it 'prints an introductory message to the command line' do
       $stdin.string = example_inputs.join("\n")
-      cli.set_up_game(@default_player_marks)
+      cli.game_setup_interaction(@default_player_marks)
 
       expect($stdout.string).not_to eq ""
     end
 
     it 'returns the player type associated with each of the given player marks' do
       $stdin.string = example_inputs.join("\n")
-      player_types = cli.set_up_game(@default_player_marks)
+      player_types = cli.game_setup_interaction(@default_player_marks)
 
       expect(player_types).to have(2).things
       player_types.each do |type|

@@ -11,11 +11,11 @@ module TicTacToe
       end
     end
 
-    def set_up_game(player_marks)
-      if @interface.respond_to?(:set_up_game)
-        @interface.set_up_game(player_marks)
+    def game_setup_interaction(player_marks)
+      if @interface.respond_to?(:game_setup_interaction)
+        @interface.game_setup_interaction(player_marks)
       else
-        raise InterfaceError, "#{self.class}#set_up_game is not implemented"
+        raise InterfaceError, "#{self.class}#game_setup_interaction is not implemented"
       end
     end
   end
