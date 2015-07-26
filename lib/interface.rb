@@ -18,5 +18,13 @@ module TicTacToe
         raise InterfaceError, "#{self.class}#game_setup_interaction is not implemented"
       end
     end
+
+    def show_game_board
+      if @interface.respond_to?(:show_game_board)
+        @interface.show_game_board(player_marks)
+      else
+        raise InterfaceError, "#{self.class}#show_game_board is not implemented"
+      end
+    end
   end
 end

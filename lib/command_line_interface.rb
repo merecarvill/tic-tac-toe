@@ -29,6 +29,10 @@ module TicTacToe
       end
     end
 
+    def show_game_board(board)
+      print board.to_s
+    end
+
     def instructions
       <<-EOS
 ~*~ Welcome to TIC TAC TOE ~*~

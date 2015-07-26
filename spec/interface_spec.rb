@@ -31,4 +31,10 @@ describe TicTacToe::Interface do
       expect(cli.respond_to?(:game_setup_interaction)).to be true
     end
   end
+
+  describe '#show_game_board' do
+    it 'is implemented' do
+      expect(cli.respond_to?(:show_game_board)).to be true
+    end
+  end
 end
