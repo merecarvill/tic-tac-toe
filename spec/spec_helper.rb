@@ -1,5 +1,6 @@
 require 'rspec'
 require 'rspec/collection_matchers'
+require_relative '../lib/game'
 require_relative '../lib/board'
 require_relative '../lib/game_state'
 require_relative '../lib/player'
