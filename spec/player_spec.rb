@@ -4,6 +4,13 @@ describe TicTacToe::Player do
   include_context 'helper_methods'
   include_context 'default_values'
 
+  let(:human_player) {
+    described_class.new(
+      type: :human,
+      board: new_board(@default_board_size),
+      player: @default_first_player,
+      opponent: @default_second_player)
+  }
   let(:computer_player) {
     described_class.new(
       type: :computer,
@@ -11,7 +18,7 @@ describe TicTacToe::Player do
       player: @default_first_player,
       opponent: @default_second_player)
   }
-  let(:player_examples) { [computer_player] }
+  let(:player_examples) { [human_player, computer_player] }
 
   describe '.requred_methods' do
 
@@ -27,14 +34,23 @@ describe TicTacToe::Player do
   describe '#initialize' do
 
     it 'takes a hash of parameters' do
-      params_for_computer_player = {
-        type: :computer,
-        board: new_board(@default_board_size),
-        player: @default_first_player,
-        opponent: @default_second_player
-      }
+      player_examples.each do |player|
+        expect{ player }.not_to raise_error
+      end
+    end
 
-      expect{ described_class.new(params_for_computer_player) }.not_to raise_error
+    context 'when initialized as a human player' do
+
+      it 'takes functionality from HumanPlayer' do
+        expect(human_player.player).to be_a TicTacToe::HumanPlayer
+      end
+    end
+
+    context 'when initialized as a computer player' do
+
+      it 'takes functionality from ComputerPlayer' do
+        expect(computer_player.player).to be_a TicTacToe::ComputerPlayer
+      end
     end
   end
 

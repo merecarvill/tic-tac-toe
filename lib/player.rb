@@ -1,8 +1,11 @@
 require 'computer_player'
+require 'human_player'
 
 module TicTacToe
   class Player
     PlayerError = Class.new(StandardError)
+
+    attr_reader :player
 
     def self.required_methods
       [:move, :player_mark]
@@ -10,6 +13,8 @@ module TicTacToe
 
     def initialize(parameters)
       case parameters[:type]
+      when :human
+        @player = HumanPlayer.new(parameters)
       when :computer
         @player = ComputerPlayer.new(parameters)
       else
