@@ -54,8 +54,20 @@ module TicTacToe
       puts "Player #{player_mark} moved at row: #{row}, column: #{col}."
     end
 
+    def report_game_over(player_mark = nil)
+      if player_mark.nil?
+        report_draw
+      else
+        report_win(player_mark)
+      end
+    end
+
     def report_win(player_mark)
       puts "Player #{player_mark} wins!"
+    end
+
+    def report_draw
+      puts "The game ended in a draw."
     end
 
     def instructions

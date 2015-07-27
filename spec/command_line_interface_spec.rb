@@ -142,13 +142,40 @@ describe TicTacToe::CommandLineInterface do
     end
   end
 
+  describe '#report_game_over' do
+
+    context 'when given the mark of a winning player' do
+      it 'prints a notification that the player has won' do
+        expect(cli).to receive(:report_win).with(@default_first_player)
+        cli.report_game_over(@default_first_player)
+      end
+    end
+
+    context 'when no mark is given' do
+      it 'prints a notification that the game has ended in a draw' do
+        expect(cli).to receive(:report_draw)
+        cli.report_game_over
+      end
+    end
+  end
+
   describe '#report_win' do
+
     it 'prints a notification that the player using the given mark has won' do
       cli.report_win(@default_first_player)
       cli_output = $stdout.string
 
       expect(cli_output).to include @default_first_player.to_s
       expect(cli_output).to include "wins"
+    end
+  end
+
+  describe '#report_draw' do
+
+    it 'prints a notification that the game has ended in a draw' do
+      cli.report_draw
+
+      expect($stdout.string).to include "draw"
     end
   end
 end

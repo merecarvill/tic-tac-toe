@@ -51,11 +51,11 @@ module TicTacToe
       end
     end
 
-    def report_win(player_mark)
-      if @interface.respond_to?(:report_win)
-        @interface.report_move(player_mark)
+    def report_game_over(player_mark)
+      if @interface.respond_to?(:report_game_over)
+        @interface.report_game_over(player_mark)
       else
-        raise InterfaceError, "#{self.class}#report_win is not implemented"
+        raise InterfaceError, "#{self.class}#report_game_over is not implemented"
       end
     end
   end
