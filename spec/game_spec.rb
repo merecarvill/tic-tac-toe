@@ -31,6 +31,34 @@ describe TicTacToe::Game do
     end
   end
 
+  describe '#run' do
+
+    it 'sets up the game' do
+      allow(game).to receive(:handle_turns)
+      allow(game).to receive(:handle_game_over)
+
+      expect(game).to receive(:set_up)
+      game.run
+    end
+
+    it 'handles each turn' do
+      allow(game).to receive(:handle_game_over)
+      allow(game).to receive(:set_up)
+
+      expect(game).to receive(:handle_turns)
+      game.run
+    end
+
+    it 'handles the end of the game, keeping track of the last mark made' do
+      last_mark_made = @default_player_marks.sample
+      allow(game).to receive(:set_up)
+      allow(game).to receive(:handle_turns).and_return(last_mark_made)
+
+      expect(game).to receive(:handle_game_over).with(last_mark_made)
+      game.run
+    end
+  end
+
   describe '#set_up' do
 
     it 'uses information from the interface to create the players' do

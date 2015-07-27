@@ -15,6 +15,12 @@ module TicTacToe
       @players = []
     end
 
+    def run
+      set_up
+      last_mark_made = handle_turns
+      handle_game_over(last_mark_made)
+    end
+
     def set_up
       player_types = @interface.game_setup_interaction(@player_marks)
 
