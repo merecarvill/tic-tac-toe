@@ -1,5 +1,5 @@
-require 'computer_player'
-require 'human_player'
+require_relative 'computer_player'
+require_relative 'human_player'
 
 module TicTacToe
   class Player

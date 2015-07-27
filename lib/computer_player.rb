@@ -1,4 +1,4 @@
-require 'game_state'
+require_relative 'game_state'
 
 module TicTacToe
   class ComputerPlayer

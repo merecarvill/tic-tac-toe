@@ -1,4 +1,4 @@
-require 'command_line_interface'
+require_relative 'command_line_interface'
 
 module TicTacToe
   class Interface
