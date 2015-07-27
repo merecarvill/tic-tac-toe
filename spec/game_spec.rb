@@ -138,6 +138,37 @@ describe TicTacToe::Game do
     end
   end
 
+  describe '#handle_game_over' do
+
+    it 'shows the final state of the game board via the interface' do
+      allow(game.interface).to receive(:report_game_over)
+
+      expect(game.interface).to receive(:show_game_board)
+      game.handle_game_over(@default_first_player)
+    end
+
+    context 'when game has been won' do
+
+      it 'reports that the given last player to move has won via the interface' do
+        allow(game.interface).to receive(:show_game_board)
+        allow(game.board).to receive(:has_winning_line?).and_return(true)
+
+        expect(game.interface).to receive(:report_game_over).with(@default_first_player)
+        game.handle_game_over(@default_first_player)
+      end
+    end
+
+    context 'when game has no winner' do
+
+      it 'reports that game ended in a draw via the interface' do
+        allow(game.interface).to receive(:show_game_board)
+
+        expect(game.interface).to receive(:report_game_over).with(:none)
+        game.handle_game_over(@default_first_player)
+      end
+    end
+  end
+
   describe '#over?' do
 
     it 'returns true when the board has a winning line' do

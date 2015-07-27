@@ -60,6 +60,12 @@ module TicTacToe
       end
     end
 
+    def handle_game_over(last_mark_made)
+      @interface.show_game_board(@board)
+      winning_player_mark = @board.has_winning_line? ? last_mark_made : :none
+      @interface.report_game_over(winning_player_mark)
+    end
+
     def over?
       @board.has_winning_line? || @board.filled?
     end
