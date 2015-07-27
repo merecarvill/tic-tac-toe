@@ -124,4 +124,23 @@ describe TicTacToe::Game do
       end
     end
   end
+
+  describe '#over?' do
+
+    it 'returns true when the board has a winning line' do
+      allow(game.board).to receive(:has_winning_line?).and_return(true)
+
+      expect(game.over?).to be true
+    end
+
+    it 'returns true if the board is filled' do
+      allow(game.board).to receive(:filled?).and_return(true)
+
+      expect(game.over?).to be true
+    end
+
+    it 'returns false when the game is not over' do
+      expect(game.over?).to be false
+    end
+  end
 end

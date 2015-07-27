@@ -50,5 +50,9 @@ module TicTacToe
         retry
       end
     end
+
+    def over?
+      @board.has_winning_line? || @board.filled?
+    end
   end
 end
