@@ -32,14 +32,21 @@ module TicTacToe
         opponent: (@player_marks - [mark]).pop)
     end
 
+    def handle_one_turn(current_player)
+      @interface.show_game_board(@board)
+      coordinates = get_valid_move(current_player)
+      @board[*coordinates] = current_player.player_mark
+      @interface.report_move(current_player.player_mark, coordinates)
+    end
+
     def get_valid_move(player)
       board = @board.deep_copy
       begin
-        coordinate = player.move
-        board[*coordinate] = player.player_mark
-        coordinate
+        coordinates = player.move
+        board[*coordinates] = player.player_mark
+        coordinates
       rescue TicTacToe::Board::BoardError => msg
-        @interface.report_invalid_move(coordinate, msg)
+        @interface.report_invalid_move(coordinates, msg)
         retry
       end
     end

@@ -43,6 +43,45 @@ describe TicTacToe::Game do
     end
   end
 
+  describe '#handle_one_turn' do
+    let(:player_stub) { Object.new }
+
+    before do
+      allow(player_stub).to receive(:player_mark).and_return(@default_first_player)
+      allow(player_stub).to receive(:move).and_return([0, 0])
+    end
+
+    it 'displays the game board via the interface' do
+      allow(game.interface).to receive(:report_move)
+
+      expect(game.interface).to receive(:show_game_board)
+      game.handle_one_turn(player_stub)
+    end
+
+    it 'gets valid move coordinates from given player' do
+      allow(game.interface).to receive(:show_game_board)
+      allow(game.interface).to receive(:report_move)
+
+      expect(game).to receive(:get_valid_move).and_return([0, 0])
+      game.handle_one_turn(player_stub)
+    end
+
+    it 'marks the game board with player\'s mark at the coordinates given by player' do
+      allow(game.interface).to receive(:show_game_board)
+      allow(game.interface).to receive(:report_move)
+      game.handle_one_turn(player_stub)
+
+      expect(game.board[0, 0]).to eq @default_first_player
+    end
+
+    it 'reports the move that was just made through the interface' do
+      allow(game.interface).to receive(:show_game_board)
+
+      expect(game.interface).to receive(:report_move).with(@default_first_player, [0, 0])
+      game.handle_one_turn(player_stub)
+    end
+  end
+
   describe '#get_valid_move' do
     let(:player_stub) { Object.new }
 
