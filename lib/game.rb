@@ -33,12 +33,15 @@ module TicTacToe
     end
 
     def handle_turns
+      last_player_to_move = nil
       catch(:game_over) do
         @players.cycle do |current_player|
           handle_one_turn(current_player)
+          last_player_to_move = current_player
           throw :game_over if over?
         end
       end
+      last_player_to_move.player_mark
     end
 
     def handle_one_turn(current_player)

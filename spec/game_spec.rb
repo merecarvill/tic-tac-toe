@@ -54,6 +54,15 @@ describe TicTacToe::Game do
       expect(game).to receive(:handle_one_turn).exactly(5).times
       game.handle_turns
     end
+
+    it 'returns the mark of the last player to move' do
+      allow(game.interface).to receive(:game_setup_interaction).and_return([:human, :computer])
+      game.set_up
+      allow(game).to receive(:handle_one_turn)
+      allow(game).to receive(:over?).and_return(true)
+
+      expect(game.handle_turns).to eq game.players.first.player_mark
+    end
   end
 
   describe '#handle_one_turn' do
