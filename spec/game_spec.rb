@@ -43,6 +43,19 @@ describe TicTacToe::Game do
     end
   end
 
+  describe '#handle_turns' do
+
+    it 'executes turns until the game is over' do
+      allow(game.interface).to receive(:game_setup_interaction).and_return([:human, :computer])
+      game.set_up
+      allow(game).to receive(:over?).and_return(false, false, false, false, true)
+      allow(game).to receive(:handle_one_turn)
+
+      expect(game).to receive(:handle_one_turn).exactly(5).times
+      game.handle_turns
+    end
+  end
+
   describe '#handle_one_turn' do
     let(:player_stub) { Object.new }
 

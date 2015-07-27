@@ -1,6 +1,6 @@
-require 'board'
-require 'player'
-require 'interface'
+require_relative 'board'
+require_relative 'player'
+require_relative 'interface'
 
 module TicTacToe
   class Game
@@ -30,6 +30,15 @@ module TicTacToe
         interface: @interface,
         board: @board,
         opponent: (@player_marks - [mark]).pop)
+    end
+
+    def handle_turns
+      catch(:game_over) do
+        @players.cycle do |current_player|
+          handle_one_turn(current_player)
+          throw :game_over if over?
+        end
+      end
     end
 
     def handle_one_turn(current_player)
