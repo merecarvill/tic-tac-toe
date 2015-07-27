@@ -35,6 +35,14 @@ module TicTacToe
       end
     end
 
+    def report_invalid_move(move_coordinates, reason)
+      if @interface.respond_to?(:sreport_invalid_move)
+        @interface.report_invalid_move(move_coordinates, reason)
+      else
+        raise InterfaceError, "#{self.class}#report_invalid_move is not implemented"
+      end
+    end
+
     def report_move(player_mark, move_coordinates)
       if @interface.respond_to?(:report_move)
         @interface.report_move(player_mark, move_coordinates)

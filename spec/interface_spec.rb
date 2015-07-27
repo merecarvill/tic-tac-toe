@@ -44,6 +44,12 @@ describe TicTacToe::Interface do
     end
   end
 
+  describe '#report_invalid_move' do
+    it 'is implemented' do
+      expect(cli.respond_to?(:report_invalid_move)).to be true
+    end
+  end
+
   describe '#report_move' do
     it 'is implemented' do
       expect(cli.respond_to?(:report_move)).to be true

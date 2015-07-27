@@ -73,6 +73,22 @@ describe TicTacToe::CommandLineInterface do
     end
   end
 
+  describe '#show_game_board' do
+
+    it 'prints a respresentation of the given board to the command line' do
+      board = board_with_draw(@default_board_size, @default_first_player, @default_second_player)
+      cli.show_game_board(board)
+
+      board_characters = $stdout.string.split("")
+      cell_count = board.size**2
+      expected_first_mark_count = cell_count.odd? ? cell_count/2 + 1 : cell_count/2
+      expected_second_mark_count = cell_count/2
+
+      expect(board_characters.count(@default_first_player.to_s)).to eq expected_first_mark_count
+      expect(board_characters.count(@default_second_player.to_s)).to eq expected_second_mark_count
+    end
+  end
+
   describe 'solicit_move' do
     let(:valid_input) { "0, 0" }
 
@@ -105,19 +121,13 @@ describe TicTacToe::CommandLineInterface do
     end
   end
 
-  describe '#show_game_board' do
+  describe '#report_invalid_move' do
 
-    it 'prints a respresentation of the given board to the command line' do
-      board = board_with_draw(@default_board_size, @default_first_player, @default_second_player)
-      cli.show_game_board(board)
+    it 'prints a notification that a move cannot be made at the given coordinates and why' do
+      cli.report_invalid_move([0, 0], "reason")
 
-      board_characters = $stdout.string.split("")
-      cell_count = board.size**2
-      expected_first_mark_count = cell_count.odd? ? cell_count/2 + 1 : cell_count/2
-      expected_second_mark_count = cell_count/2
-
-      expect(board_characters.count(@default_first_player.to_s)).to eq expected_first_mark_count
-      expect(board_characters.count(@default_second_player.to_s)).to eq expected_second_mark_count
+      expect($stdout.string).to include "reason"
+      expect($stdout.string.split("").count("0")).to eq 2
     end
   end
 

@@ -20,6 +20,10 @@ module TicTacToe
       end
     end
 
+    def show_game_board(board)
+      print board.to_s
+    end
+
     def solicit_move(player_mark)
       puts "Player #{player_mark}: select your move."
       puts "Enter your move coordinates in the format 'row, col' - eg. '0, 0'."
@@ -40,8 +44,9 @@ module TicTacToe
       end
     end
 
-    def show_game_board(board)
-      print board.to_s
+    def report_invalid_move(move_coordinates, reason)
+      row, col = move_coordinates
+      puts "Couldn't move at row: #{row}, column: #{col}. #{reason}, please try again."
     end
 
     def report_move(player_mark, move_coordinates)
