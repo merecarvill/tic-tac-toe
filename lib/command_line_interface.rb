@@ -54,11 +54,11 @@ module TicTacToe
       puts "Player #{player_mark} moved at row: #{row}, column: #{col}."
     end
 
-    def report_game_over(player_mark = nil)
-      if player_mark.nil?
+    def report_game_over(winning_player)
+      if winning_player == :none
         report_draw
       else
-        report_win(player_mark)
+        report_win(winning_player)
       end
     end
 

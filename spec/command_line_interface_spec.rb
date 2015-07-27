@@ -151,10 +151,10 @@ describe TicTacToe::CommandLineInterface do
       end
     end
 
-    context 'when no mark is given' do
+    context 'when winning player is ":none"' do
       it 'prints a notification that the game has ended in a draw' do
         expect(cli).to receive(:report_draw)
-        cli.report_game_over
+        cli.report_game_over(:none)
       end
     end
   end
