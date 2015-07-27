@@ -19,9 +19,9 @@ module TicTacToe
       end
     end
 
-    def show_game_board
+    def show_game_board(board)
       if @interface.respond_to?(:show_game_board)
-        @interface.show_game_board
+        @interface.show_game_board(board)
       else
         raise InterfaceError, "#{self.class}#show_game_board is not implemented"
       end
