@@ -7,9 +7,8 @@ describe TicTacToe::Player do
   let(:human_player) {
     described_class.new(
       type: :human,
-      board: new_board(@default_board_size),
-      player: @default_first_player,
-      opponent: @default_second_player)
+      interface: TicTacToe::Interface.new(:command_line),
+      player: @default_first_player)
   }
   let(:computer_player) {
     described_class.new(
