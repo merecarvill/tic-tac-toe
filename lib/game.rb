@@ -1,3 +1,5 @@
+require 'board'
+require 'player'
 require 'interface'
 
 module TicTacToe
@@ -28,6 +30,18 @@ module TicTacToe
         interface: @interface,
         board: @board,
         opponent: (@player_marks - [mark]).pop)
+    end
+
+    def get_valid_move(player)
+      board = @board.deep_copy
+      begin
+        coordinate = player.move
+        board[*coordinate] = player.player_mark
+        coordinate
+      rescue TicTacToe::Board::BoardError => msg
+        @interface.report_invalid_move(coordinate, msg)
+        retry
+      end
     end
   end
 end
