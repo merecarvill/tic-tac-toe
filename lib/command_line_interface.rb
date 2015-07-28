@@ -73,7 +73,9 @@ module TicTacToe
     def instructions
       <<-EOS
 ~*~ Welcome to TIC TAC TOE ~*~
-TODO: Instructions
+You've probably done this a million times before.
+You don't need me to tell you what to do.
+Go get 'em killer~
 EOS
     end
   end
