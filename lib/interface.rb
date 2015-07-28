@@ -4,10 +4,19 @@ module TicTacToe
   class Interface
     InterfaceError = Class.new(StandardError)
 
+    attr_reader :interface
+
+    def self.required_methods
+      [:game_setup_interaction, :show_game_board, :solicit_move,
+        :report_invalid_move, :report_move, :report_game_over]
+    end
+
     def initialize(type)
       case type
       when :command_line
         @interface = TicTacToe::CommandLineInterface.new
+      else
+        raise InterfaceError, "Attempted to initialize interface with invalid type: #{type}"
       end
     end
 
