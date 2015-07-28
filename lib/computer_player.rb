@@ -39,8 +39,8 @@ module TicTacToe
 
     def evaluate(game_state)
       game_state.board.lines.each do |line|
-        return 1 if line.all?{ |cell| cell == @player_mark }
-        return -1 if line.all?{ |cell| cell == @opponent_mark }
+        return Float::INFINITY if line.all?{ |cell| cell == @player_mark }
+        return -Float::INFINITY if line.all?{ |cell| cell == @opponent_mark }
       end
 
       game_state.board.filled? ? 0 : nil

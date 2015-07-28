@@ -52,7 +52,7 @@ describe TicTacToe::ComputerPlayer do
 
   describe '#minimax' do
 
-    it 'returns 1 when given game state is a win for computer player' do
+    it 'returns Infinity when given game state is a win for computer player' do
       all_wins(@default_board_size, ai.player_mark).each do |winning_board|
         game_state = TicTacToe::GameState.new(
           board: winning_board,
@@ -60,11 +60,11 @@ describe TicTacToe::ComputerPlayer do
           opponent: ai.opponent_mark
         )
 
-        expect(ai.minimax(game_state)).to eq 1
+        expect(ai.minimax(game_state)).to eq Float::INFINITY
       end
     end
 
-    it 'returns -1 when given game state is a win for opponent' do
+    it 'returns -Infinity when given game state is a win for opponent' do
       all_wins(@default_board_size, ai.opponent_mark).each do |winning_board|
         game_state = TicTacToe::GameState.new(
           board: winning_board,
@@ -72,7 +72,7 @@ describe TicTacToe::ComputerPlayer do
           opponent: ai.opponent_mark
         )
 
-        expect(ai.minimax(game_state)).to eq -1
+        expect(ai.minimax(game_state)).to eq -Float::INFINITY
       end
     end
 
