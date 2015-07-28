@@ -21,6 +21,12 @@ describe TicTacToe::CommandLineInterface do
 
   let(:cli) { described_class.new }
 
+  it 'implements methods required by Interface interface' do
+    TicTacToe::Interface.required_methods.each do |method|
+      expect(cli).to respond_to(method)
+    end
+  end
+
   describe '#game_setup_interaction' do
     let(:example_inputs) { ["human", "computer"] }
 
