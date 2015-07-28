@@ -14,7 +14,7 @@ module TicTacToe
     def initialize(type)
       case type
       when :command_line
-        @interface = TicTacToe::CommandLineInterface.new
+        @interface = CommandLineInterface.new
       else
         raise InterfaceError, "Attempted to initialize interface with invalid type: #{type}"
       end

@@ -10,8 +10,8 @@ module TicTacToe
     def initialize(parameters)
       @player_marks = parameters[:player_marks] || [:x, :o]
       board_size = parameters[:board_size] || 3
-      @board = TicTacToe::Board.new(size: board_size)
-      @interface = TicTacToe::Interface.new(:command_line)
+      @board = Board.new(size: board_size)
+      @interface = Interface.new(:command_line)
       @players = []
     end
 
@@ -30,7 +30,7 @@ module TicTacToe
     end
 
     def create_player(mark, type)
-      TicTacToe::Player.new(
+      Player.new(
         player: mark,
         type: type,
         interface: @interface,
@@ -63,7 +63,7 @@ module TicTacToe
         coordinates = player.move
         board[*coordinates] = player.player_mark
         coordinates
-      rescue TicTacToe::Board::BoardError => msg
+      rescue Board::BoardError => msg
         @interface.report_invalid_move(coordinates, msg)
         retry
       end

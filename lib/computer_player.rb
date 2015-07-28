@@ -18,7 +18,7 @@ module TicTacToe
     end
 
     def create_game_state
-      TicTacToe::GameState.new(
+      GameState.new(
         board: @board,
         current_player: @player_mark,
         opponent: @opponent_mark)
