@@ -47,6 +47,18 @@ RSpec.shared_context "helper_methods" do
     TicTacToe::Board.new(size: board_size)
   end
 
+  def board_with_potential_win_loss_or_draw(board_size, first_mark, second_mark)
+    board = new_board(board_size)
+    (0...board_size - 1).each { |col| board[0, col] = first_mark}
+    (0...board_size - 1).each { |col| board[1, col] = second_mark}
+    (2...board_size).each do |row|
+      (0...board_size - 1).each do |col|
+        board[row, col] = col.even? ? first_mark : second_mark
+      end
+    end
+    board
+  end
+
   def board_with_draw(board_size, first_mark, second_mark)
     board = new_board(board_size)
     (0...board_size).each do |row|

@@ -109,14 +109,12 @@ describe TicTacToe::ComputerPlayer do
       end
 
       context 'when current player is computer player' do
+
         it 'returns greatest score from among game states that can result from current turn' do
-          board = new_board(@default_board_size)
-          board[0, 0] = :x
-          board[1, 0] = :o
-          board[0, 1] = :x
-          board[1, 1] = :o
-          board[2, 0] = :x
-          board[2, 1] = :o
+          board = board_with_potential_win_loss_or_draw(
+            @default_board_size,
+            @default_first_player,
+            @default_second_player)
 
           game_state = TicTacToe::GameState.new(
             board: board,
@@ -133,14 +131,12 @@ describe TicTacToe::ComputerPlayer do
       end
 
       context 'when current player is not the computer player' do
+
         it 'returns lowest score from among game states that can result from current turn' do
-          board = new_board(@default_board_size)
-          board[0, 0] = :x
-          board[1, 0] = :o
-          board[0, 1] = :x
-          board[1, 1] = :o
-          board[2, 0] = :x
-          board[2, 1] = :o
+          board = board_with_potential_win_loss_or_draw(
+            @default_board_size,
+            @default_first_player,
+            @default_second_player)
 
           game_state = TicTacToe::GameState.new(
             board: board,
