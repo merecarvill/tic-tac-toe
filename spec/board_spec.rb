@@ -11,10 +11,16 @@ describe TicTacToe::Board do
       expect{ described_class.new(size: @default_board_size, board: nil) }.not_to raise_error
     end
 
+    it 'raises error if given size is less than 3' do
+      error_info = @board_size_error_info
+
+      expect{ described_class.new(size: 2, board: nil) }.to raise_error(*error_info)
+    end
+
     context 'when NOT given another board to copy' do
 
       it 'generates a NxN board of the given size' do
-        (1..3).each do |size|
+        (3..5).each do |size|
           custom_board = described_class.new(size: size)
 
           expect(custom_board.size).to eq size
@@ -50,11 +56,11 @@ describe TicTacToe::Board do
         expect(board[*coordinate]).not_to eq board_copy[*coordinate]
       end
 
-      it 'raises error if given board is not the right size' do
-        small_board = described_class.new(size: @default_board_size - 1)
+      it 'raises error if given board does not match given size' do
+        large_board = described_class.new(size: @default_board_size + 1)
 
-        params = {size: @default_board_size, board: small_board}
-        error_info = @incorrect_board_size_error_info
+        params = {size: @default_board_size, board: large_board}
+        error_info = @incompatible_board_error_info
 
         expect{ described_class.new(params) }.to raise_error(*error_info)
       end

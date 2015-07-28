@@ -5,7 +5,8 @@ module TicTacToe
     attr_reader :size
 
     def initialize(parameters)
-      @size = parameters[:size] || 3
+      raise BoardError, 'Given size is too small, must be 3 or greater' if parameters[:size] < 3
+      @size = parameters[:size]
       generate_new_board
       deep_copy_board(parameters[:board]) if parameters[:board]
     end
@@ -86,7 +87,7 @@ module TicTacToe
     end
 
     def deep_copy_board(board)
-      raise BoardError, 'Given board is incorrect size' if board.size != @size
+      raise BoardError, 'Given size does not match given board' if board.size != @size
 
       (0...@size).each do |row|
         (0...@size).each do |col|

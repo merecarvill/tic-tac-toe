@@ -23,7 +23,8 @@ RSpec.shared_context "error_messages" do
   before :all do
     board_error = TicTacToe::Board::BoardError
 
-    @incorrect_board_size_error_info = [board_error, 'Given board is incorrect size']
+    @board_size_error_info = [board_error, 'Given size is too small, must be 3 or greater']
+    @incompatible_board_error_info = [board_error, 'Given size does not match given board']
     @out_of_bounds_error_info = [board_error, 'Cell coordinates are out of bounds']
     @non_empty_cell_error_info = [board_error, 'Cannot alter marked cell']
   end
