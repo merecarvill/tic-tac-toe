@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe TicTacToe::Player do
-  include_context 'helper_methods'
-  include_context 'default_values'
+  include_context "default_values"
+  include_context "helper_methods"
 
   let(:human_player) {
     described_class.new(

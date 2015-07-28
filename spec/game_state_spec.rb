@@ -1,9 +1,8 @@
 require 'spec_helper'
 
 describe TicTacToe::GameState do
-  include_context "helper_methods"
-  include_context "error_messages"
   include_context "default_values"
+  include_context "helper_methods"
 
   let(:starting_game_state) {
     described_class.new(
