@@ -18,6 +18,7 @@ describe TicTacToe::Player do
       opponent: @default_second_player)
   }
   let(:player_examples) { [human_player, computer_player] }
+  let(:player_error) { TicTacToe::Player::PlayerError }
 
   describe '.requred_methods' do
 
@@ -38,6 +39,13 @@ describe TicTacToe::Player do
       end
     end
 
+    context 'when given unrecognized player type' do
+
+      it 'raises error' do
+        expect{ described_class.new(type: :invalid_type) }.to raise_error(player_error)
+      end
+    end
+
     context 'when initialized as a human player' do
 
       it 'takes functionality from HumanPlayer' do
@@ -55,18 +63,32 @@ describe TicTacToe::Player do
 
   describe '#player_mark' do
 
-    it 'is implemented' do
+    it 'is implemented by each type of player' do
       player_examples.each do |player|
         expect(player.respond_to?(:player_mark)).to be true
+      end
+    end
+
+    it 'raises error when not implemented by the functionality-providing object' do
+      player_examples.each do |player|
+        allow(player.player).to receive(:respond_to?).and_return(false)
+        expect{ player.player_mark }.to raise_error(player_error)
       end
     end
   end
 
   describe '#move' do
 
-    it 'is implemented' do
+    it 'is implemented by each type of player' do
       player_examples.each do |player|
         expect(player.respond_to?(:move)).to be true
+      end
+    end
+
+    it 'raises error when not implemented by the functionality-providing object' do
+      player_examples.each do |player|
+        allow(player.player).to receive(:respond_to?).and_return(false)
+        expect{ player.move }.to raise_error(player_error)
       end
     end
   end
