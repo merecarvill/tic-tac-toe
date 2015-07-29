@@ -29,17 +29,17 @@ module TicTacToe
     end
 
     describe '#game_setup_interaction' do
-      let(:example_inputs) { %w(human computer) }
+      before do
+        $stdin.string = %w(human computer).join("\n")
+      end
 
       it 'prints an introductory message to the command line' do
-        $stdin.string = example_inputs.join("\n")
         cli.game_setup_interaction(@default_player_marks)
 
         expect($stdout.string).not_to eq ''
       end
 
       it 'returns the player type associated with each of the given player marks' do
-        $stdin.string = example_inputs.join("\n")
         player_types = cli.game_setup_interaction(@default_player_marks)
 
         expect(player_types).to have(2).things

@@ -63,48 +63,43 @@ module TicTacToe
     end
 
     describe '#[]=' do
+      let(:board) { new_board(@default_board_size) }
+      let(:coordinates) { random_coordinate(board.size) }
+      let(:mark) { mark = @default_player_marks.sample }
+
       it 'sets the contents of an empty cell at the given row and column' do
-        board = new_board(@default_board_size)
-        coordinates = random_coordinate(board.size)
-        mark = @default_player_marks.sample
         board[*coordinates] = mark
 
         expect(board[*coordinates]).to eq mark
       end
 
       it 'raises error if cell coordinates are out of bounds' do
-        board = new_board(@default_board_size)
-        mark = @default_player_marks.sample
-
         error_info = @out_of_bounds_error_info
 
         expect { board[board.size, board.size] =  mark }.to raise_error(*error_info)
       end
 
       it 'raises error when attempting to change contents of non-empty cell' do
-        board = new_board(@default_board_size)
-        coordinates = random_coordinate(board.size)
-        board[*coordinates] = @default_player_marks.sample
+        board[*coordinates] = mark
 
         error_info = @non_empty_cell_error_info
 
-        expect { board[*coordinates] = @default_player_marks.sample }.to raise_error(*error_info)
+        expect { board[*coordinates] = mark }.to raise_error(*error_info)
       end
     end
 
     describe '#[]' do
+      let(:board) { new_board(@default_board_size) }
+      let(:coordinates) { random_coordinate(board.size) }
+      let(:mark) { mark = @default_player_marks.sample }
+
       it 'gets the contents of cell at given row and column' do
-        board = new_board(@default_board_size)
-        coordinates = random_coordinate(board.size)
-        mark = @default_player_marks.sample
         board[*coordinates] = mark
 
         expect(board[*coordinates]).to eq mark
       end
 
       it 'raises error if cell coordinates are out of bounds' do
-        board = new_board(@default_board_size)
-
         error_info = @out_of_bounds_error_info
 
         expect { board[board.size, board.size] }.to raise_error(*error_info)
@@ -112,8 +107,9 @@ module TicTacToe
     end
 
     describe '#lines' do
+      let(:board) { new_board(@default_board_size) }
+
       it 'returns the contents of every board-length line (rows, cols, and diagonals)' do
-        board = new_board(@default_board_size)
         lines = board.lines
 
         lines.each do |line|
@@ -124,13 +120,15 @@ module TicTacToe
     end
 
     describe '#blank_cell_coordinates' do
+      let(:board) { new_board(@default_board_size) }
+
       it 'returns all cell coordinates when board is blank' do
-        blank_board = new_board(@default_board_size)
-        expect(blank_board.blank_cell_coordinates).to match_array(all_coordinates(blank_board.size))
+        board = new_board(@default_board_size)
+
+        expect(board.blank_cell_coordinates).to match_array(all_coordinates(board.size))
       end
 
       it 'returns the coordinates of all blank cells in board' do
-        board = new_board(@default_board_size)
         marked_coordinates = []
         board.size.times do |index|
           board[index, index] = @default_player_marks.sample
@@ -142,7 +140,6 @@ module TicTacToe
       end
 
       it 'returns empty array when no cells are blank' do
-        board = new_board(@default_board_size)
         all_coordinates(board.size).each do |coordinates|
           board[*coordinates] = @default_player_marks.sample
         end
@@ -152,8 +149,9 @@ module TicTacToe
     end
 
     describe '#deep_copy' do
+      let(:board) { new_board(@default_board_size) }
+
       it 'returns a new board that is a deep copy of the original' do
-        board = new_board(@default_board_size)
         coordinate1 = random_coordinate(board.size)
         board[*coordinate1] = @default_player_marks.sample
 
@@ -167,6 +165,7 @@ module TicTacToe
     end
 
     describe '#marked?' do
+
       it 'checks if cell at given row and col has any player\'s mark' do
         blank_board = new_board(@default_board_size)
         board = blank_board.deep_copy
