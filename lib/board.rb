@@ -66,7 +66,7 @@ module TicTacToe
     end
 
     def to_s
-      row_separator = '----' * @size + '-\n'
+      row_separator = '----' * @size + "-\n"
       col_separator = '|'
 
       assemble_board_string(row_separator, col_separator)
@@ -79,7 +79,7 @@ module TicTacToe
         (0...@size).each do |col|
           output_string += " #{self[row, col] || ' '} " + col_separator
         end
-        output_string += '\n' + row_separator
+        output_string += "\n" + row_separator
       end
       output_string
     end
