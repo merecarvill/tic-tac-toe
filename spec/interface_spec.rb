@@ -10,8 +10,8 @@ module TicTacToe
     end
 
     after do
-      $stdin.string = ""
-      $stdout.string = ""
+      $stdin.string = ''
+      $stdout.string = ''
     end
 
     after :all do
@@ -24,7 +24,6 @@ module TicTacToe
     let(:interface_error) { Interface::InterfaceError }
 
     describe '.requred_methods' do
-
       it 'provides the name of each method that must be implemented' do
         methods = [
           :game_setup_interaction,
@@ -42,21 +41,18 @@ module TicTacToe
     end
 
     describe '#intialize' do
-
       it 'takes the interface type' do
-        expect{ described_class.new(:command_line) }.not_to raise_error
+        expect { described_class.new(:command_line) }.not_to raise_error
       end
 
       context 'when given unrecognized player type' do
-
         it 'raises error' do
-          expect{ described_class.new(:invalid_type) }.to raise_error(interface_error)
+          expect { described_class.new(:invalid_type) }.to raise_error(interface_error)
         end
       end
     end
 
     describe '#game_setup_interaction' do
-
       it 'is implemented' do
         interface_examples.each do |interface|
           expect(interface.respond_to?(:game_setup_interaction)).to be true
@@ -65,7 +61,6 @@ module TicTacToe
     end
 
     describe '#show_game_board' do
-
       it 'is implemented' do
         interface_examples.each do |interface|
           expect(interface.respond_to?(:show_game_board)).to be true
@@ -74,7 +69,6 @@ module TicTacToe
     end
 
     describe '#solicit_move' do
-
       it 'is implemented' do
         interface_examples.each do |interface|
           expect(interface.respond_to?(:solicit_move)).to be true
@@ -83,7 +77,6 @@ module TicTacToe
     end
 
     describe '#report_invalid_move' do
-
       it 'is implemented' do
         interface_examples.each do |interface|
           expect(interface.respond_to?(:report_invalid_move)).to be true
@@ -92,7 +85,6 @@ module TicTacToe
     end
 
     describe '#report_move' do
-
       it 'is implemented' do
         interface_examples.each do |interface|
           expect(interface.respond_to?(:report_move)).to be true
@@ -101,7 +93,6 @@ module TicTacToe
     end
 
     describe '#report_game_over' do
-
       it 'is implemented' do
         interface_examples.each do |interface|
           expect(interface.respond_to?(:report_game_over)).to be true

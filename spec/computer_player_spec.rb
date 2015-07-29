@@ -2,15 +2,15 @@ require 'spec_helper'
 
 module TicTacToe
   describe ComputerPlayer do
-    include_context "default_values"
-    include_context "helper_methods"
+    include_context 'default_values'
+    include_context 'helper_methods'
 
-    let(:ai) {
+    let(:ai) do
       described_class.new(
         board: new_board(@default_board_size),
         player: @default_first_player,
         opponent: @default_second_player)
-    }
+    end
 
     it 'implements methods required by Player interface' do
       Player.required_methods.each do |method|
@@ -19,7 +19,6 @@ module TicTacToe
     end
 
     describe '#initialize' do
-
       it 'takes a parameters hash with the player\'s mark, opponent\'s mark, and the game board' do
         params = {
           board: new_board(@default_board_size),
@@ -27,12 +26,11 @@ module TicTacToe
           opponent: @default_second_player
         }
 
-        expect{ described_class.new(params) }.not_to raise_error
+        expect { described_class.new(params) }.not_to raise_error
       end
     end
 
     describe '#move' do
-
       it 'returns a move coordinate that is not already marked on the game board' do
         all_coordinates(ai.board.size).each do |coordinate|
           ai.board[*coordinate] = ai.player_mark unless coordinate == [0, 0]
@@ -52,7 +50,6 @@ module TicTacToe
     end
 
     describe '#minimax' do
-
       it 'returns Infinity when given game state is a win for computer player' do
         all_wins(@default_board_size, ai.player_mark).each do |winning_board|
           game_state = GameState.new(
@@ -88,10 +85,9 @@ module TicTacToe
       end
 
       context 'when given a game state that is incomplete' do
-
         it 'recursively calls minimax on possible subsequent game states to determine a score' do
           board = new_board(@default_board_size)
-          board[0,0] = @default_first_player
+          board[0, 0] = @default_first_player
           board[0, board.size - 1] = @default_second_player
           marked_coordinates = [[0, 0], [0, board.size - 1]]
 
@@ -110,7 +106,6 @@ module TicTacToe
         end
 
         context 'when current player is computer player' do
-
           it 'returns greatest score from among game states that can result from current turn' do
             board = board_with_potential_win_loss_or_draw(@default_board_size, @default_player_marks)
 
@@ -129,7 +124,6 @@ module TicTacToe
         end
 
         context 'when current player is not the computer player' do
-
           it 'returns lowest score from among game states that can result from current turn' do
             board = board_with_potential_win_loss_or_draw(@default_board_size, @default_player_marks)
 

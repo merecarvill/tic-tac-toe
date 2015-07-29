@@ -2,12 +2,11 @@ require 'spec_helper'
 
 module TicTacToe
   describe Game do
-    include_context "default_values"
+    include_context 'default_values'
 
     let(:game) { described_class.new({}) }
 
     describe '#initialize' do
-
       it 'initializes a board and stores it in an instance variable' do
         expect(game.board).to be_a Board
       end
@@ -17,7 +16,6 @@ module TicTacToe
       end
 
       context 'when given parameters' do
-
         it 'creates a board of the given size' do
           custom_game = described_class.new(board_size: 4)
 
@@ -33,7 +31,6 @@ module TicTacToe
     end
 
     describe '#run' do
-
       it 'sets up the game' do
         allow(game).to receive(:handle_turns)
         allow(game).to receive(:handle_game_over)
@@ -61,7 +58,6 @@ module TicTacToe
     end
 
     describe '#set_up' do
-
       it 'uses information from the interface to create the players' do
         allow(game.interface).to receive(:game_setup_interaction).and_return([:human, :computer])
         game.set_up
@@ -73,7 +69,6 @@ module TicTacToe
     end
 
     describe '#handle_turns' do
-
       it 'executes turns until the game is over' do
         allow(game.interface).to receive(:game_setup_interaction).and_return([:human, :computer])
         game.set_up
@@ -141,7 +136,6 @@ module TicTacToe
       end
 
       context 'when it receieves valid move coordinates from given player' do
-
         it 'returns those coordinates' do
           allow(player_stub).to receive(:move).and_return([0, 0])
 
@@ -177,7 +171,6 @@ module TicTacToe
     end
 
     describe '#handle_game_over' do
-
       it 'shows the final state of the game board via the interface' do
         allow(game.interface).to receive(:report_game_over)
 
@@ -186,7 +179,6 @@ module TicTacToe
       end
 
       context 'when game has been won' do
-
         it 'reports that the given last player to move has won via the interface' do
           allow(game.interface).to receive(:show_game_board)
           allow(game.board).to receive(:has_winning_line?).and_return(true)
@@ -197,7 +189,6 @@ module TicTacToe
       end
 
       context 'when game has no winner' do
-
         it 'reports that game ended in a draw via the interface' do
           allow(game.interface).to receive(:show_game_board)
 
@@ -208,7 +199,6 @@ module TicTacToe
     end
 
     describe '#over?' do
-
       it 'returns true when the board has a winning line' do
         allow(game.board).to receive(:has_winning_line?).and_return(true)
 

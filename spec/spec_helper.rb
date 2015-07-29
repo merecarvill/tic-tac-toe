@@ -9,7 +9,7 @@ require_relative '../lib/computer_player'
 require_relative '../lib/interface'
 require_relative '../lib/command_line_interface'
 
-RSpec.shared_context "default_values" do
+RSpec.shared_context 'default_values' do
   before :all do
     @default_board_size = 3
     @default_first_player = :x
@@ -19,7 +19,7 @@ RSpec.shared_context "default_values" do
   end
 end
 
-RSpec.shared_context "error_messages" do
+RSpec.shared_context 'error_messages' do
   before :all do
     board_error = TicTacToe::Board::BoardError
     @board_size_error_info = [board_error, 'Given size is too small, must be 3 or greater']
@@ -29,8 +29,8 @@ RSpec.shared_context "error_messages" do
   end
 end
 
-RSpec.shared_context "helper_methods" do
-  def has_at_least_one_repeated_line?(string)
+RSpec.shared_context 'helper_methods' do
+  def at_least_one_repeated_line?(string)
     lines = string.split("\n")
     lines.uniq.length < lines.length
   end
@@ -50,8 +50,8 @@ RSpec.shared_context "helper_methods" do
   def board_with_potential_win_loss_or_draw(board_size, player_marks)
     first_mark, second_mark = player_marks
     board = new_board(board_size)
-    (0...board_size - 1).each { |col| board[0, col] = first_mark}
-    (0...board_size - 1).each { |col| board[1, col] = second_mark}
+    (0...board_size - 1).each { |col| board[0, col] = first_mark }
+    (0...board_size - 1).each { |col| board[1, col] = second_mark }
     (2...board_size).each do |row|
       (0...board_size - 1).each do |col|
         board[row, col] = col.even? ? first_mark : second_mark
@@ -84,7 +84,7 @@ RSpec.shared_context "helper_methods" do
   def horizontal_wins(board_size, winning_mark)
     (0...board_size).each_with_object([]) do |row, winning_boards|
       board = new_board(board_size)
-      (0...board_size).each{ |col| board[row, col] = winning_mark }
+      (0...board_size).each { |col| board[row, col] = winning_mark }
       winning_boards << board
     end
   end
@@ -92,17 +92,17 @@ RSpec.shared_context "helper_methods" do
   def vertical_wins(board_size, winning_mark)
     (0...board_size).each_with_object([]) do |col, winning_boards|
       board = new_board(board_size)
-      (0...board_size).each{ |row| board[row, col] = winning_mark }
+      (0...board_size).each { |row| board[row, col] = winning_mark }
       winning_boards << board
     end
   end
 
   def diagonal_wins(board_size, winning_mark)
     ldiag_board = new_board(board_size)
-    (0...board_size).each{ |index| ldiag_board[index, index] = winning_mark }
+    (0...board_size).each { |index| ldiag_board[index, index] = winning_mark }
 
     rdiag_board = new_board(board_size)
-    (0...board_size).each{ |index| rdiag_board[index, rdiag_board.size - index - 1] = winning_mark }
+    (0...board_size).each { |index| rdiag_board[index, rdiag_board.size - index - 1] = winning_mark }
 
     [ldiag_board, rdiag_board]
   end

@@ -7,19 +7,17 @@ module TicTacToe
     include_context 'helper_methods'
 
     describe '#initialize' do
-
       it 'takes a perameters hash' do
-        expect{ described_class.new(size: @default_board_size, board: nil) }.not_to raise_error
+        expect { described_class.new(size: @default_board_size, board: nil) }.not_to raise_error
       end
 
       it 'raises error if given size is less than 3' do
         error_info = @board_size_error_info
 
-        expect{ described_class.new(size: 2, board: nil) }.to raise_error(*error_info)
+        expect { described_class.new(size: 2, board: nil) }.to raise_error(*error_info)
       end
 
       context 'when NOT given another board to copy' do
-
         it 'generates a NxN board of the given size' do
           (3..5).each do |size|
             custom_board = described_class.new(size: size)
@@ -35,7 +33,6 @@ module TicTacToe
       end
 
       context 'when given another board to copy' do
-
         it 'copies the cell values to a new board in the same configuration' do
           board = board_with_draw(@default_board_size, @default_player_marks)
           board_copy = described_class.new(size: board.size, board: board)
@@ -60,13 +57,12 @@ module TicTacToe
           params = { size: @default_board_size, board: large_board }
           error_info = @incompatible_board_error_info
 
-          expect{ described_class.new(params) }.to raise_error(*error_info)
+          expect { described_class.new(params) }.to raise_error(*error_info)
         end
       end
     end
 
     describe '#[]=' do
-
       it 'sets the contents of an empty cell at the given row and column' do
         board = new_board(@default_board_size)
         coordinates = random_coordinate(board.size)
@@ -78,10 +74,11 @@ module TicTacToe
 
       it 'raises error if cell coordinates are out of bounds' do
         board = new_board(@default_board_size)
+        mark = @default_player_marks.sample
 
         error_info = @out_of_bounds_error_info
 
-        expect{ board[board.size, board.size] = @default_player_marks.sample }.to raise_error(*error_info)
+        expect { board[board.size, board.size] =  mark }.to raise_error(*error_info)
       end
 
       it 'raises error when attempting to change contents of non-empty cell' do
@@ -91,12 +88,11 @@ module TicTacToe
 
         error_info = @non_empty_cell_error_info
 
-        expect{ board[*coordinates] = @default_player_marks.sample }.to raise_error(*error_info)
+        expect { board[*coordinates] = @default_player_marks.sample }.to raise_error(*error_info)
       end
     end
 
     describe '#[]' do
-
       it 'gets the contents of cell at given row and column' do
         board = new_board(@default_board_size)
         coordinates = random_coordinate(board.size)
@@ -111,12 +107,11 @@ module TicTacToe
 
         error_info = @out_of_bounds_error_info
 
-        expect{ board[board.size, board.size] }.to raise_error(*error_info)
+        expect { board[board.size, board.size] }.to raise_error(*error_info)
       end
     end
 
     describe '#lines' do
-
       it 'returns the contents of every board-length line (rows, cols, and diagonals)' do
         board = new_board(@default_board_size)
         lines = board.lines
@@ -124,12 +119,11 @@ module TicTacToe
         lines.each do |line|
           expect(line.count).to eq board.size
         end
-        expect(lines.count).to eq board.size*2 + 2
+        expect(lines.count).to eq board.size * 2 + 2
       end
     end
 
     describe '#blank_cell_coordinates' do
-
       it 'returns all cell coordinates when board is blank' do
         blank_board = new_board(@default_board_size)
         expect(blank_board.blank_cell_coordinates).to match_array(all_coordinates(blank_board.size))
@@ -158,7 +152,6 @@ module TicTacToe
     end
 
     describe '#deep_copy' do
-
       it 'returns a new board that is a deep copy of the original' do
         board = new_board(@default_board_size)
         coordinate1 = random_coordinate(board.size)
@@ -174,7 +167,6 @@ module TicTacToe
     end
 
     describe '#marked?' do
-
       it 'checks if cell at given row and col has any player\'s mark' do
         blank_board = new_board(@default_board_size)
         board = blank_board.deep_copy
@@ -187,7 +179,6 @@ module TicTacToe
     end
 
     describe '#blank?' do
-
       it 'checks if no cell in board is marked' do
         blank_board = new_board(@default_board_size)
         board = blank_board.deep_copy
@@ -200,7 +191,6 @@ module TicTacToe
     end
 
     describe '#filled?' do
-
       it 'checks if all cells in board are marked' do
         blank_board = new_board(@default_board_size)
         board = blank_board.deep_copy
@@ -214,7 +204,6 @@ module TicTacToe
     end
 
     describe '#has_winning_line?' do
-
       it 'checks if board has any winning lines' do
         blank_board = new_board(@default_board_size)
         mark = @default_player_marks.sample
@@ -227,7 +216,6 @@ module TicTacToe
     end
 
     describe '#to_s' do
-
       it 'returns a string representation of the board' do
         board = new_board(@default_board_size)
 
@@ -236,10 +224,10 @@ module TicTacToe
 
       it 'contains a number of marks equal to the number of times they appear on the board' do
         board = board_with_draw(@default_board_size, @default_player_marks)
-        board_characters = board.to_s.split("")
+        board_characters = board.to_s.split('')
         cell_count = board.size**2
-        expected_first_mark_count = cell_count.odd? ? cell_count/2 + 1 : cell_count/2
-        expected_second_mark_count = cell_count/2
+        expected_first_mark_count = cell_count.odd? ? cell_count / 2 + 1 : cell_count / 2
+        expected_second_mark_count = cell_count / 2
 
         expect(board_characters.count(@default_first_player.to_s)).to eq expected_first_mark_count
         expect(board_characters.count(@default_second_player.to_s)).to eq expected_second_mark_count
