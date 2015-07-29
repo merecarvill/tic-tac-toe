@@ -83,7 +83,7 @@ module TicTacToe
     describe '#show_game_board' do
 
       it 'prints a respresentation of the given board to the command line' do
-        board = board_with_draw(@default_board_size, @default_first_player, @default_second_player)
+        board = board_with_draw(@default_board_size, @default_player_marks)
         cli.show_game_board(board)
 
         board_characters = $stdout.string.split("")

@@ -78,7 +78,7 @@ module TicTacToe
       end
 
       it 'returns 0 if game state is a draw' do
-        board = board_with_draw(@default_board_size, ai.player_mark, ai.opponent_mark)
+        board = board_with_draw(@default_board_size, [ai.player_mark, ai.opponent_mark])
         game_state = GameState.new(
           board: board,
           current_player: ai.player_mark,
@@ -112,10 +112,7 @@ module TicTacToe
         context 'when current player is computer player' do
 
           it 'returns greatest score from among game states that can result from current turn' do
-            board = board_with_potential_win_loss_or_draw(
-              @default_board_size,
-              @default_first_player,
-              @default_second_player)
+            board = board_with_potential_win_loss_or_draw(@default_board_size, @default_player_marks)
 
             game_state = GameState.new(
               board: board,
@@ -134,10 +131,7 @@ module TicTacToe
         context 'when current player is not the computer player' do
 
           it 'returns lowest score from among game states that can result from current turn' do
-            board = board_with_potential_win_loss_or_draw(
-              @default_board_size,
-              @default_first_player,
-              @default_second_player)
+            board = board_with_potential_win_loss_or_draw(@default_board_size, @default_player_marks)
 
             game_state = GameState.new(
               board: board,

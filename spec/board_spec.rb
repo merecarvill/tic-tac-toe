@@ -238,7 +238,7 @@ module TicTacToe
       end
 
       it 'contains a number of marks equal to the number of times they appear on the board' do
-        board = board_with_draw(@default_board_size, @default_first_player, @default_second_player)
+        board = board_with_draw(@default_board_size, @default_player_marks)
         board_characters = board.to_s.split("")
         cell_count = board.size**2
         expected_first_mark_count = cell_count.odd? ? cell_count/2 + 1 : cell_count/2

@@ -28,7 +28,7 @@ module TicTacToe
     describe '#game_over?' do
 
       it 'returns true if the game has ended in a draw' do
-        draw_board = board_with_draw(@default_board_size, @default_first_player, @default_second_player)
+        draw_board = board_with_draw(@default_board_size, @default_player_marks)
         params = {
           board: draw_board,
           current_player: @default_first_player,
