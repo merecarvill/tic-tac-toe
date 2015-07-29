@@ -13,7 +13,7 @@ module TicTacToe
     def move
       game_state = create_game_state
       child_states = @board.blank_cell_coordinates.map { |coord| game_state.make_move(coord) }
-      child_states.max_by { |state| minimax(state) }.last_move
+      child_states.max_by { |state| minimax(state, -Float::INFINITY, Float::INFINITY) }.last_move
     end
 
     def create_game_state
@@ -23,19 +23,22 @@ module TicTacToe
         opponent: @opponent_mark)
     end
 
-    def minimax(game_state)
+    def minimax(game_state, highest_score, lowest_score)
       if game_state.game_over?
         evaluate(game_state)
       else
-        recursively_determine_minimax_score(game_state)
+        recursively_determine_minimax_score(game_state, highest_score, lowest_score)
       end
     end
 
-    private
-
-    def recursively_determine_minimax_score(game_state)
-      child_state_scores = game_state.board.blank_cell_coordinates.map do |coordinate|
-        minimax(game_state.make_move(coordinate))
+    def recursively_determine_minimax_score(game_state, highest_score, lowest_score)
+      child_state_scores = []
+      game_state.board.blank_cell_coordinates.each do |coordinate|
+        score = minimax(game_state.make_move(coordinate), highest_score, lowest_score)
+        child_state_scores << score
+        highest_score = score if score > highest_score && game_state.player_mark == @player_mark
+        lowest_score = score if score < lowest_score && game_state.player_mark == @opponent_mark
+        break if highest_score >= lowest_score
       end
       if game_state.player_mark == @player_mark
         child_state_scores.max

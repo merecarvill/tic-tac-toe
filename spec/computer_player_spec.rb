@@ -50,6 +50,9 @@ module TicTacToe
     end
 
     describe '#minimax' do
+      let(:infinity) { Float::INFINITY }
+      let(:neg_infinity) { -Float::INFINITY }
+
       it 'returns Infinity when given game state is a win for computer player' do
         all_wins(@default_board_size, ai.player_mark).each do |winning_board|
           game_state = GameState.new(
@@ -58,7 +61,7 @@ module TicTacToe
             opponent: ai.opponent_mark
           )
 
-          expect(ai.minimax(game_state)).to eq Float::INFINITY
+          expect(ai.minimax(game_state, neg_infinity, infinity)).to eq infinity
         end
       end
 
@@ -70,7 +73,7 @@ module TicTacToe
             opponent: ai.opponent_mark
           )
 
-          expect(ai.minimax(game_state)).to eq -Float::INFINITY
+          expect(ai.minimax(game_state, neg_infinity, infinity)).to eq neg_infinity
         end
       end
 
@@ -81,16 +84,16 @@ module TicTacToe
           current_player: ai.player_mark,
           opponent: ai.opponent_mark)
 
-        expect(ai.minimax(game_state)).to eq 0
+        expect(ai.minimax(game_state, neg_infinity, infinity)).to eq 0
       end
 
       context 'when given a game state that is incomplete' do
-        it 'recursively calls minimax on possible subsequent game states to determine a score' do
-          board = new_board(@default_board_size)
-          board[0, 0] = @default_first_player
-          board[0, board.size - 1] = @default_second_player
-          marked_coordinates = [[0, 0], [0, board.size - 1]]
+        let(:board) do
+          board_with_potential_win_loss_or_draw(@default_board_size, @default_player_marks)
+        end
 
+        it 'recursively calls minimax on possible subsequent game states to determine a score' do
+          marked_coordinates = all_coordinates(board.size) - board.blank_cell_coordinates
           initial_game_state = GameState.new(
             board: board,
             current_player: ai.player_mark,
@@ -102,42 +105,58 @@ module TicTacToe
               expect(game_state.board[*coordinate]).to eq board[*coordinate]
             end
           end
-          expect(ai.minimax(initial_game_state)).not_to be nil
+          expect(ai.minimax(initial_game_state, neg_infinity, infinity)).not_to be nil
         end
 
         context 'when current player is computer player' do
-          it 'returns greatest score from among game states that can result from current turn' do
-            board = board_with_potential_win_loss_or_draw(@default_board_size, @default_player_marks)
-
+          let(:game_state) do
             game_state = GameState.new(
               board: board,
               current_player: ai.player_mark,
               opponent: ai.opponent_mark)
+          end
 
+          it 'returns greatest score from among game states that can result from current turn' do
             child_state_scores = board.blank_cell_coordinates.map do |coord|
-              ai.minimax(game_state.make_move(coord))
+              ai.minimax(game_state.make_move(coord), neg_infinity, infinity)
             end
             highest_score = child_state_scores.max
 
-            expect(ai.minimax(game_state)).to eq highest_score
+            expect(ai.minimax(game_state, neg_infinity, infinity)).to eq highest_score
+          end
+
+          it 'stops evaluating subsequent game states when a better choice is already available' do
+            best_score_so_far_for_max = 1
+            allow(ai).to receive(:evaluate).and_return(0)
+
+            expect(ai).to receive(:evaluate).exactly(3).times
+            ai.minimax(game_state, best_score_so_far_for_max, infinity)
           end
         end
 
         context 'when current player is not the computer player' do
-          it 'returns lowest score from among game states that can result from current turn' do
-            board = board_with_potential_win_loss_or_draw(@default_board_size, @default_player_marks)
-
+          let(:game_state) do
             game_state = GameState.new(
               board: board,
               current_player: ai.opponent_mark,
               opponent: ai.player_mark)
+          end
 
+          it 'returns lowest score from among game states that can result from current turn' do
             child_state_scores = board.blank_cell_coordinates.map do |coord|
-              ai.minimax(game_state.make_move(coord))
+              ai.minimax(game_state.make_move(coord), neg_infinity, infinity)
             end
             lowest_score = child_state_scores.min
 
-            expect(ai.minimax(game_state)).to eq lowest_score
+            expect(ai.minimax(game_state, neg_infinity, infinity)).to eq lowest_score
+          end
+
+          it 'stops evaluating subsequent game states when a better choice is already available' do
+            best_score_so_far_for_min = -1
+            allow(ai).to receive(:evaluate).and_return(0)
+
+            expect(ai).to receive(:evaluate).exactly(3).times
+            ai.minimax(game_state, neg_infinity, best_score_so_far_for_min)
           end
         end
       end
