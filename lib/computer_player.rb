@@ -11,9 +11,13 @@ module TicTacToe
     end
 
     def move
-      game_state = create_game_state
-      child_states = @board.blank_cell_coordinates.map { |coord| game_state.make_move(coord) }
-      child_states.max_by { |state| minimax(state, -Float::INFINITY, Float::INFINITY) }.last_move
+      if @board.blank_cell_coordinates.include?([@board.size / 2, @board.size / 2]) && @board.size.odd?
+        [@board.size / 2, @board.size / 2]
+      else
+        game_state = create_game_state
+        child_states = @board.blank_cell_coordinates.map { |coord| game_state.make_move(coord) }
+        child_states.max_by { |state| minimax(state, -Float::INFINITY, Float::INFINITY) }.last_move
+      end
     end
 
     def create_game_state

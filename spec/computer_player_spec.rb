@@ -31,21 +31,38 @@ module TicTacToe
     end
 
     describe '#move' do
-      it 'returns a move coordinate that is not already marked on the game board' do
-        all_coordinates(ai.board.size).each do |coordinate|
-          ai.board[*coordinate] = ai.player_mark unless coordinate == [0, 0]
-        end
+      context 'when a center space is available' do
+        it 'returns the move coordinate for centermost space' do
+          odd_size_board = new_board(3)
+          custom_ai = described_class.new(
+            board: odd_size_board,
+            player: @default_first_player,
+            opponent: @default_second_player)
 
-        expect(ai.move).to eq [0, 0]
+          expect(ai.move).to eq [ai.board.size / 2, ai.board.size / 2]
+        end
       end
 
-      it 'returns move coordinate that produces greatest scoring game state when passed to minimax' do
-        allow(ai).to receive(:minimax) do |game_state|
-          row, col = game_state.last_move
-          row + col
+      context 'when a center space is not available' do
+        it 'returns a move coordinate that is not already marked on the game board' do
+          all_coordinates(ai.board.size).each do |coordinate|
+            ai.board[*coordinate] = ai.player_mark unless coordinate == [0, 0]
+          end
+
+          expect(ai.move).to eq [0, 0]
         end
 
-        expect(ai.move).to eq [ai.board.size - 1, ai.board.size - 1]
+        it 'returns move coordinate for game state that produces greatest score when passed to minimax' do
+          center_coordinate = [ai.board.size / 2, ai.board.size / 2]
+          ai.board[*center_coordinate] = ai.opponent_mark
+
+          allow(ai).to receive(:minimax) do |game_state|
+            row, col = game_state.last_move
+            row + col
+          end
+
+          expect(ai.move).to eq [ai.board.size - 1, ai.board.size - 1]
+        end
       end
     end
 
