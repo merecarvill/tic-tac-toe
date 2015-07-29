@@ -4,7 +4,6 @@ require_relative 'interface'
 
 module TicTacToe
   class Game
-
     attr_reader :interface, :board, :player_marks, :players
 
     def initialize(parameters)

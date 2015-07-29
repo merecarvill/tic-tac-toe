@@ -5,7 +5,7 @@ module TicTacToe
     attr_reader :size
 
     def initialize(parameters)
-      raise BoardError, 'Given size is too small, must be 3 or greater' if parameters[:size] < 3
+      fail BoardError, 'Given size is too small, must be 3 or greater' if parameters[:size] < 3
       @size = parameters[:size]
       generate_new_board
       deep_copy_board(parameters[:board]) if parameters[:board]
@@ -13,7 +13,7 @@ module TicTacToe
 
     def []=(row, col, mark)
       raise_error_if_out_of_bounds(row, col)
-      raise BoardError, 'Cannot alter marked cell' unless @cells[row][col].nil?
+      fail BoardError, 'Cannot alter marked cell' unless @cells[row][col].nil?
 
       @cells[row][col] = mark
     end
@@ -26,7 +26,7 @@ module TicTacToe
 
     def lines
       lines = [left_diag, right_diag]
-      (0...@size).each{ |index| lines << row_at(index) << col_at(index) }
+      (0...@size).each { |index| lines << row_at(index) << col_at(index) }
       lines
     end
 
@@ -39,7 +39,7 @@ module TicTacToe
     end
 
     def deep_copy
-      Board.new({size: @size, board: self})
+      Board.new(size: @size, board: self)
     end
 
     def num_cells
@@ -59,23 +59,27 @@ module TicTacToe
     end
 
     def has_winning_line?
-      self.lines.each do |line|
-        return true if !line.first.nil? && line.all?{ |cell| cell == line.first }
+      lines.each do |line|
+        return true if !line.first.nil? && line.all? { |cell| cell == line.first }
       end
-      return false
+      false
     end
 
     def to_s
-      row_separator = "----"*@size + "-\n"
-      col_separator = "|"
-      output_string = row_separator
+      row_separator = '----' * @size + '-\n'
+      col_separator = '|'
 
+      assemble_board_string(row_separator, col_separator)
+    end
+
+    def assemble_board_string(row_separator, col_separator)
+      output_string = row_separator
       (0...@size).each do |row|
         output_string += col_separator
         (0...@size).each do |col|
-          output_string += " #{self[row, col] || " "} " + col_separator
+          output_string += " #{self[row, col] || ' '} " + col_separator
         end
-        output_string += "\n" + row_separator
+        output_string += '\n' + row_separator
       end
       output_string
     end
@@ -83,11 +87,11 @@ module TicTacToe
     private
 
     def generate_new_board
-      @cells = (0...@size).map{ (0...@size).map{ nil } }
+      @cells = (0...@size).map { (0...@size).map { nil } }
     end
 
     def deep_copy_board(board)
-      raise BoardError, 'Given size does not match given board' if board.size != @size
+      fail BoardError, 'Given size does not match given board' if board.size != @size
 
       (0...@size).each do |row|
         (0...@size).each do |col|
@@ -101,19 +105,19 @@ module TicTacToe
     end
 
     def col_at(col)
-      (0...@size).map{ |row| @cells[row][col] }
+      (0...@size).map { |row| @cells[row][col] }
     end
 
     def left_diag
-      (0...@size).map{ |index| @cells[index][index] }
+      (0...@size).map { |index| @cells[index][index] }
     end
 
     def right_diag
-      (0...@size).map{ |row| @cells[row][@size - row - 1] }
+      (0...@size).map { |row| @cells[row][@size - row - 1] }
     end
 
     def raise_error_if_out_of_bounds(row, col)
-      raise BoardError, 'Cell coordinates are out of bounds' if row >= @size || col >= @size
+      fail BoardError, 'Cell coordinates are out of bounds' if row >= @size || col >= @size
     end
   end
 end

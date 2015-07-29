@@ -28,7 +28,7 @@ module TicTacToe
       puts "Player #{player_mark}: select your move."
       puts "Enter your move coordinates in the format 'row, col' - eg. '0, 0'."
       begin
-        get_valid_input(/^\s*\d+\s*,\s*\d+\s*$/).split(",").map{ |c| c.to_i }
+        get_valid_input(/^\s*\d+\s*,\s*\d+\s*$/).split(',').map(&:to_i)
       rescue CommandLineInterfaceError => msg
         puts "Sorry, #{msg}. Please try again."
         retry
@@ -37,10 +37,10 @@ module TicTacToe
 
     def get_valid_input(valid_input_pattern)
       cleaned_input = gets.strip.downcase
-      if valid_input_pattern === cleaned_input
+      if valid_input_pattern =~ cleaned_input
         cleaned_input
       else
-        raise CommandLineInterfaceError, "'#{cleaned_input}' input is invalid"
+        fail CommandLineInterfaceError, "'#{cleaned_input}' input is invalid"
       end
     end
 
@@ -67,7 +67,7 @@ module TicTacToe
     end
 
     def report_draw
-      puts "The game ended in a draw."
+      puts 'The game ended in a draw.'
     end
 
     def instructions

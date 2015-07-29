@@ -18,7 +18,7 @@ module TicTacToe
       when :computer
         @player = ComputerPlayer.new(parameters)
       else
-        raise PlayerError, "Attempted to initialize player with invalid type: #{parameters[:type]}"
+        fail PlayerError, "Attempted to initialize player with invalid type: #{parameters[:type]}"
       end
     end
 
@@ -26,7 +26,7 @@ module TicTacToe
       if @player.respond_to?(:player_mark)
         @player.player_mark
       else
-        raise PlayerError, "#{self.class}#player_mark is not implemented"
+        fail PlayerError, "#{self.class}#player_mark is not implemented"
       end
     end
 
@@ -34,7 +34,7 @@ module TicTacToe
       if @player.respond_to?(:move)
         @player.move
       else
-        raise PlayerError, "#{self.class}#move is not implemented"
+        fail PlayerError, "#{self.class}#move is not implemented"
       end
     end
   end
