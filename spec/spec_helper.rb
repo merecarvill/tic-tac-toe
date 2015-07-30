@@ -25,7 +25,7 @@ RSpec.shared_context 'helper_methods' do
     lines.uniq.length < lines.length
   end
 
-  def random_coordinate(board_size)
+  def random_coordinates(board_size)
     [rand(board_size), rand(board_size)]
   end
 

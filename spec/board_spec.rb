@@ -46,7 +46,7 @@ module TicTacToe
         it 'deep copies the cells' do
           board = new_board(@default_board_size)
           board_copy = described_class.new(size: board.size, board: board)
-          coordinates = random_coordinate(board.size)
+          coordinates = random_coordinates(board.size)
           board[*coordinates] = @default_player_marks.sample
 
           expect(board[*coordinates]).not_to eq board_copy[*coordinates]
@@ -65,7 +65,7 @@ module TicTacToe
 
     describe '#[]=' do
       let(:board) { new_board(@default_board_size) }
-      let(:coordinates) { random_coordinate(board.size) }
+      let(:coordinates) { random_coordinates(board.size) }
       let(:mark) { mark = @default_player_marks.sample }
 
       it 'sets the contents of an empty cell at the given row and column' do
@@ -91,7 +91,7 @@ module TicTacToe
 
     describe '#[]' do
       let(:board) { new_board(@default_board_size) }
-      let(:coordinates) { random_coordinate(board.size) }
+      let(:coordinates) { random_coordinates(board.size) }
       let(:mark) { mark = @default_player_marks.sample }
 
       it 'gets the contents of cell at given row and column' do
@@ -153,11 +153,11 @@ module TicTacToe
       let(:board) { new_board(@default_board_size) }
 
       it 'returns a new board that is a deep copy of the original' do
-        coordinate1 = random_coordinate(board.size)
+        coordinate1 = random_coordinates(board.size)
         board[*coordinate1] = @default_player_marks.sample
 
         board_copy = board.deep_copy
-        begin coordinate2 = random_coordinate(board.size) end until coordinate1 != coordinate2
+        begin coordinate2 = random_coordinates(board.size) end until coordinate1 != coordinate2
         board[*coordinate2] = @default_player_marks.sample
 
         expect(board[*coordinate1]).to eq board_copy[*coordinate1]
@@ -170,7 +170,7 @@ module TicTacToe
       it 'checks if cell at given row and col has any player\'s mark' do
         blank_board = new_board(@default_board_size)
         board = blank_board.deep_copy
-        coordinates = random_coordinate(board.size)
+        coordinates = random_coordinates(board.size)
         board[*coordinates] = @default_player_marks.sample
 
         expect(blank_board.marked?(*coordinates)).to be false
@@ -182,7 +182,7 @@ module TicTacToe
       it 'checks if no cell in board is marked' do
         blank_board = new_board(@default_board_size)
         board = blank_board.deep_copy
-        coordinates = random_coordinate(board.size)
+        coordinates = random_coordinates(board.size)
         board[*coordinates] = @default_player_marks.sample
 
         expect(blank_board.blank?).to be true
