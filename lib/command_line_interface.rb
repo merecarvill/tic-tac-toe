@@ -4,9 +4,7 @@ module TicTacToe
 
     def game_setup_interaction(player_marks)
       puts instructions
-      player_marks.each_with_object([]) do |mark, player_types|
-        player_types << solicit_player_type(mark)
-      end
+      player_marks.map { |mark| solicit_player_type(mark) }
     end
 
     def solicit_player_type(player_mark)
