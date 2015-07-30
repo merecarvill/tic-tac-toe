@@ -3,8 +3,9 @@ require 'spec_helper'
 module TicTacToe
   describe Board do
     include_context 'default_values'
-    include_context 'error_messages'
     include_context 'helper_methods'
+
+    let(:board_error) { Board::BoardError }
 
     describe '#initialize' do
       it 'takes a perameters hash' do
@@ -12,7 +13,7 @@ module TicTacToe
       end
 
       it 'raises error if given size is less than 3' do
-        error_info = @board_size_error_info
+        error_info = [board_error, 'Given size is too small, must be 3 or greater']
 
         expect { described_class.new(size: 2, board: nil) }.to raise_error(*error_info)
       end
@@ -55,7 +56,7 @@ module TicTacToe
           large_board = described_class.new(size: @default_board_size + 1)
 
           params = { size: @default_board_size, board: large_board }
-          error_info = @incompatible_board_error_info
+          error_info = [board_error, 'Given size does not match given board']
 
           expect { described_class.new(params) }.to raise_error(*error_info)
         end
@@ -74,7 +75,7 @@ module TicTacToe
       end
 
       it 'raises error if cell coordinates are out of bounds' do
-        error_info = @out_of_bounds_error_info
+        error_info = [board_error, 'Cell coordinates are out of bounds']
 
         expect { board[board.size, board.size] =  mark }.to raise_error(*error_info)
       end
@@ -82,7 +83,7 @@ module TicTacToe
       it 'raises error when attempting to change contents of non-empty cell' do
         board[*coordinates] = mark
 
-        error_info = @non_empty_cell_error_info
+        error_info = [board_error, 'Cannot alter marked cell']
 
         expect { board[*coordinates] = mark }.to raise_error(*error_info)
       end
@@ -100,7 +101,7 @@ module TicTacToe
       end
 
       it 'raises error if cell coordinates are out of bounds' do
-        error_info = @out_of_bounds_error_info
+        error_info = [board_error, 'Cell coordinates are out of bounds']
 
         expect { board[board.size, board.size] }.to raise_error(*error_info)
       end
