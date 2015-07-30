@@ -66,6 +66,10 @@ module TicTacToe
       false
     end
 
+    def game_over?
+      has_winning_line? || filled?
+    end
+
     def to_s
       row_separator = '----' * @size + "-\n"
       col_separator = '|'

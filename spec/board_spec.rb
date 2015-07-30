@@ -215,6 +215,27 @@ module TicTacToe
       end
     end
 
+    describe '#game_over?' do
+      it 'returns true if the game has ended in a draw' do
+        board_with_draw = board_with_draw(@default_board_size, @default_player_marks)
+
+        expect(board_with_draw.game_over?).to be true
+      end
+
+      it 'returns true if the game has been won' do
+        all_wins(@default_board_size, @default_first_player).each do |board_with_win|
+
+          expect(board_with_win.game_over?).to be true
+        end
+      end
+
+      it 'returns false if board has no win and is not filled' do
+        board = board_with_potential_win_loss_or_draw(@default_board_size, @default_player_marks)
+
+        expect(board.game_over?).to be false
+      end
+    end
+
     describe '#to_s' do
       it 'returns a string representation of the board' do
         board = new_board(@default_board_size)
