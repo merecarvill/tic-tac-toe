@@ -2,7 +2,7 @@ module TicTacToe
   class Board
     BoardError = Class.new(StandardError)
 
-    attr_reader :size
+    attr_reader :size, :last_move_made
 
     def initialize(parameters)
       fail BoardError, 'Given size is too small, must be 3 or greater' if parameters[:size] < 3
@@ -15,6 +15,7 @@ module TicTacToe
       raise_error_if_out_of_bounds(row, col)
       fail BoardError, 'Cannot alter marked cell' unless @cells[row][col].nil?
 
+      @last_move_made = [row, col]
       @cells[row][col] = mark
     end
 
@@ -36,6 +37,11 @@ module TicTacToe
           coordinates << [row, col] if @cells[row][col].nil?
         end
       end
+    end
+
+    def last_mark_made
+      return if @last_move_made.nil?
+      self[*last_move_made]
     end
 
     def deep_copy

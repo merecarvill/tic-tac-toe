@@ -74,6 +74,12 @@ module TicTacToe
         expect(board[*coordinates]).to eq mark
       end
 
+      it 'records the coordinates of the last mark made' do
+        board[*coordinates] = mark
+
+        expect(board.last_move_made).to eq coordinates
+      end
+
       it 'raises error if cell coordinates are out of bounds' do
         error_info = [board_error, 'Cell coordinates are out of bounds']
 
@@ -146,6 +152,26 @@ module TicTacToe
         end
 
         expect(board.blank_cell_coordinates).to eq []
+      end
+    end
+
+    describe '#last_mark_made' do
+      let(:board) { new_board(@default_board_size) }
+      let(:coordinates) { random_coordinates(board.size) }
+      let(:mark) { mark = @default_player_marks.sample }
+
+      context 'when board is blank' do
+        it 'returns nil' do
+          expect(board.last_mark_made).to be nil
+        end
+      end
+
+      context 'when board is not blank' do
+        it 'returns the last mark made on the board' do
+          board[*coordinates] = mark
+
+          expect(board.last_mark_made).to eq mark
+        end
       end
     end
 
