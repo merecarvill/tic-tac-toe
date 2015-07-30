@@ -55,7 +55,7 @@ module TicTacToe
     end
 
     def filled?
-      !@cells.flatten.any?(&:nil?)
+      @cells.flatten.none?(&:nil?)
     end
 
     def has_winning_line?
