@@ -30,7 +30,7 @@ module TicTacToe
 
     def minimax(game_state, highest_score, lowest_score)
       if game_state.board.game_over?
-        evaluate(game_state)
+        evaluate(game_state.board)
       else
         recursively_determine_minimax_score(game_state, highest_score, lowest_score)
       end
@@ -52,13 +52,12 @@ module TicTacToe
       end
     end
 
-    def evaluate(game_state)
-      game_state.board.lines.each do |line|
+    def evaluate(board)
+      board.lines.each do |line|
         return Float::INFINITY if line.all? { |cell| cell == @player_mark }
         return -Float::INFINITY if line.all? { |cell| cell == @opponent_mark }
       end
-
-      game_state.board.filled? ? 0 : nil
+      0
     end
   end
 end
