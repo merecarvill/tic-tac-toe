@@ -53,8 +53,9 @@ module TicTacToe
         allow(game.interface).to receive(:game_setup_interaction).and_return([:human, :computer])
         game.set_up
 
-        game.players.each do |player|
+        game.players.each_with_index do |player, index|
           expect(player).to be_a Player
+          expect(player.player).to be_a index == 0 ? HumanPlayer : ComputerPlayer
         end
       end
     end
