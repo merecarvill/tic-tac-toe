@@ -167,14 +167,14 @@ module TicTacToe
 
     describe '#marked?' do
 
-      it 'checks if cell at given row and col has any player\'s mark' do
+      it 'checks if cell at given coordinates has any player\'s mark' do
         blank_board = new_board(@default_board_size)
         board = blank_board.deep_copy
         coordinates = random_coordinates(board.size)
         board[*coordinates] = @default_player_marks.sample
 
-        expect(blank_board.marked?(*coordinates)).to be false
-        expect(board.marked?(*coordinates)).to be true
+        expect(blank_board.marked?(coordinates)).to be false
+        expect(board.marked?(coordinates)).to be true
       end
     end
 

@@ -46,7 +46,8 @@ module TicTacToe
       @cells.flatten.count
     end
 
-    def marked?(row, col)
+    def marked?(coordinates)
+      row, col = coordinates
       @cells[row][col] != nil
     end
 

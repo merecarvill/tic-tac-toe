@@ -11,8 +11,9 @@ module TicTacToe
     end
 
     def move
-      if @board.blank_cell_coordinates.include?([@board.size / 2, @board.size / 2]) && @board.size.odd?
-        [@board.size / 2, @board.size / 2]
+      center_coordinate = [@board.size / 2, @board.size / 2]
+      if !@board.marked?(center_coordinate) && @board.size.odd?
+        center_coordinate
       else
         game_state = create_game_state
         child_states = @board.blank_cell_coordinates.map { |coord| game_state.make_move(coord) }
