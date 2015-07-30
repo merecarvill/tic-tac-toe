@@ -34,7 +34,7 @@ module TicTacToe
     def blank_cell_coordinates
       (0...@size).each_with_object([]) do |row, coordinates|
         (0...@size).each do |col|
-          coordinates << [row, col] if @cells[row][col].nil?
+          coordinates << [row, col] if self[row, col].nil?
         end
       end
     end
@@ -53,8 +53,7 @@ module TicTacToe
     end
 
     def marked?(coordinates)
-      row, col = coordinates
-      @cells[row][col] != nil
+      !self[*coordinates].nil?
     end
 
     def blank?
@@ -112,19 +111,19 @@ module TicTacToe
     end
 
     def row_at(row)
-      @cells[row]
+      (0...@size).map { |col| self[row, col] }
     end
 
     def col_at(col)
-      (0...@size).map { |row| @cells[row][col] }
+      (0...@size).map { |row| self[row, col] }
     end
 
     def left_diag
-      (0...@size).map { |index| @cells[index][index] }
+      (0...@size).map { |index| self[index, index] }
     end
 
     def right_diag
-      (0...@size).map { |row| @cells[row][@size - row - 1] }
+      (0...@size).map { |row| self[row, @size - row - 1] }
     end
 
     def raise_error_if_out_of_bounds(row, col)
