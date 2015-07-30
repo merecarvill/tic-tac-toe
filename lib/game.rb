@@ -16,8 +16,8 @@ module TicTacToe
 
     def run
       set_up
-      last_mark_made = handle_turns
-      handle_game_over(last_mark_made)
+      handle_turns
+      handle_game_over
     end
 
     def set_up
@@ -38,15 +38,12 @@ module TicTacToe
     end
 
     def handle_turns
-      last_player_to_move = nil
       catch(:game_over) do
         @players.cycle do |current_player|
           handle_one_turn(current_player)
-          last_player_to_move = current_player
           throw :game_over if over?
         end
       end
-      last_player_to_move.player_mark
     end
 
     def handle_one_turn(current_player)
@@ -68,9 +65,9 @@ module TicTacToe
       end
     end
 
-    def handle_game_over(last_mark_made)
+    def handle_game_over
       @interface.show_game_board(@board)
-      winning_player_mark = @board.has_winning_line? ? last_mark_made : :none
+      winning_player_mark = @board.has_winning_line? ? @board.last_mark_made : :none
       @interface.report_game_over(winning_player_mark)
     end
 

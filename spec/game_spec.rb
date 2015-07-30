@@ -46,15 +46,6 @@ module TicTacToe
         expect(game).to receive(:handle_turns)
         game.run
       end
-
-      it 'handles the end of the game, keeping track of the last mark made' do
-        last_mark_made = @default_player_marks.sample
-        allow(game).to receive(:set_up)
-        allow(game).to receive(:handle_turns).and_return(last_mark_made)
-
-        expect(game).to receive(:handle_game_over).with(last_mark_made)
-        game.run
-      end
     end
 
     describe '#set_up' do
@@ -77,15 +68,6 @@ module TicTacToe
 
         expect(game).to receive(:handle_one_turn).exactly(5).times
         game.handle_turns
-      end
-
-      it 'returns the mark of the last player to move' do
-        allow(game.interface).to receive(:game_setup_interaction).and_return([:human, :computer])
-        game.set_up
-        allow(game).to receive(:handle_one_turn)
-        allow(game).to receive(:over?).and_return(true)
-
-        expect(game.handle_turns).to eq game.players.first.player_mark
       end
     end
 
@@ -175,25 +157,27 @@ module TicTacToe
         allow(game.interface).to receive(:report_game_over)
 
         expect(game.interface).to receive(:show_game_board)
-        game.handle_game_over(@default_first_player)
+        game.handle_game_over
       end
 
       context 'when game has been won' do
         it 'reports that the given last player to move has won via the interface' do
           allow(game.interface).to receive(:show_game_board)
           allow(game.board).to receive(:has_winning_line?).and_return(true)
+          allow(game.board).to receive(:last_mark_made).and_return(@default_first_player)
 
           expect(game.interface).to receive(:report_game_over).with(@default_first_player)
-          game.handle_game_over(@default_first_player)
+          game.handle_game_over
         end
       end
 
       context 'when game has no winner' do
         it 'reports that game ended in a draw via the interface' do
           allow(game.interface).to receive(:show_game_board)
+          allow(game.board).to receive(:last_mark_made).and_return(@default_first_player)
 
           expect(game.interface).to receive(:report_game_over).with(:none)
-          game.handle_game_over(@default_first_player)
+          game.handle_game_over
         end
       end
     end
