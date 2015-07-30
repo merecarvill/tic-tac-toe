@@ -29,7 +29,7 @@ module TicTacToe
     end
 
     def minimax(game_state, highest_score, lowest_score)
-      if game_state.game_over?
+      if game_state.board.game_over?
         evaluate(game_state)
       else
         recursively_determine_minimax_score(game_state, highest_score, lowest_score)

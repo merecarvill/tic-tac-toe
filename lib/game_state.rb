@@ -1,6 +1,5 @@
 module TicTacToe
   class GameState
-    attr_accessor :evaluation_score
     attr_reader :board, :last_move, :player_mark, :opponent_mark
 
     def initialize(parameters)
@@ -19,10 +18,6 @@ module TicTacToe
         opponent: @player_mark,
         last_move: coordinate
       )
-    end
-
-    def game_over?
-      @board.filled? || @board.has_winning_line?
     end
   end
 end
