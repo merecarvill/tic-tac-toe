@@ -135,7 +135,7 @@ module TicTacToe
         allow(player_stub).to receive(:player_mark)
       end
 
-      context 'when it receieves valid move coordinates from given player' do
+      context 'when it receives valid move coordinates from given player' do
         it 'returns those coordinates' do
           allow(player_stub).to receive(:move).and_return([0, 0])
 
