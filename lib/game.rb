@@ -54,14 +54,13 @@ module TicTacToe
     end
 
     def get_valid_move(player)
-      board = @board.deep_copy
-      begin
+      loop do
         coordinates = player.move
-        board[*coordinates] = player.player_mark
-        coordinates
-      rescue Board::BoardError => msg
-        @interface.report_invalid_move(coordinates, msg)
-        retry
+        if coordinates.any? { |i| !i.between?(0, @board.size - 1) } || @board.marked?(coordinates)
+          @interface.report_invalid_move(coordinates)
+        else
+          return coordinates
+        end
       end
     end
 

@@ -44,9 +44,9 @@ module TicTacToe
       end
     end
 
-    def report_invalid_move(move_coordinates, reason)
+    def report_invalid_move(move_coordinates)
       row, col = move_coordinates
-      puts "Couldn't move at row: #{row}, column: #{col}. #{reason}, please try again."
+      puts "Couldn't move at row: #{row}, column: #{col}. Please try again."
     end
 
     def report_move(player_mark, move_coordinates)

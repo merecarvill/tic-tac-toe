@@ -126,10 +126,9 @@ module TicTacToe
     end
 
     describe '#report_invalid_move' do
-      it 'prints a notification that a move cannot be made at the given coordinates and why' do
-        cli.report_invalid_move([0, 0], 'reason')
+      it 'prints a notification that a move cannot be made at the given coordinates' do
+        cli.report_invalid_move([0, 0])
 
-        expect($stdout.string).to include 'reason'
         expect($stdout.string.split('').count('0')).to eq 2
       end
     end
