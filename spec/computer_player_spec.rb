@@ -69,25 +69,26 @@ module TicTacToe
     describe '#minimax' do
       let(:infinity) { Float::INFINITY }
       let(:neg_infinity) { -Float::INFINITY }
+      let(:best_score_so_far) { {player: neg_infinity, opponent: infinity} }
 
       it 'returns Infinity when given game state is a win for computer player' do
         all_wins(@default_board_size, ai.player_mark).each do |winning_board|
 
-          expect(ai.minimax(winning_board, ai.player_mark, neg_infinity, infinity)).to eq infinity
+          expect(ai.minimax(winning_board, ai.player_mark, best_score_so_far)).to eq infinity
         end
       end
 
       it 'returns -Infinity when given game state is a win for opponent' do
         all_wins(@default_board_size, ai.opponent_mark).each do |winning_board|
 
-          expect(ai.minimax(winning_board, ai.opponent_mark, neg_infinity, infinity)).to eq neg_infinity
+          expect(ai.minimax(winning_board, ai.opponent_mark, best_score_so_far)).to eq neg_infinity
         end
       end
 
       it 'returns 0 if game state is a draw' do
         board = board_with_draw(@default_board_size, [ai.player_mark, ai.opponent_mark])
 
-        expect(ai.minimax(board, ai.player_mark, neg_infinity, infinity)).to eq 0
+        expect(ai.minimax(board, ai.player_mark, best_score_so_far)).to eq 0
       end
 
       context 'when given a game state that is incomplete' do
@@ -104,44 +105,44 @@ module TicTacToe
               expect(passed_board[*coordinate]).to eq board[*coordinate]
             end
           end
-          expect(ai.minimax(board, ai.player_mark, neg_infinity, infinity)).not_to be nil
+          expect(ai.minimax(board, ai.player_mark, best_score_so_far)).not_to be nil
         end
 
         context 'when current player is computer player' do
           it 'returns greatest score from among game states that can result from current turn' do
             child_state_scores = ai.generate_possible_successor_boards(board, ai.player_mark).map do |child_board|
-              ai.minimax(child_board, ai.player_mark, neg_infinity, infinity)
+              ai.minimax(child_board, ai.player_mark, best_score_so_far.dup)
             end
             highest_score = child_state_scores.max
 
-            expect(ai.minimax(board, ai.player_mark, neg_infinity, infinity)).to eq highest_score
+            expect(ai.minimax(board, ai.player_mark, best_score_so_far)).to eq highest_score
           end
 
           it 'stops evaluating subsequent game states when a better choice is already available' do
-            best_score_so_far_for_max = 1
+            best_score_so_far[:player] = 1
             allow(ai).to receive(:evaluate).and_return(0)
 
             expect(ai).to receive(:evaluate).exactly(3).times
-            ai.minimax(board, ai.player_mark, best_score_so_far_for_max, infinity)
+            ai.minimax(board, ai.player_mark, best_score_so_far)
           end
         end
 
         context 'when current player is not the computer player' do
           it 'returns lowest score from among game states that can result from current turn' do
             child_state_scores = ai.generate_possible_successor_boards(board, ai.opponent_mark).map do |child_board|
-              ai.minimax(child_board, ai.opponent_mark, neg_infinity, infinity)
+              ai.minimax(child_board, ai.opponent_mark, best_score_so_far.dup)
             end
             lowest_score = child_state_scores.min
 
-            expect(ai.minimax(board, ai.opponent_mark, neg_infinity, infinity)).to eq lowest_score
+            expect(ai.minimax(board, ai.opponent_mark, best_score_so_far)).to eq lowest_score
           end
 
           it 'stops evaluating subsequent game states when a better choice is already available' do
-            best_score_so_far_for_min = -1
+            best_score_so_far[:opponent] = -1
             allow(ai).to receive(:evaluate).and_return(0)
 
             expect(ai).to receive(:evaluate).exactly(3).times
-            ai.minimax(board, ai.opponent_mark, neg_infinity, best_score_so_far_for_min)
+            ai.minimax(board, ai.opponent_mark, best_score_so_far)
           end
         end
       end
