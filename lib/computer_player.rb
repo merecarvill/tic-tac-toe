@@ -1,5 +1,3 @@
-require_relative 'game_state'
-
 module TicTacToe
   class ComputerPlayer
     attr_reader :player_mark, :opponent_mark, :board
@@ -15,9 +13,8 @@ module TicTacToe
       if !@board.marked?(center_coordinate) && @board.size.odd?
         center_coordinate
       else
-        game_state = create_game_state
-        child_states = @board.blank_cell_coordinates.map { |coord| game_state.make_move(coord) }
-        child_states.max_by { |state| minimax(state, -Float::INFINITY, Float::INFINITY) }.last_move
+        child_boards = generate_possible_successor_boards(@board, @player_mark)
+        child_boards.max_by { |board| minimax(board, @player_mark, -Float::INFINITY, Float::INFINITY) }.last_move_made
       end
     end
 
@@ -29,34 +26,28 @@ module TicTacToe
       end
     end
 
-    def create_game_state
-      GameState.new(
-        board: @board,
-        current_player: @player_mark,
-        opponent: @opponent_mark)
-    end
-
-    def minimax(game_state, highest_score, lowest_score)
-      if game_state.board.game_over?
-        evaluate(game_state.board)
+    def minimax(board, current_player, highest_score, lowest_score)
+      if board.game_over?
+        evaluate(board)
       else
-        recursively_determine_minimax_score(game_state, highest_score, lowest_score)
+        recursively_determine_minimax_score(board, current_player, highest_score, lowest_score)
       end
     end
 
-    def recursively_determine_minimax_score(game_state, highest_score, lowest_score)
-      child_state_scores = []
-      game_state.board.blank_cell_coordinates.each do |coordinate|
-        score = minimax(game_state.make_move(coordinate), highest_score, lowest_score)
-        child_state_scores << score
-        highest_score = score if score > highest_score && game_state.player_mark == @player_mark
-        lowest_score = score if score < lowest_score && game_state.player_mark == @opponent_mark
+    def recursively_determine_minimax_score(board, current_player, highest_score, lowest_score)
+      next_player = current_player == @player_mark ? @opponent_mark : @player_mark
+      child_board_scores = []
+      generate_possible_successor_boards(board, current_player).each do |board|
+        score = minimax(board, next_player, highest_score, lowest_score)
+        child_board_scores << score
+        highest_score = score if score > highest_score && current_player == @player_mark
+        lowest_score = score if score < lowest_score && current_player == @opponent_mark
         break if highest_score >= lowest_score
       end
-      if game_state.player_mark == @player_mark
-        child_state_scores.max
+      if current_player == @player_mark
+        child_board_scores.max
       else
-        child_state_scores.min
+        child_board_scores.min
       end
     end
 

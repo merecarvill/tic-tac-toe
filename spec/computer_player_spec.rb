@@ -56,8 +56,8 @@ module TicTacToe
           center_coordinate = [ai.board.size / 2, ai.board.size / 2]
           ai.board[*center_coordinate] = ai.opponent_mark
 
-          allow(ai).to receive(:minimax) do |game_state|
-            row, col = game_state.last_move
+          allow(ai).to receive(:minimax) do |board|
+            row, col = board.last_move_made
             row + col
           end
 
@@ -72,36 +72,22 @@ module TicTacToe
 
       it 'returns Infinity when given game state is a win for computer player' do
         all_wins(@default_board_size, ai.player_mark).each do |winning_board|
-          game_state = GameState.new(
-            board: winning_board,
-            current_player: ai.player_mark,
-            opponent: ai.opponent_mark
-          )
 
-          expect(ai.minimax(game_state, neg_infinity, infinity)).to eq infinity
+          expect(ai.minimax(winning_board, ai.player_mark, neg_infinity, infinity)).to eq infinity
         end
       end
 
       it 'returns -Infinity when given game state is a win for opponent' do
         all_wins(@default_board_size, ai.opponent_mark).each do |winning_board|
-          game_state = GameState.new(
-            board: winning_board,
-            current_player: ai.player_mark,
-            opponent: ai.opponent_mark
-          )
 
-          expect(ai.minimax(game_state, neg_infinity, infinity)).to eq neg_infinity
+          expect(ai.minimax(winning_board, ai.opponent_mark, neg_infinity, infinity)).to eq neg_infinity
         end
       end
 
       it 'returns 0 if game state is a draw' do
         board = board_with_draw(@default_board_size, [ai.player_mark, ai.opponent_mark])
-        game_state = GameState.new(
-          board: board,
-          current_player: ai.player_mark,
-          opponent: ai.opponent_mark)
 
-        expect(ai.minimax(game_state, neg_infinity, infinity)).to eq 0
+        expect(ai.minimax(board, ai.player_mark, neg_infinity, infinity)).to eq 0
       end
 
       context 'when given a game state that is incomplete' do
@@ -111,35 +97,24 @@ module TicTacToe
 
         it 'recursively calls minimax on possible subsequent game states to determine a score' do
           marked_coordinates = all_coordinates(board.size) - board.blank_cell_coordinates
-          initial_game_state = GameState.new(
-            board: board,
-            current_player: ai.player_mark,
-            opponent: ai.opponent_mark)
 
           expect(ai).to receive(:minimax).at_least(:twice)
-          allow(ai).to receive(:minimax).and_call_original do |game_state|
+          allow(ai).to receive(:minimax).and_call_original do |passed_board|
             marked_coordinates.each do |coordinate|
-              expect(game_state.board[*coordinate]).to eq board[*coordinate]
+              expect(passed_board[*coordinate]).to eq board[*coordinate]
             end
           end
-          expect(ai.minimax(initial_game_state, neg_infinity, infinity)).not_to be nil
+          expect(ai.minimax(board, ai.player_mark, neg_infinity, infinity)).not_to be nil
         end
 
         context 'when current player is computer player' do
-          let(:game_state) do
-            game_state = GameState.new(
-              board: board,
-              current_player: ai.player_mark,
-              opponent: ai.opponent_mark)
-          end
-
           it 'returns greatest score from among game states that can result from current turn' do
-            child_state_scores = board.blank_cell_coordinates.map do |coord|
-              ai.minimax(game_state.make_move(coord), neg_infinity, infinity)
+            child_state_scores = ai.generate_possible_successor_boards(board, ai.player_mark).map do |child_board|
+              ai.minimax(child_board, ai.player_mark, neg_infinity, infinity)
             end
             highest_score = child_state_scores.max
 
-            expect(ai.minimax(game_state, neg_infinity, infinity)).to eq highest_score
+            expect(ai.minimax(board, ai.player_mark, neg_infinity, infinity)).to eq highest_score
           end
 
           it 'stops evaluating subsequent game states when a better choice is already available' do
@@ -147,25 +122,18 @@ module TicTacToe
             allow(ai).to receive(:evaluate).and_return(0)
 
             expect(ai).to receive(:evaluate).exactly(3).times
-            ai.minimax(game_state, best_score_so_far_for_max, infinity)
+            ai.minimax(board, ai.player_mark, best_score_so_far_for_max, infinity)
           end
         end
 
         context 'when current player is not the computer player' do
-          let(:game_state) do
-            game_state = GameState.new(
-              board: board,
-              current_player: ai.opponent_mark,
-              opponent: ai.player_mark)
-          end
-
           it 'returns lowest score from among game states that can result from current turn' do
-            child_state_scores = board.blank_cell_coordinates.map do |coord|
-              ai.minimax(game_state.make_move(coord), neg_infinity, infinity)
+            child_state_scores = ai.generate_possible_successor_boards(board, ai.opponent_mark).map do |child_board|
+              ai.minimax(child_board, ai.opponent_mark, neg_infinity, infinity)
             end
             lowest_score = child_state_scores.min
 
-            expect(ai.minimax(game_state, neg_infinity, infinity)).to eq lowest_score
+            expect(ai.minimax(board, ai.opponent_mark, neg_infinity, infinity)).to eq lowest_score
           end
 
           it 'stops evaluating subsequent game states when a better choice is already available' do
@@ -173,7 +141,7 @@ module TicTacToe
             allow(ai).to receive(:evaluate).and_return(0)
 
             expect(ai).to receive(:evaluate).exactly(3).times
-            ai.minimax(game_state, neg_infinity, best_score_so_far_for_min)
+            ai.minimax(board, ai.opponent_mark, neg_infinity, best_score_so_far_for_min)
           end
         end
       end
