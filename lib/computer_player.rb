@@ -21,6 +21,14 @@ module TicTacToe
       end
     end
 
+    def generate_possible_successor_boards(board, mark)
+      board.blank_cell_coordinates.map do |coordinates|
+        child_board = board.deep_copy
+        child_board[*coordinates] = mark
+        child_board
+      end
+    end
+
     def create_game_state
       GameState.new(
         board: @board,

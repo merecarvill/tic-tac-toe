@@ -178,5 +178,29 @@ module TicTacToe
         end
       end
     end
+
+    describe '#generate_possible_successor_boards' do
+      it 'returns new board objects that are distinct from given board' do
+        ai.generate_possible_successor_boards(ai.board, ai.player_mark).each do |board|
+          expect(board).not_to eq ai.board
+        end
+      end
+
+      it 'returns a board for every blank cell in given board' do
+        blank_cell_count = ai.board.blank_cell_coordinates.count
+        board_count = ai.generate_possible_successor_boards(ai.board, ai.player_mark).count
+
+        expect(board_count).to eq blank_cell_count
+      end
+
+      it 'returns boards marked once with given mark, in each of the blank cells' do
+        boards = ai.generate_possible_successor_boards(ai.board, ai.player_mark)
+        (0...ai.board.size).each do |row|
+          (0...ai.board.size).each do |col|
+            expect(boards.any? { |board| board.marked?([row, col]) }).to be true
+          end
+        end
+      end
+    end
   end
 end
