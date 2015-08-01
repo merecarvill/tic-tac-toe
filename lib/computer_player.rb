@@ -13,13 +13,19 @@ module TicTacToe
       if !@board.marked?(center_coordinate) && @board.size.odd?
         center_coordinate
       else
-        child_boards = generate_possible_successor_boards(@board, @player_mark)
-        best_score_so_far = {
-          player: -Float::INFINITY, # highest score is best for player
-          opponent: Float::INFINITY # lowest score is best for opponent
-        }
-        child_boards.max_by { |board| minimax(board, @opponent_mark, best_score_so_far) }.last_move_made
+        select_best_move
       end
+    end
+
+    def select_best_move
+      best_score_so_far = {
+        player: -Float::INFINITY, # highest score is best for player
+        opponent: Float::INFINITY # lowest score is best for opponent
+      }
+
+      child_boards = generate_possible_successor_boards(@board, @player_mark)
+      best_board = child_boards.max_by { |board| minimax(board, @opponent_mark, best_score_so_far) }
+      best_board.last_move_made
     end
 
     def generate_possible_successor_boards(board, mark)
@@ -38,30 +44,50 @@ module TicTacToe
       end
     end
 
-    def recursively_evaluate(board, current_player, best_score_so_far)
-      next_player = current_player == @player_mark ? @opponent_mark : @player_mark
-      child_board_scores = []
-      generate_possible_successor_boards(board, current_player).each do |board|
-        score = minimax(board, next_player, best_score_so_far.dup)
-        child_board_scores << score
-        best_score_so_far[:player] = score if score > best_score_so_far[:player] && current_player == @player_mark
-        best_score_so_far[:opponent] = score if score < best_score_so_far[:opponent] && current_player == @opponent_mark
-        break if best_score_so_far[:player] >= best_score_so_far[:opponent]
-      end
-
-      if current_player == @player_mark
-        child_board_scores.max
-      else
-        child_board_scores.min
-      end
-    end
-
     def evaluate(board)
       board.lines.each do |line|
         return Float::INFINITY if line.all? { |cell| cell == @player_mark }
         return -Float::INFINITY if line.all? { |cell| cell == @opponent_mark }
       end
       0
+    end
+
+    def recursively_evaluate(board, current_player, best_score_so_far)
+      scores = find_scores_for_child_boards(board, current_player, best_score_so_far)
+      current_player == @player_mark ? scores.max : scores.min
+    end
+
+    def find_scores_for_child_boards(board, current_player, best_score_so_far)
+      next_player = toggle_current_player(current_player)
+
+      child_board_scores = []
+      catch(:best_score_found) do
+        generate_possible_successor_boards(board, current_player).each do |board|
+          score = minimax(board, next_player, best_score_so_far.dup)
+          child_board_scores << score
+
+          update_best_score_so_far(current_player, best_score_so_far, score)
+          stop_if_best_score_found(best_score_so_far)
+        end
+      end
+      child_board_scores
+    end
+
+    def toggle_current_player(current_player)
+      current_player == @player_mark ? @opponent_mark : @player_mark
+    end
+
+    def update_best_score_so_far(current_player, best_score_so_far, score)
+      if score > best_score_so_far[:player] && current_player == @player_mark
+        best_score_so_far[:player] = score
+      end
+      if score < best_score_so_far[:opponent] && current_player == @opponent_mark
+        best_score_so_far[:opponent] = score
+      end
+    end
+
+    def stop_if_best_score_found(best_score_so_far)
+      throw(:best_score_found) if best_score_so_far[:player] >= best_score_so_far[:opponent]
     end
   end
 end
