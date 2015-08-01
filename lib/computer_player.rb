@@ -53,22 +53,21 @@ module TicTacToe
     end
 
     def recursively_evaluate(board, my_turn, best_score_so_far)
-      scores = find_scores_for_child_boards(board, my_turn, best_score_so_far)
-      my_turn ? scores.max : scores.min
-    end
-
-    def find_scores_for_child_boards(board, my_turn, best_score_so_far)
       current_player_mark = my_turn ? @player_mark : @opponent_mark
 
       child_boards = generate_possible_successor_boards(board, current_player_mark)
-      catch(:best_score_found) do
-       child_boards.each_with_object([]) do |board, scores|
-          score = minimax(board, !my_turn, best_score_so_far.dup)
-          scores << score
+      scores = find_scores_for_child_boards(child_boards, my_turn, best_score_so_far)
 
-          update_best_score_so_far(my_turn, best_score_so_far, score)
-          throw(:best_score_found, scores) if best_score_found?(best_score_so_far)
-        end
+      my_turn ? scores.max : scores.min
+    end
+
+    def find_scores_for_child_boards(child_boards, my_turn, best_score_so_far)
+      child_boards.each_with_object([]) do |board, scores|
+        score = minimax(board, !my_turn, best_score_so_far.dup)
+        scores << score
+
+        update_best_score_so_far(my_turn, best_score_so_far, score)
+        return scores if best_score_found?(best_score_so_far)
       end
     end
 
