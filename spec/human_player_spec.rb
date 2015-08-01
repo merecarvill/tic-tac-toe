@@ -8,7 +8,7 @@ module TicTacToe
     let(:human_player) do
       described_class.new(
         interface: interface,
-        player: @default_first_player)
+        player_mark: @default_first_player)
     end
 
     it 'implements methods required by Player interface' do
@@ -21,7 +21,7 @@ module TicTacToe
       it 'takes parameters containing the game interface and the player\'s mark' do
         params = {
           interface: interface,
-          player: @default_first_player
+          player_mark: @default_first_player
         }
 
         expect { described_class.new(params) }.not_to raise_error

@@ -9,14 +9,14 @@ module TicTacToe
       described_class.new(
         type: :human,
         interface: Interface.new(:command_line),
-        player: @default_first_player)
+        player_mark: @default_first_player)
     end
     let(:computer_player) do
       described_class.new(
         type: :computer,
         board: new_board(@default_board_size),
-        player: @default_first_player,
-        opponent: @default_second_player)
+        player_mark: @default_first_player,
+        opponent_mark: @default_second_player)
     end
     let(:player_examples) { [human_player, computer_player] }
     let(:player_error) { Player::PlayerError }

@@ -30,11 +30,11 @@ module TicTacToe
 
     def create_player(mark, type)
       Player.new(
-        player: mark,
+        player_mark: mark,
         type: type,
         interface: @interface,
         board: @board,
-        opponent: (@player_marks - [mark]).pop)
+        opponent_mark: (@player_marks - [mark]).pop)
     end
 
     def handle_turns

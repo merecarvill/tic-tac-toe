@@ -3,8 +3,8 @@ module TicTacToe
     attr_reader :player_mark, :opponent_mark, :board
 
     def initialize(parameters)
-      @player_mark = parameters[:player]
-      @opponent_mark = parameters[:opponent]
+      @player_mark = parameters[:player_mark]
+      @opponent_mark = parameters[:opponent_mark]
       @board = parameters[:board]
     end
 

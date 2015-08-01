@@ -8,8 +8,8 @@ module TicTacToe
     let(:ai) do
       described_class.new(
         board: new_board(@default_board_size),
-        player: @default_first_player,
-        opponent: @default_second_player)
+        player_mark: @default_first_player,
+        opponent_mark: @default_second_player)
     end
 
     it 'implements methods required by Player interface' do
@@ -22,8 +22,8 @@ module TicTacToe
       it 'takes a parameters hash with the player\'s mark, opponent\'s mark, and the game board' do
         params = {
           board: new_board(@default_board_size),
-          player: @default_first_player,
-          opponent: @default_second_player
+          player_mark: @default_first_player,
+          opponent_mark: @default_second_player
         }
 
         expect { described_class.new(params) }.not_to raise_error
@@ -36,8 +36,8 @@ module TicTacToe
           odd_size_board = new_board(3)
           custom_ai = described_class.new(
             board: odd_size_board,
-            player: @default_first_player,
-            opponent: @default_second_player)
+            player_mark: @default_first_player,
+            opponent_mark: @default_second_player)
 
           expect(ai.move).to eq [ai.board.size / 2, ai.board.size / 2]
         end
