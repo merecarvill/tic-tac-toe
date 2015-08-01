@@ -72,25 +72,28 @@ module TicTacToe
       let(:neg_infinity) { -Float::INFINITY }
       let(:best_score_so_far) { {player: neg_infinity, opponent: infinity} }
 
-      it 'returns Infinity when given game state is a win for computer player' do
-        all_wins(@default_board_size, ai.player_mark).each do |winning_board|
-
-          expect(ai.minimax(winning_board, true, best_score_so_far)).to eq infinity
+      context 'when given a board that is won or ended in a draw' do
+        let(:game_over_boards) do
+          boards = all_wins(@default_board_size, ai.player_mark)
+          boards += all_wins(@default_board_size, ai.opponent_mark)
+          boards << board_with_draw(@default_board_size, [ai.player_mark, ai.opponent_mark])
         end
-      end
 
-      it 'returns -Infinity when given game state is a win for opponent' do
-        all_wins(@default_board_size, ai.opponent_mark).each do |winning_board|
+        it 'heuristically evaluates the desirability of given board' do
+          allow(ai).to receive(:evaluate).and_return(0)
 
-          expect(ai.minimax(winning_board, false, best_score_so_far)).to eq neg_infinity
+          game_over_boards.each do |board|
+            expect(ai).to receive(:evaluate)
+            expect(ai.minimax(board, true, best_score_so_far)).to eq 0
+          end
         end
-      end
 
-      it 'returns 0 if game state is a draw' do
-        board = board_with_draw(@default_board_size, [ai.player_mark, ai.opponent_mark])
-
-        expect(ai.minimax(board, true, best_score_so_far)).to eq 0
-        expect(ai.minimax(board, false, best_score_so_far)).to eq 0
+        it 'does not use recursive calls to #minimax' do
+          game_over_boards.each do |board|
+            expect(ai).to receive(:minimax).at_most(1).times
+            ai.minimax(board, true, best_score_so_far)
+          end
+        end
       end
 
       context 'when given a game state that is incomplete' do
@@ -171,6 +174,31 @@ module TicTacToe
             expect(boards.any? { |board| board.marked?([row, col]) }).to be true
           end
         end
+      end
+    end
+
+    describe '#evaluate' do
+      let(:infinity) { Float::INFINITY }
+      let(:neg_infinity) { -Float::INFINITY }
+
+      it 'returns Infinity when given board is a win for computer player' do
+        all_wins(@default_board_size, ai.player_mark).each do |winning_board|
+
+          expect(ai.evaluate(winning_board)).to eq infinity
+        end
+      end
+
+      it 'returns -Infinity when given board is a win for opponent' do
+        all_wins(@default_board_size, ai.opponent_mark).each do |winning_board|
+
+          expect(ai.evaluate(winning_board)).to eq neg_infinity
+        end
+      end
+
+      it 'returns 0 if board is a draw' do
+        board = board_with_draw(@default_board_size, [ai.player_mark, ai.opponent_mark])
+
+        expect(ai.evaluate(board)).to eq 0
       end
     end
   end
