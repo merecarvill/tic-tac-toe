@@ -208,5 +208,27 @@ module TicTacToe
         expect(game.over?).to be false
       end
     end
+
+    describe 'integration tests' do
+      context 'in a game with two computer players' do
+        let(:game) { described_class.new({}) }
+
+        before do
+          allow(game.interface).to receive(:game_setup_interaction).and_return([:computer, :computer])
+          allow(game.interface).to receive(:show_game_board)
+          allow(game.interface).to receive(:solicit_move)
+          allow(game.interface).to receive(:report_move)
+          allow(game.interface).to receive(:report_invalid_move)
+          allow(game.interface).to receive(:report_game_over)
+        end
+
+        it 'should end the game in a draw' do
+          game.run
+
+          expect(game.board.has_winning_line?).to be false
+          expect(game.board.filled?).to be true
+        end
+      end
+    end
   end
 end
