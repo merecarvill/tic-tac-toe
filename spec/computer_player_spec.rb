@@ -33,13 +33,14 @@ module TicTacToe
     describe '#move' do
       context 'when a center space is available' do
         it 'returns the move coordinate for centermost space' do
-          odd_size_board = new_board(3)
-          custom_ai = described_class.new(
-            board: odd_size_board,
-            player_mark: @default_first_player,
-            opponent_mark: @default_second_player)
+          [3, 5, 7].each do |odd_size|
+            custom_ai = described_class.new(
+              board: new_board(odd_size),
+              player_mark: @default_first_player,
+              opponent_mark: @default_second_player)
 
-          expect(ai.move).to eq [ai.board.size / 2, ai.board.size / 2]
+            expect(custom_ai.move).to eq [odd_size / 2, odd_size / 2]
+          end
         end
       end
 
