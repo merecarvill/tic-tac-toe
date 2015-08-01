@@ -210,16 +210,19 @@ module TicTacToe
     end
 
     describe 'integration tests' do
-      context 'in a game with two computer players' do
-        let(:game) { described_class.new({}) }
+      let(:game) { described_class.new({}) }
 
-        before do
-          allow(game.interface).to receive(:game_setup_interaction).and_return([:computer, :computer])
+      before do
           allow(game.interface).to receive(:show_game_board)
           allow(game.interface).to receive(:solicit_move)
           allow(game.interface).to receive(:report_move)
           allow(game.interface).to receive(:report_invalid_move)
           allow(game.interface).to receive(:report_game_over)
+      end
+
+      context 'in a game with two computer players' do
+        before do
+          allow(game.interface).to receive(:game_setup_interaction).and_return([:computer, :computer])
         end
 
         it 'should end the game in a draw' do
@@ -227,6 +230,23 @@ module TicTacToe
 
           expect(game.board.has_winning_line?).to be false
           expect(game.board.filled?).to be true
+        end
+      end
+
+      context 'in a game with a human player and a computer player' do
+        before do
+          allow(game.interface).to receive(:game_setup_interaction).and_return([:human, :computer])
+        end
+
+        it 'should end in a win for the computer player against an unskilled human player' do
+          allow(game.interface).to receive(:solicit_move) do
+            game.board.blank_cell_coordinates.first
+          end
+          computer_player_mark = :o
+          game.run
+
+          expect(game.board.has_winning_line?).to be true
+          expect(game.board.last_mark_made).to be computer_player_mark
         end
       end
     end
