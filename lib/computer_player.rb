@@ -24,7 +24,7 @@ module TicTacToe
       }
 
       child_boards = generate_possible_successor_boards(@board, @player_mark)
-      best_board = child_boards.max_by { |board| minimax(board, @opponent_mark, best_score_so_far) }
+      best_board = child_boards.max_by { |board| minimax(board, false, best_score_so_far) }
       best_board.last_move_made
     end
 
@@ -36,11 +36,11 @@ module TicTacToe
       end
     end
 
-    def minimax(board, current_player, best_score_so_far)
+    def minimax(board, my_turn, best_score_so_far)
       if board.game_over?
         evaluate(board)
       else
-        recursively_evaluate(board, current_player, best_score_so_far.dup)
+        recursively_evaluate(board, my_turn, best_score_so_far.dup)
       end
     end
 
@@ -52,36 +52,32 @@ module TicTacToe
       0
     end
 
-    def recursively_evaluate(board, current_player, best_score_so_far)
-      scores = find_scores_for_child_boards(board, current_player, best_score_so_far)
-      current_player == @player_mark ? scores.max : scores.min
+    def recursively_evaluate(board, my_turn, best_score_so_far)
+      scores = find_scores_for_child_boards(board, my_turn, best_score_so_far)
+      my_turn ? scores.max : scores.min
     end
 
-    def find_scores_for_child_boards(board, current_player, best_score_so_far)
-      next_player = toggle_current_player(current_player)
+    def find_scores_for_child_boards(board, my_turn, best_score_so_far)
+      current_player_mark = my_turn ? @player_mark : @opponent_mark
 
       child_board_scores = []
       catch(:best_score_found) do
-        generate_possible_successor_boards(board, current_player).each do |board|
-          score = minimax(board, next_player, best_score_so_far.dup)
+        generate_possible_successor_boards(board, current_player_mark).each do |board|
+          score = minimax(board, !my_turn, best_score_so_far.dup)
           child_board_scores << score
 
-          update_best_score_so_far(current_player, best_score_so_far, score)
+          update_best_score_so_far(my_turn, best_score_so_far, score)
           stop_if_best_score_found(best_score_so_far)
         end
       end
       child_board_scores
     end
 
-    def toggle_current_player(current_player)
-      current_player == @player_mark ? @opponent_mark : @player_mark
-    end
-
-    def update_best_score_so_far(current_player, best_score_so_far, score)
-      if score > best_score_so_far[:player] && current_player == @player_mark
+    def update_best_score_so_far(my_turn, best_score_so_far, score)
+      if score > best_score_so_far[:player] && my_turn
         best_score_so_far[:player] = score
       end
-      if score < best_score_so_far[:opponent] && current_player == @opponent_mark
+      if score < best_score_so_far[:opponent] && !my_turn
         best_score_so_far[:opponent] = score
       end
     end
