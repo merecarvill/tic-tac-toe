@@ -10,12 +10,9 @@ module TicTacToe
     def solicit_player_type(player_mark)
       puts "Is player #{player_mark} a human or computer?"
       puts "Enter 'computer' or 'human'."
-      begin
-        get_valid_input(/^(computer|human)$/).to_sym
-      rescue CommandLineInterfaceError => msg
-        puts "Sorry, #{msg}. Please try again."
-        retry
-      end
+
+      cleaned_input = get_valid_input(/^(computer|human)$/)
+      cleaned_input.to_sym
     end
 
     def show_game_board(board)
@@ -25,20 +22,18 @@ module TicTacToe
     def solicit_move(player_mark)
       puts "Player #{player_mark}: select your move."
       puts "Enter your move coordinates in the format 'row, col' - eg. '0, 0'."
-      begin
-        get_valid_input(/^\s*\d+\s*,\s*\d+\s*$/).split(',').map(&:to_i)
-      rescue CommandLineInterfaceError => msg
-        puts "Sorry, #{msg}. Please try again."
-        retry
-      end
+
+      cleaned_input = get_valid_input(/^\s*\d+\s*,\s*\d+\s*$/)
+      cleaned_input.split(',').map(&:to_i)
     end
 
     def get_valid_input(valid_input_pattern)
-      cleaned_input = gets.strip.downcase
-      if valid_input_pattern =~ cleaned_input
-        cleaned_input
-      else
-        fail CommandLineInterfaceError, "'#{cleaned_input}' input is invalid"
+      catch(:success) do
+        loop do
+          cleaned_input = gets.strip.downcase
+          throw(:success, cleaned_input) if valid_input_pattern =~ cleaned_input
+          puts "Sorry, '#{cleaned_input}' is not valid input. Please try again."
+        end
       end
     end
 
