@@ -46,6 +46,14 @@ module TicTacToe
         expect(game).to receive(:handle_turns)
         game.run
       end
+
+      it 'handles the end of the game' do
+        allow(game).to receive(:set_up)
+        allow(game).to receive(:handle_turns)
+
+        expect(game).to receive(:handle_game_over)
+        game.run
+      end
     end
 
     describe '#set_up' do
