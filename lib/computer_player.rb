@@ -23,16 +23,16 @@ module TicTacToe
         opponent: Float::INFINITY # lowest score is best for opponent
       }
 
-      child_boards = generate_possible_successor_boards(@board, @player_mark)
-      best_board = child_boards.max_by { |board| minimax(board, false, best_score_so_far) }
+      successor_boards = generate_possible_successor_boards(@board, @player_mark)
+      best_board = successor_boards.max_by { |board| minimax(board, false, best_score_so_far) }
       best_board.last_move_made
     end
 
     def generate_possible_successor_boards(board, mark)
       board.blank_cell_coordinates.map do |coordinates|
-        child_board = board.deep_copy
-        child_board[*coordinates] = mark
-        child_board
+        successor_board = board.deep_copy
+        successor_board[*coordinates] = mark
+        successor_board
       end
     end
 
@@ -40,7 +40,7 @@ module TicTacToe
       if board.game_over?
         evaluate(board)
       else
-        recursively_evaluate(board, my_turn, best_score_so_far.dup)
+        select_score_of_best_successor_board(board, my_turn, best_score_so_far.dup)
       end
     end
 
@@ -52,22 +52,22 @@ module TicTacToe
       0
     end
 
-    def recursively_evaluate(board, my_turn, best_score_so_far)
+    def select_score_of_best_successor_board(board, my_turn, best_score_so_far)
       current_player_mark = my_turn ? @player_mark : @opponent_mark
 
-      child_boards = generate_possible_successor_boards(board, current_player_mark)
-      scores = find_scores_for_child_boards(child_boards, my_turn, best_score_so_far)
+      successor_boards = generate_possible_successor_boards(board, current_player_mark)
+      scores = score_successor_boards(successor_boards, my_turn, best_score_so_far)
 
       my_turn ? scores.max : scores.min
     end
 
-    def find_scores_for_child_boards(child_boards, my_turn, best_score_so_far)
-      child_boards.each_with_object([]) do |board, scores|
+    def score_successor_boards(successor_boards, my_turn, best_score_so_far)
+      successor_boards.each_with_object([]) do |board, scores|
         score = minimax(board, !my_turn, best_score_so_far.dup)
         scores << score
 
         update_best_score_so_far(my_turn, best_score_so_far, score)
-        return scores if best_score_found?(best_score_so_far)
+        return scores if best_score_guaranteed_elsewhere?(best_score_so_far)
       end
     end
 
@@ -80,7 +80,7 @@ module TicTacToe
       end
     end
 
-    def best_score_found?(best_score_so_far)
+    def best_score_guaranteed_elsewhere?(best_score_so_far)
       best_score_so_far[:player] >= best_score_so_far[:opponent]
     end
   end
