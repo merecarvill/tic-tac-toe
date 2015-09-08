@@ -22,12 +22,6 @@ module TicTacToe
 
     let(:cli) { described_class.new }
 
-    it 'implements methods required by Interface interface' do
-      Interface.required_methods.each do |method|
-        expect(cli).to respond_to(method)
-      end
-    end
-
     describe '#game_setup_interaction' do
       before do
         $stdin.string = %w(human computer).join("\n")

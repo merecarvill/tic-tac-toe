@@ -8,7 +8,7 @@ module TicTacToe
     let(:human_player) do
       described_class.new(
         type: :human,
-        interface: Interface.new(:command_line),
+        interface: CommandLineInterface.new,
         player_mark: @default_first_player)
     end
     let(:computer_player) do

@@ -1,6 +1,6 @@
 require_relative 'board'
 require_relative 'player'
-require_relative 'interface'
+require_relative 'command_line_interface'
 
 module TicTacToe
   class Game
@@ -10,7 +10,7 @@ module TicTacToe
       @player_marks = parameters[:player_marks] || [:x, :o]
       board_size = parameters[:board_size] || 3
       @board = Board.new(size: board_size)
-      @interface = Interface.new(:command_line)
+      @interface = parameters[:interface] || CommandLineInterface.new
       @players = []
     end
 

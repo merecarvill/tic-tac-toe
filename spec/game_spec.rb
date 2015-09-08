@@ -11,10 +11,6 @@ module TicTacToe
         expect(game.board).to be_a Board
       end
 
-      it 'initializes an interface and stores it in an instance variable' do
-        expect(game.interface).to be_a Interface
-      end
-
       context 'when given parameters' do
         it 'creates a board of the given size' do
           custom_game = described_class.new(board_size: 4)
@@ -26,6 +22,29 @@ module TicTacToe
           custom_game = described_class.new(player_marks: [:F, :B])
 
           expect(custom_game.player_marks).to eq [:F, :B]
+        end
+
+        it 'uses the given interface' do
+          interface = CommandLineInterface.new
+          custom_game = described_class.new(interface: interface)
+
+          expect(custom_game.interface).to eq interface
+        end
+      end
+
+      context 'when a given parameter is not provided' do
+        it 'creates a board of a default size' do
+          expect(game.board.size).to eq @default_board_size
+        end
+
+        it 'uses a default set of player marks' do
+          game.player_marks.each do |default_mark|
+            expect(@default_player_marks).to include default_mark
+          end
+        end
+
+        it 'creates and uses a command line interface by default' do
+          expect(game.interface).to be_a CommandLineInterface
         end
       end
     end

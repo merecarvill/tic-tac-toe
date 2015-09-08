@@ -1,6 +1,5 @@
 module TicTacToe
   class CommandLineInterface
-    CommandLineInterfaceError = Class.new(StandardError)
 
     def game_setup_interaction(player_marks)
       puts instructions

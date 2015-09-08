@@ -4,7 +4,7 @@ module TicTacToe
   describe HumanPlayer do
     include_context 'default_values'
 
-    let(:interface) { Interface.new(:command_line) }
+    let(:interface) { CommandLineInterface.new }
     let(:human_player) do
       described_class.new(
         interface: interface,
