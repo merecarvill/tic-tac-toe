@@ -1,5 +1,6 @@
 require_relative 'board'
 require_relative 'player'
+require_relative 'player_factory'
 require_relative 'command_line_interface'
 
 module TicTacToe
@@ -24,7 +25,8 @@ module TicTacToe
       player_types = @interface.game_setup_interaction(@player_marks)
 
       @player_marks.zip(player_types).each do |mark, type|
-        @players << create_player(mark, type)
+        params = {type: type, player_mark: mark, opponent_mark: (@player_marks - [mark]).pop}
+        @players << PlayerFactory.new({game: self}).build(params)
       end
     end
 
