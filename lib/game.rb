@@ -25,8 +25,12 @@ module TicTacToe
       player_types = @interface.game_setup_interaction(@player_marks)
 
       @player_marks.zip(player_types).each do |mark, type|
-        params = {type: type, player_mark: mark, opponent_mark: (@player_marks - [mark]).pop}
-        @players << PlayerFactory.new({game: self}).build(params)
+        player_config = {
+          type: type,
+          game: self,
+          player_mark: mark
+        }
+        @players << PlayerFactory.build(player_config)
       end
     end
 

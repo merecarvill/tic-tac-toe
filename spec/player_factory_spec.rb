@@ -3,28 +3,37 @@ require 'spec_helper'
 module TicTacToe
   describe PlayerFactory do
     include_context 'default_values'
-    let(:player_factory) { described_class.new({game: Game.new({})}) }
 
-    describe '#initialize' do
-      it 'takes a parameter specifying the current game instance' do
-        parameters = {game: Game.new({})}
-
-        expect{ described_class.new(parameters) }.not_to raise_error
-      end
-    end
-
-    describe '#build' do
+    describe '.build' do
       let(:player_types) { {human: HumanPlayer, computer: ComputerPlayer} }
-      let(:build_parameters) do
-        {player_mark: @default_player_marks.first, opponent_mark: @default_player_marks.last}
+      let(:player_config) do
+        {
+          game: Game.new({}),
+          player_mark: @default_player_marks.first
+        }
       end
 
       it 'creates a player of the given type' do
         player_types.each do |type, associated_class|
-          build_parameters[:type] = type
-          player = player_factory.build(build_parameters)
+          player_config[:type] = type
 
-          expect(player).to be_a associated_class
+          expect(described_class.build(player_config)).to be_a associated_class
+        end
+      end
+
+      it 'creates players that respond to #move' do
+        player_types.keys.each do |type|
+          player_config[:type] = type
+
+          expect(described_class.build(player_config)).to respond_to(:move)
+        end
+      end
+
+      it 'creats players that use the given mark' do
+        player_types.keys.each do |type|
+          player_config[:type] = type
+
+          expect(described_class.build(player_config).player_mark).to eq player_config[:player_mark]
         end
       end
     end

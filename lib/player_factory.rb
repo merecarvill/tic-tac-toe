@@ -3,23 +3,21 @@ require_relative 'computer_player'
 
 module TicTacToe
   class PlayerFactory
-    def initialize(parameters)
-      @game = parameters[:game]
-    end
+    def self.build(config)
+      shared_parameters = {player_mark: config[:player_mark]}
 
-    def build(parameters)
-      player_parameters = {
-        player_mark: parameters[:player_mark],
-        opponent_mark: parameters[:opponent_mark]
-      }
-
-      case parameters[:type]
+      case config[:type]
       when :human
-        player_parameters[:interface] = @game.interface
-        HumanPlayer.new(player_parameters)
+        human_parameters = {
+          interface: config[:game].interface
+        }
+        HumanPlayer.new(human_parameters.merge(shared_parameters))
       when :computer
-        player_parameters[:board] = @game.board
-        ComputerPlayer.new(player_parameters)
+        computer_parameters = {
+          opponent_mark: (config[:game].player_marks - [config[:player_mark]]).pop,
+          board: config[:game].board
+        }
+        ComputerPlayer.new(computer_parameters.merge(shared_parameters))
       end
     end
   end
