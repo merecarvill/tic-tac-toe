@@ -24,7 +24,7 @@ module TicTacToe
             custom_board = described_class.new(size: size)
 
             expect(custom_board.size).to eq size
-            expect(custom_board.num_cells).to eq size**2
+            expect(custom_board.all_coordinates.count).to eq size**2
           end
         end
 
@@ -38,7 +38,7 @@ module TicTacToe
           board = board_with_draw(@default_board_size, @default_player_marks)
           board_copy = described_class.new(size: board.size, board: board)
 
-          all_coordinates(board.size).each do |coordinates|
+          board.all_coordinates.each do |coordinates|
             expect(board_copy[*coordinates]).to eq board[*coordinates]
           end
         end
@@ -126,13 +126,21 @@ module TicTacToe
       end
     end
 
+    describe '#all_coordinates' do
+      let(:board) { new_board(@default_board_size) }
+
+      it 'returns the coordinates of every cell in board' do
+        expect(board.all_coordinates).to match_array (0...board.size).to_a.repeated_permutation(2).to_a
+      end
+    end
+
     describe '#blank_cell_coordinates' do
       let(:board) { new_board(@default_board_size) }
 
       it 'returns all cell coordinates when board is blank' do
         board = new_board(@default_board_size)
 
-        expect(board.blank_cell_coordinates).to match_array(all_coordinates(board.size))
+        expect(board.blank_cell_coordinates).to match_array(board.all_coordinates)
       end
 
       it 'returns the coordinates of all blank cells in board' do
@@ -141,13 +149,13 @@ module TicTacToe
           board[index, index] = @default_player_marks.sample
           marked_coordinates << [index, index]
         end
-        unmarked_coordinates = all_coordinates(board.size) - marked_coordinates
+        unmarked_coordinates = board.all_coordinates - marked_coordinates
 
         expect(board.blank_cell_coordinates).to match_array(unmarked_coordinates)
       end
 
       it 'returns empty array when no cells are blank' do
-        all_coordinates(board.size).each do |coordinates|
+        board.all_coordinates.each do |coordinates|
           board[*coordinates] = @default_player_marks.sample
         end
 
@@ -219,7 +227,7 @@ module TicTacToe
       it 'returns false if given coordinates are within bounds of board' do
         board = new_board(@default_board_size)
 
-        all_coordinates(board.size).each do |coordinates|
+        board.all_coordinates.each do |coordinates|
           expect(board.out_of_bounds?(coordinates)).to be false
         end
       end
@@ -243,7 +251,7 @@ module TicTacToe
     describe '#filled?' do
       it 'returns true if all cells in board are marked' do
         board = new_board(@default_board_size)
-        all_coordinates(board.size).each do |coordinates|
+        board.all_coordinates.each do |coordinates|
           board[*coordinates] = @default_player_marks.sample
         end
 

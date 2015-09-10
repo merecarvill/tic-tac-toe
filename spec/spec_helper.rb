@@ -27,10 +27,6 @@ RSpec.shared_context 'helper_methods' do
     [rand(board_size), rand(board_size)]
   end
 
-  def all_coordinates(board_size)
-    (0...board_size).to_a.repeated_permutation(2).to_a
-  end
-
   def new_board(board_size)
     TicTacToe::Board.new(size: board_size)
   end
