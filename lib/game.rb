@@ -22,23 +22,7 @@ module TicTacToe
     def set_up
       player_types = @interface.game_setup_interaction(@player_marks)
 
-      @player_marks.zip(player_types).each do |mark, type|
-        player_config = {
-          type: type,
-          game: self,
-          player_mark: mark
-        }
-        @players << PlayerFactory.build(player_config)
-      end
-    end
-
-    def create_player(mark, type)
-      Player.new(
-        player_mark: mark,
-        type: type,
-        interface: @interface,
-        board: @board,
-        opponent_mark: (@player_marks - [mark]).pop)
+      @players = @player_marks.zip(player_types).map { |mark, type| create_player(mark, type) }
     end
 
     def handle_turns
@@ -76,6 +60,17 @@ module TicTacToe
 
     def over?
       @board.has_winning_line? || @board.filled?
+    end
+
+    private
+
+    def create_player(mark, type)
+      player_config = {
+        type: type,
+        game: self,
+        player_mark: mark
+      }
+      PlayerFactory.build(player_config)
     end
   end
 end
