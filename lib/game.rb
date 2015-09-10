@@ -44,7 +44,7 @@ module TicTacToe
     def get_valid_move(player)
       loop do
         coordinates = player.move
-        if coordinates.any? { |i| !i.between?(0, @board.size - 1) } || @board.marked?(coordinates)
+        if @board.out_of_bounds?(coordinates) || @board.marked?(coordinates)
           @interface.report_invalid_move(coordinates)
         else
           return coordinates

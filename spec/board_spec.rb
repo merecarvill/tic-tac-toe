@@ -24,7 +24,7 @@ module TicTacToe
             custom_board = described_class.new(size: size)
 
             expect(custom_board.size).to eq size
-            expect(custom_board.num_cells).to eq size**2
+            expect(custom_board.all_coordinates.count).to eq size**2
           end
         end
 
@@ -38,7 +38,7 @@ module TicTacToe
           board = board_with_draw(@default_board_size, @default_player_marks)
           board_copy = described_class.new(size: board.size, board: board)
 
-          all_coordinates(board.size).each do |coordinates|
+          board.all_coordinates.each do |coordinates|
             expect(board_copy[*coordinates]).to eq board[*coordinates]
           end
         end
@@ -126,13 +126,21 @@ module TicTacToe
       end
     end
 
+    describe '#all_coordinates' do
+      let(:board) { new_board(@default_board_size) }
+
+      it 'returns the coordinates of every cell in board' do
+        expect(board.all_coordinates).to match_array (0...board.size).to_a.repeated_permutation(2).to_a
+      end
+    end
+
     describe '#blank_cell_coordinates' do
       let(:board) { new_board(@default_board_size) }
 
       it 'returns all cell coordinates when board is blank' do
         board = new_board(@default_board_size)
 
-        expect(board.blank_cell_coordinates).to match_array(all_coordinates(board.size))
+        expect(board.blank_cell_coordinates).to match_array(board.all_coordinates)
       end
 
       it 'returns the coordinates of all blank cells in board' do
@@ -141,13 +149,13 @@ module TicTacToe
           board[index, index] = @default_player_marks.sample
           marked_coordinates << [index, index]
         end
-        unmarked_coordinates = all_coordinates(board.size) - marked_coordinates
+        unmarked_coordinates = board.all_coordinates - marked_coordinates
 
         expect(board.blank_cell_coordinates).to match_array(unmarked_coordinates)
       end
 
       it 'returns empty array when no cells are blank' do
-        all_coordinates(board.size).each do |coordinates|
+        board.all_coordinates.each do |coordinates|
           board[*coordinates] = @default_player_marks.sample
         end
 
@@ -192,52 +200,86 @@ module TicTacToe
     end
 
     describe '#marked?' do
-
-      it 'checks if cell at given coordinates has any player\'s mark' do
-        blank_board = new_board(@default_board_size)
-        board = blank_board.deep_copy
+      it 'returns true if cell at given coordinates has any player\'s mark' do
+        board = new_board(@default_board_size)
         coordinates = random_coordinates(board.size)
         board[*coordinates] = @default_player_marks.sample
 
-        expect(blank_board.marked?(coordinates)).to be false
         expect(board.marked?(coordinates)).to be true
+      end
+
+      it 'returns false if cell at given coordinates does not have a player\'s mark' do
+        blank_board = new_board(@default_board_size)
+        coordinates = random_coordinates(blank_board.size)
+
+        expect(blank_board.marked?(coordinates)).to be false
+      end
+    end
+
+    describe '#out_of_bounds?' do
+      it 'returns true if given coordinates are not within bounds of board' do
+        board = new_board(@default_board_size)
+        coordinates = [0, board.size]
+
+        expect(board.out_of_bounds?(coordinates)).to be true
+      end
+
+      it 'returns false if given coordinates are within bounds of board' do
+        board = new_board(@default_board_size)
+
+        board.all_coordinates.each do |coordinates|
+          expect(board.out_of_bounds?(coordinates)).to be false
+        end
       end
     end
 
     describe '#blank?' do
-      it 'checks if no cell in board is marked' do
+      it 'returns true if no cell in board is marked' do
         blank_board = new_board(@default_board_size)
-        board = blank_board.deep_copy
-        coordinates = random_coordinates(board.size)
-        board[*coordinates] = @default_player_marks.sample
 
         expect(blank_board.blank?).to be true
+      end
+
+      it 'returns false if any cell in board is marked' do
+        board = new_board(@default_board_size)
+        board[*random_coordinates(board.size)] = @default_player_marks.sample
+
         expect(board.blank?).to be false
       end
     end
 
     describe '#filled?' do
-      it 'checks if all cells in board are marked' do
-        blank_board = new_board(@default_board_size)
-        board = blank_board.deep_copy
-        all_coordinates(board.size).each do |coordinates|
+      it 'returns true if all cells in board are marked' do
+        board = new_board(@default_board_size)
+        board.all_coordinates.each do |coordinates|
           board[*coordinates] = @default_player_marks.sample
         end
 
-        expect(blank_board.filled?).to be false
         expect(board.filled?).to be true
+      end
+
+      it 'returns false if any cell in board is blank' do
+        board = new_board(@default_board_size)
+        coordinates = random_coordinates(board.size)
+        board[*coordinates] = @default_player_marks.sample
+
+        expect(board.filled?).to be false
       end
     end
 
     describe '#has_winning_line?' do
-      it 'checks if board has any winning lines' do
-        blank_board = new_board(@default_board_size)
+      it 'returns true if board has any winning lines' do
         mark = @default_player_marks.sample
 
-        expect(blank_board.has_winning_line?).to be false
         all_wins(@default_board_size, mark).each do |won_board|
           expect(won_board.has_winning_line?).to be true
         end
+      end
+
+      it 'returns false if board has no winning lines' do
+        blank_board = new_board(@default_board_size)
+
+        expect(blank_board.has_winning_line?).to be false
       end
     end
 
@@ -259,26 +301,6 @@ module TicTacToe
         board = board_with_potential_win_loss_or_draw(@default_board_size, @default_player_marks)
 
         expect(board.game_over?).to be false
-      end
-    end
-
-    describe '#to_s' do
-      it 'returns a string representation of the board' do
-        board = new_board(@default_board_size)
-
-        expect(board.to_s).to be_a String
-      end
-
-      it 'contains a number of marks equal to the number of times they appear on the board' do
-        board = new_board(@default_board_size)
-        3.times do
-          board[*board.blank_cell_coordinates.sample] = @default_first_player
-          board[*board.blank_cell_coordinates.sample] = @default_second_player
-        end
-        board_characters = board.to_s.split('')
-
-        expect(board_characters.count(@default_first_player.to_s)).to eq 3
-        expect(board_characters.count(@default_second_player.to_s)).to eq 3
       end
     end
   end

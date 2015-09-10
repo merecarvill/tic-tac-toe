@@ -15,7 +15,10 @@ module TicTacToe
     end
 
     def show_game_board(board)
-      print board.to_s
+      row_separator = '----' * board.size + "-\n"
+      col_separator = '|'
+
+      print assemble_board_string(board, row_separator, col_separator)
     end
 
     def solicit_move(player_mark)
@@ -69,6 +72,20 @@ You've probably done this a million times before.
 You don't need me to tell you what to do.
 Go get 'em killer~
 EOS
+    end
+
+    private
+
+    def assemble_board_string(board, row_separator, col_separator)
+      output_string = row_separator
+      (0...board.size).each do |row|
+        output_string += col_separator
+        (0...board.size).each do |col|
+          output_string += " #{board[row, col] || ' '} " + col_separator
+        end
+        output_string += "\n" + row_separator
+      end
+      output_string
     end
   end
 end
