@@ -25,7 +25,7 @@ module TicTacToe
         player_types.keys.each do |type|
           player_config[:type] = type
 
-          expect(described_class.build(player_config)).to respond_to(:move)
+          expect(described_class.build(player_config)).to respond_to :move
         end
       end
 

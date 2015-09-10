@@ -82,7 +82,7 @@ module TicTacToe
         game.set_up
 
         game.players.each_with_index do |player, index|
-          expect(player.respond_to?(:move)).to be true
+          expect(player).to respond_to :move
           expect(player).to be_a index == 0 ? HumanPlayer : ComputerPlayer
         end
       end
