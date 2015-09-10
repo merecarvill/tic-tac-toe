@@ -8,8 +8,7 @@ module TicTacToe
 
     def initialize(parameters)
       @player_marks = parameters[:player_marks] || [:x, :o]
-      board_size = parameters[:board_size] || 3
-      @board = Board.new(size: board_size)
+      @board = parameters[:board] || Board.new(size: 3)
       @interface = parameters[:interface] || CommandLineInterface.new
       @players = []
     end
