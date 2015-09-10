@@ -56,6 +56,10 @@ module TicTacToe
       !self[*coordinates].nil?
     end
 
+    def out_of_bounds?(coordinates)
+      coordinates.any? { |i| !i.between?(0, @size - 1) }
+    end
+
     def blank?
       @cells.flatten.all?(&:nil?)
     end

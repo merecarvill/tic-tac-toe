@@ -192,52 +192,86 @@ module TicTacToe
     end
 
     describe '#marked?' do
-
-      it 'checks if cell at given coordinates has any player\'s mark' do
-        blank_board = new_board(@default_board_size)
-        board = blank_board.deep_copy
+      it 'returns true if cell at given coordinates has any player\'s mark' do
+        board = new_board(@default_board_size)
         coordinates = random_coordinates(board.size)
         board[*coordinates] = @default_player_marks.sample
 
-        expect(blank_board.marked?(coordinates)).to be false
         expect(board.marked?(coordinates)).to be true
+      end
+
+      it 'returns false if cell at given coordinates does not have a player\'s mark' do
+        blank_board = new_board(@default_board_size)
+        coordinates = random_coordinates(blank_board.size)
+
+        expect(blank_board.marked?(coordinates)).to be false
+      end
+    end
+
+    describe '#out_of_bounds?' do
+      it 'returns true if given coordinates are not within bounds of board' do
+        board = new_board(@default_board_size)
+        coordinates = [0, board.size]
+
+        expect(board.out_of_bounds?(coordinates)).to be true
+      end
+
+      it 'returns false if given coordinates are within bounds of board' do
+        board = new_board(@default_board_size)
+
+        all_coordinates(board.size).each do |coordinates|
+          expect(board.out_of_bounds?(coordinates)).to be false
+        end
       end
     end
 
     describe '#blank?' do
-      it 'checks if no cell in board is marked' do
+      it 'returns true if no cell in board is marked' do
         blank_board = new_board(@default_board_size)
-        board = blank_board.deep_copy
-        coordinates = random_coordinates(board.size)
-        board[*coordinates] = @default_player_marks.sample
 
         expect(blank_board.blank?).to be true
+      end
+
+      it 'returns false if any cell in board is marked' do
+        board = new_board(@default_board_size)
+        board[*random_coordinates(board.size)] = @default_player_marks.sample
+
         expect(board.blank?).to be false
       end
     end
 
     describe '#filled?' do
-      it 'checks if all cells in board are marked' do
-        blank_board = new_board(@default_board_size)
-        board = blank_board.deep_copy
+      it 'returns true if all cells in board are marked' do
+        board = new_board(@default_board_size)
         all_coordinates(board.size).each do |coordinates|
           board[*coordinates] = @default_player_marks.sample
         end
 
-        expect(blank_board.filled?).to be false
         expect(board.filled?).to be true
+      end
+
+      it 'returns false if any cell in board is blank' do
+        board = new_board(@default_board_size)
+        coordinates = random_coordinates(board.size)
+        board[*coordinates] = @default_player_marks.sample
+
+        expect(board.filled?).to be false
       end
     end
 
     describe '#has_winning_line?' do
-      it 'checks if board has any winning lines' do
-        blank_board = new_board(@default_board_size)
+      it 'returns true if board has any winning lines' do
         mark = @default_player_marks.sample
 
-        expect(blank_board.has_winning_line?).to be false
         all_wins(@default_board_size, mark).each do |won_board|
           expect(won_board.has_winning_line?).to be true
         end
+      end
+
+      it 'returns false if board has no winning lines' do
+        blank_board = new_board(@default_board_size)
+
+        expect(blank_board.has_winning_line?).to be false
       end
     end
 
