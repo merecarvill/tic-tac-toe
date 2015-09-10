@@ -2,7 +2,7 @@ require_relative 'human_player'
 require_relative 'computer_player'
 
 module TicTacToe
-  class PlayerFactory
+  module PlayerFactory
     def self.build(config)
       shared_parameters = {player_mark: config[:player_mark]}
 

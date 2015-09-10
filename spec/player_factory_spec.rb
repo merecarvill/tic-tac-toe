@@ -29,7 +29,7 @@ module TicTacToe
         end
       end
 
-      it 'creats players that use the given mark' do
+      it 'creates players that use the given mark' do
         player_types.keys.each do |type|
           player_config[:type] = type
 
