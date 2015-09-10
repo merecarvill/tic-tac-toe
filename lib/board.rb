@@ -79,25 +79,6 @@ module TicTacToe
       has_winning_line? || filled?
     end
 
-    def to_s
-      row_separator = '----' * @size + "-\n"
-      col_separator = '|'
-
-      assemble_board_string(row_separator, col_separator)
-    end
-
-    def assemble_board_string(row_separator, col_separator)
-      output_string = row_separator
-      (0...@size).each do |row|
-        output_string += col_separator
-        (0...@size).each do |col|
-          output_string += " #{self[row, col] || ' '} " + col_separator
-        end
-        output_string += "\n" + row_separator
-      end
-      output_string
-    end
-
     private
 
     def generate_new_board

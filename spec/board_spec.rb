@@ -295,25 +295,5 @@ module TicTacToe
         expect(board.game_over?).to be false
       end
     end
-
-    describe '#to_s' do
-      it 'returns a string representation of the board' do
-        board = new_board(@default_board_size)
-
-        expect(board.to_s).to be_a String
-      end
-
-      it 'contains a number of marks equal to the number of times they appear on the board' do
-        board = new_board(@default_board_size)
-        3.times do
-          board[*board.blank_cell_coordinates.sample] = @default_first_player
-          board[*board.blank_cell_coordinates.sample] = @default_second_player
-        end
-        board_characters = board.to_s.split('')
-
-        expect(board_characters.count(@default_first_player.to_s)).to eq 3
-        expect(board_characters.count(@default_second_player.to_s)).to eq 3
-      end
-    end
   end
 end
