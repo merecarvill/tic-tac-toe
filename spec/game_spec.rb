@@ -12,10 +12,11 @@ module TicTacToe
       end
 
       context 'when given parameters' do
-        it 'creates a board of the given size' do
-          custom_game = described_class.new(board_size: 4)
+        it 'uses given board' do
+          board = Board.new(size: 4)
+          custom_game = described_class.new(board: board)
 
-          expect(custom_game.board.size).to eq 4
+          expect(custom_game.board).to eq board
         end
 
         it 'uses player marks of the given type' do
@@ -33,7 +34,7 @@ module TicTacToe
       end
 
       context 'when a given parameter is not provided' do
-        it 'creates a board of a default size' do
+        it 'creates and uses a board of default size' do
           expect(game.board.size).to eq @default_board_size
         end
 
@@ -81,8 +82,8 @@ module TicTacToe
         game.set_up
 
         game.players.each_with_index do |player, index|
-          expect(player).to be_a Player
-          expect(player.player).to be_a index == 0 ? HumanPlayer : ComputerPlayer
+          expect(player.respond_to?(:move)).to be true
+          expect(player).to be_a index == 0 ? HumanPlayer : ComputerPlayer
         end
       end
     end

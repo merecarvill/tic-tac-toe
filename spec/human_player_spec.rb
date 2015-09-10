@@ -11,12 +11,6 @@ module TicTacToe
         player_mark: @default_first_player)
     end
 
-    it 'implements methods required by Player interface' do
-      Player.required_methods.each do |method|
-        expect(human_player).to respond_to(method)
-      end
-    end
-
     describe '#initialize' do
       it 'takes parameters containing the game interface and the player\'s mark' do
         params = {

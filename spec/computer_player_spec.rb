@@ -14,12 +14,6 @@ module TicTacToe
     let(:infinity) { Float::INFINITY }
     let(:neg_infinity) { -Float::INFINITY }
 
-    it 'implements methods required by Player interface' do
-      Player.required_methods.each do |method|
-        expect(ai).to respond_to(method)
-      end
-    end
-
     describe '#initialize' do
       it 'takes a parameters hash with the player\'s mark, opponent\'s mark, and the game board' do
         params = {

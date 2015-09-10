@@ -1,5 +1,5 @@
 require_relative 'board'
-require_relative 'player'
+require_relative 'player_factory'
 require_relative 'command_line_interface'
 
 module TicTacToe
@@ -8,8 +8,7 @@ module TicTacToe
 
     def initialize(parameters)
       @player_marks = parameters[:player_marks] || [:x, :o]
-      board_size = parameters[:board_size] || 3
-      @board = Board.new(size: board_size)
+      @board = parameters[:board] || Board.new(size: 3)
       @interface = parameters[:interface] || CommandLineInterface.new
       @players = []
     end
@@ -24,7 +23,12 @@ module TicTacToe
       player_types = @interface.game_setup_interaction(@player_marks)
 
       @player_marks.zip(player_types).each do |mark, type|
-        @players << create_player(mark, type)
+        player_config = {
+          type: type,
+          game: self,
+          player_mark: mark
+        }
+        @players << PlayerFactory.build(player_config)
       end
     end
 

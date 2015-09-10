@@ -2,9 +2,9 @@ require 'rspec'
 require 'rspec/collection_matchers'
 require_relative '../lib/game'
 require_relative '../lib/board'
-require_relative '../lib/player'
 require_relative '../lib/human_player'
 require_relative '../lib/computer_player'
+require_relative '../lib/player_factory'
 require_relative '../lib/command_line_interface'
 
 RSpec.shared_context 'default_values' do
