@@ -1,5 +1,4 @@
 require_relative 'board'
-require_relative 'player'
 require_relative 'player_factory'
 require_relative 'command_line_interface'
 
