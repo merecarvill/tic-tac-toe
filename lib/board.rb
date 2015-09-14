@@ -13,7 +13,6 @@ module TicTacToe
       fail BoardError, 'Given size is too small, must be 3 or greater' if parameters[:size] < 3
       @size = parameters[:size]
       generate_new_board
-      deep_copy_board(parameters[:board]) if parameters[:board]
       initialize_cells(parameters[:config]) if parameters[:config]
     end
 
@@ -51,7 +50,7 @@ module TicTacToe
     end
 
     def deep_copy
-      Board.new(size: @size, board: self)
+      Board.new(size: @size, config: configuration_of_cells)
     end
 
     def blank?(coordinates)
@@ -88,23 +87,15 @@ module TicTacToe
         fail BoardError, 'Given size does not reconcile with given configuration'
       end
 
-      all_coordinates.zip(config).each do |coordinates, mark|
-        self[*coordinates] = mark
-      end
+      @cells = config.each_slice(@size).to_a
+    end
+
+    def configuration_of_cells
+      @cells.flatten
     end
 
     def generate_new_board
       @cells = (0...@size).map { (0...@size).map { BLANK_MARK } }
-    end
-
-    def deep_copy_board(board)
-      fail BoardError, 'Given size does not match given board' if board.size != @size
-
-      (0...@size).each do |row|
-        (0...@size).each do |col|
-          self[row, col] = board[row, col]
-        end
-      end
     end
 
     def row_at(row)

@@ -18,14 +18,14 @@ module TicTacToe
     end
 
     describe '#initialize' do
-      it 'takes a perameters hash' do
-        expect { described_class.new(size: @default_board_size, board: nil) }.not_to raise_error
+      it 'takes a parameters hash' do
+        expect { described_class.new(size: @default_board_size) }.not_to raise_error
       end
 
       it 'raises error if given size is less than 3' do
         error_info = [board_error, 'Given size is too small, must be 3 or greater']
 
-        expect { described_class.new(size: 2, board: nil) }.to raise_error(*error_info)
+        expect { described_class.new(size: 2) }.to raise_error(*error_info)
       end
 
       context 'given the configuration of a board with preexisting marks' do
@@ -57,36 +57,7 @@ module TicTacToe
         end
       end
 
-      context 'when given another board to copy' do
-        it 'copies the cell values to a new board in the same configuration' do
-          board = board_with_draw(@default_board_size, @default_player_marks)
-          board_copy = described_class.new(size: board.size, board: board)
-
-          board.all_coordinates.each do |coordinates|
-            expect(board_copy[*coordinates]).to eq board[*coordinates]
-          end
-        end
-
-        it 'deep copies the cells' do
-          board = new_board(@default_board_size)
-          board_copy = described_class.new(size: board.size, board: board)
-          coordinates = random_coordinates(board.size)
-          board[*coordinates] = @default_player_marks.sample
-
-          expect(board[*coordinates]).not_to eq board_copy[*coordinates]
-        end
-
-        it 'raises error if given board does not match given size' do
-          large_board = described_class.new(size: @default_board_size + 1)
-
-          params = { size: @default_board_size, board: large_board }
-          error_info = [board_error, 'Given size does not match given board']
-
-          expect { described_class.new(params) }.to raise_error(*error_info)
-        end
-      end
-
-      context 'when not given a config or another board to copy' do
+      context 'when not given a configuration of a board with preexisting marks' do
         it 'generates a NxN board of the given size' do
           (3..5).each do |size|
             custom_board = described_class.new(size: size)
