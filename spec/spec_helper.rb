@@ -6,6 +6,7 @@ require_relative '../lib/command_line_interface'
 require_relative '../lib/player_factory'
 require_relative '../lib/human_player'
 require_relative '../lib/computer_player'
+require_relative '../lib/minimax'
 
 RSpec.shared_context 'default_values' do
   before :all do
