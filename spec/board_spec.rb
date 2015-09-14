@@ -99,7 +99,7 @@ module TicTacToe
       it 'raises error when attempting to change contents of non-empty cell' do
         board[*coordinates] = mark
 
-        error_info = [board_error, 'Cannot alter marked cell']
+        error_info = [board_error, 'Cannot alter a marked cell']
 
         expect { board[*coordinates] = mark }.to raise_error(*error_info)
       end
