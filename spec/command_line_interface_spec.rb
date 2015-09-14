@@ -5,21 +5,6 @@ module TicTacToe
     include_context 'default_values'
     include_context 'helper_methods'
 
-    before :all do
-      $stdin = StringIO.new
-      $stdout = StringIO.new
-    end
-
-    after do
-      $stdin.string = ''
-      $stdout.string = ''
-    end
-
-    after :all do
-      $stdin = STDIN
-      $stdout = STDOUT
-    end
-
     let(:input_stream) { StringIO.new }
     let(:output_stream) { StringIO.new }
     let(:interface) do
@@ -37,13 +22,13 @@ module TicTacToe
 
     describe '#game_setup_interaction' do
       before do
-        $stdin.string = %w(human computer).join("\n")
+        input_stream.string = %w(human computer).join("\n")
       end
 
       it 'prints an introductory message to the command line' do
         interface.game_setup_interaction(@default_player_marks)
 
-        expect($stdout.string).not_to eq ''
+        expect(output_stream.string).not_to eq ''
       end
 
       it 'returns the player type associated with each of the given player marks' do
@@ -60,15 +45,15 @@ module TicTacToe
       let(:valid_input) { 'human' }
 
       it 'prints a prompt to the command line' do
-        $stdin.string = valid_input
+        input_stream.string = valid_input
         interface.solicit_player_type(@default_first_player)
 
-        expect($stdout.string).not_to eq ''
+        expect(output_stream.string).not_to eq ''
       end
 
       context 'when given valid input' do
         it 'returns the player type input by user' do
-          $stdin.string = valid_input
+          input_stream.string = valid_input
 
           expect(interface.solicit_player_type(@default_first_player)).to eq valid_input.to_sym
         end
@@ -78,10 +63,10 @@ module TicTacToe
         let(:invalid_input) { 'foo' }
 
         it 'prompts the user until given valid input' do
-          $stdin.string = invalid_input + "\n" + invalid_input + "\n" + valid_input
+          input_stream.string = invalid_input + "\n" + invalid_input + "\n" + valid_input
           interface.solicit_player_type(@default_first_player)
 
-          expect(at_least_one_repeated_line?($stdout.string)).to be true
+          expect(at_least_one_repeated_line?(output_stream.string)).to be true
         end
       end
     end
@@ -91,7 +76,7 @@ module TicTacToe
         board = board_with_draw(@default_board_size, @default_player_marks)
         interface.show_game_board(board)
 
-        board_characters = $stdout.string.split('')
+        board_characters = output_stream.string.split('')
         cell_count = board.size**2
         expected_first_mark_count = cell_count.odd? ? cell_count / 2 + 1 : cell_count / 2
         expected_second_mark_count = cell_count / 2
@@ -105,15 +90,15 @@ module TicTacToe
       let(:valid_input) { '0, 0' }
 
       it 'prints a prompt to the command line' do
-        $stdin.string = valid_input
+        input_stream.string = valid_input
         interface.solicit_move(@default_first_player)
 
-        expect($stdout.string).not_to eq ''
+        expect(output_stream.string).not_to eq ''
       end
 
       context 'when given valid input' do
         it 'returns the move coordinates input by user' do
-          $stdin.string = valid_input
+          input_stream.string = valid_input
           valid_coordinate = valid_input.split(',').map(&:to_i)
 
           expect(interface.solicit_move(@default_first_player)).to eq valid_coordinate
@@ -124,10 +109,10 @@ module TicTacToe
         let(:invalid_input) { 'foo' }
 
         it 'prompts the user until given valid input' do
-          $stdin.string = invalid_input + "\n" + invalid_input + "\n" + valid_input
+          input_stream.string = invalid_input + "\n" + invalid_input + "\n" + valid_input
           interface.solicit_move(@default_first_player)
 
-          expect(at_least_one_repeated_line?($stdout.string)).to be true
+          expect(at_least_one_repeated_line?(output_stream.string)).to be true
         end
       end
     end
@@ -136,14 +121,14 @@ module TicTacToe
       it 'prints a notification that a move cannot be made at the given coordinates' do
         interface.report_invalid_move([0, 0])
 
-        expect($stdout.string.split('').count('0')).to eq 2
+        expect(output_stream.string.split('').count('0')).to eq 2
       end
     end
 
     describe '#report_move' do
       it 'prints a notification of the move made by the given mark at the given coordinates' do
         interface.report_move(@default_first_player, [0, 0])
-        interface_output = $stdout.string
+        interface_output = output_stream.string
 
         expect(interface_output).to include @default_first_player.to_s
         expect(interface_output.split('').count('0')).to eq 2
@@ -169,7 +154,7 @@ module TicTacToe
     describe '#report_win' do
       it 'prints a notification that the player using the given mark has won' do
         interface.report_win(@default_first_player)
-        interface_output = $stdout.string
+        interface_output = output_stream.string
 
         expect(interface_output).to include @default_first_player.to_s
         expect(interface_output).to include 'wins'
@@ -180,7 +165,7 @@ module TicTacToe
       it 'prints a notification that the game has ended in a draw' do
         interface.report_draw
 
-        expect($stdout.string).to include 'draw'
+        expect(output_stream.string).to include 'draw'
       end
     end
   end
