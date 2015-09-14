@@ -219,7 +219,7 @@ module TicTacToe
       end
 
       it 'returns true if the board is filled' do
-        allow(game.board).to receive(:filled?).and_return(true)
+        allow(game.board).to receive(:all_marked?).and_return(true)
 
         expect(game.over?).to be true
       end
@@ -249,7 +249,7 @@ module TicTacToe
           game.run
 
           expect(game.board.has_winning_line?).to be false
-          expect(game.board.filled?).to be true
+          expect(game.board.all_marked?).to be true
         end
       end
 

@@ -59,7 +59,7 @@ module TicTacToe
     end
 
     def over?
-      @board.has_winning_line? || @board.filled?
+      @board.has_winning_line? || @board.all_marked?
     end
 
     private

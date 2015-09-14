@@ -37,7 +37,7 @@ module TicTacToe
     end
 
     def minimax(board, my_turn, best_score_so_far)
-      if board.game_over?
+      if board.has_winning_line? || board.all_marked?
         evaluate(board)
       else
         select_score_of_best_successor_board(board, my_turn, best_score_so_far.dup)

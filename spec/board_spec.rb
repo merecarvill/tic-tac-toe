@@ -7,6 +7,16 @@ module TicTacToe
 
     let(:board_error) { Board::BoardError }
 
+    describe '.blank_mark' do
+      it 'returns the mark used by board to indicate a blank cell' do
+        board = new_board(@default_board_size)
+
+        board.all_coordinates.each do |coordinates|
+          expect(board[*coordinates]).to eq Board.blank_mark
+        end
+      end
+    end
+
     describe '#initialize' do
       it 'takes a perameters hash' do
         expect { described_class.new(size: @default_board_size, board: nil) }.not_to raise_error
@@ -29,7 +39,7 @@ module TicTacToe
         end
 
         it 'leaves the generated board blank' do
-          expect(described_class.new(size: @default_board_size).blank?).to be true
+          expect(described_class.new(size: @default_board_size).all_blank?).to be true
         end
       end
 
@@ -199,6 +209,23 @@ module TicTacToe
       end
     end
 
+    describe '#blank?' do
+      it 'returns true if cell at given coordinates is blank' do
+        blank_board = new_board(@default_board_size)
+        coordinates = random_coordinates(blank_board.size)
+
+        expect(blank_board.blank?(coordinates)).to be true
+      end
+
+      it 'returns false if cell at given coordinates is not blank' do
+        board = new_board(@default_board_size)
+        coordinates = random_coordinates(board.size)
+        board[*coordinates] = @default_player_marks.sample
+
+        expect(board.blank?(coordinates)).to be false
+      end
+    end
+
     describe '#marked?' do
       it 'returns true if cell at given coordinates has any player\'s mark' do
         board = new_board(@default_board_size)
@@ -233,29 +260,29 @@ module TicTacToe
       end
     end
 
-    describe '#blank?' do
+    describe '#all_blank?' do
       it 'returns true if no cell in board is marked' do
         blank_board = new_board(@default_board_size)
 
-        expect(blank_board.blank?).to be true
+        expect(blank_board.all_blank?).to be true
       end
 
       it 'returns false if any cell in board is marked' do
         board = new_board(@default_board_size)
         board[*random_coordinates(board.size)] = @default_player_marks.sample
 
-        expect(board.blank?).to be false
+        expect(board.all_blank?).to be false
       end
     end
 
-    describe '#filled?' do
+    describe '#all_marked?' do
       it 'returns true if all cells in board are marked' do
         board = new_board(@default_board_size)
         board.all_coordinates.each do |coordinates|
           board[*coordinates] = @default_player_marks.sample
         end
 
-        expect(board.filled?).to be true
+        expect(board.all_marked?).to be true
       end
 
       it 'returns false if any cell in board is blank' do
@@ -263,7 +290,7 @@ module TicTacToe
         coordinates = random_coordinates(board.size)
         board[*coordinates] = @default_player_marks.sample
 
-        expect(board.filled?).to be false
+        expect(board.all_marked?).to be false
       end
     end
 
@@ -280,27 +307,6 @@ module TicTacToe
         blank_board = new_board(@default_board_size)
 
         expect(blank_board.has_winning_line?).to be false
-      end
-    end
-
-    describe '#game_over?' do
-      it 'returns true if the game has ended in a draw' do
-        board_with_draw = board_with_draw(@default_board_size, @default_player_marks)
-
-        expect(board_with_draw.game_over?).to be true
-      end
-
-      it 'returns true if the game has been won' do
-        all_wins(@default_board_size, @default_first_player).each do |board_with_win|
-
-          expect(board_with_win.game_over?).to be true
-        end
-      end
-
-      it 'returns false if board has no win and is not filled' do
-        board = board_with_potential_win_loss_or_draw(@default_board_size, @default_player_marks)
-
-        expect(board.game_over?).to be false
       end
     end
   end
