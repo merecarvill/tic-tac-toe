@@ -28,6 +28,23 @@ module TicTacToe
         expect { described_class.new(size: 2, board: nil) }.to raise_error(*error_info)
       end
 
+      context 'given the configuration of a board with preexisting marks' do
+        it 'generates a board with the specified marks in each cell' do
+          _ = described_class.blank_mark
+          x, o = :x, :o
+          config = [
+            x, _, _,
+            _, o, _,
+            _, _, x
+          ]
+          board = described_class.new(size: @default_board_size, config: config)
+
+          board.all_coordinates.zip(config).each do |coordinates, mark|
+            expect(board[*coordinates]).to eq mark
+          end
+        end
+      end
+
       context 'when NOT given another board to copy' do
         it 'generates a NxN board of the given size' do
           (3..5).each do |size|

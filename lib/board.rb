@@ -14,6 +14,7 @@ module TicTacToe
       @size = parameters[:size]
       generate_new_board
       deep_copy_board(parameters[:board]) if parameters[:board]
+      initialize_cells(parameters[:config]) if parameters[:config]
     end
 
     def []=(row, col, mark)
@@ -81,6 +82,12 @@ module TicTacToe
     end
 
     private
+
+    def initialize_cells(config)
+      all_coordinates.zip(config).each do |coordinates, mark|
+        self[*coordinates] = mark
+      end
+    end
 
     def generate_new_board
       @cells = (0...@size).map { (0...@size).map { BLANK_MARK } }
