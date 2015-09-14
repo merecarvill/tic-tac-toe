@@ -42,8 +42,8 @@ module TicTacToe
 
       context 'when a center space is not available' do
         before do
-          center_coordinate = [ai.board.size / 2, ai.board.size / 2]
-          ai.board[*center_coordinate] = ai.opponent_mark
+          center_coordinates = [ai.board.size / 2, ai.board.size / 2]
+          ai.board.mark_cell(ai.opponent_mark, *center_coordinates)
         end
 
         it 'returns coordinates for the best available move' do
@@ -57,7 +57,7 @@ module TicTacToe
       it 'returns the coordinates of an available move on the game board' do
         board = ai.board
         3.times do
-          board[*board.blank_cell_coordinates.sample] = @default_player_marks.sample
+          board.mark_cell(@default_player_marks.sample, *board.blank_cell_coordinates.sample)
         end
         coordinates = ai.select_best_move
 

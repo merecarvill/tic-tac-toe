@@ -38,11 +38,12 @@ RSpec.shared_context 'helper_methods' do
   def board_with_potential_win_loss_or_draw(board_size, player_marks)
     first_mark, second_mark = player_marks
     board = new_board(board_size)
-    (0...board_size - 1).each { |col| board[0, col] = first_mark }
-    (0...board_size - 1).each { |col| board[1, col] = second_mark }
+    (0...board_size - 1).each { |col| board.mark_cell(first_mark, 0, col) }
+    (0...board_size - 1).each { |col| board.mark_cell(second_mark, 1, col) }
     (2...board_size).each do |row|
       (0...board_size - 1).each do |col|
-        board[row, col] = col.even? ? first_mark : second_mark
+        mark = col.even? ? first_mark : second_mark
+        board.mark_cell(mark, row, col)
       end
     end
     board
@@ -54,9 +55,11 @@ RSpec.shared_context 'helper_methods' do
     (0...board_size).each do |row|
       (0...board_size).each do |col|
         if row == 0
-          board[row, col] = col.odd? ? first_mark : second_mark
+          mark = col.odd? ? first_mark : second_mark
+          board.mark_cell(mark, row, col)
         else
-          board[row, col] = col.even? ? first_mark : second_mark
+          mark = col.even? ? first_mark : second_mark
+          board.mark_cell(mark, row, col)
         end
       end
     end
@@ -72,7 +75,7 @@ RSpec.shared_context 'helper_methods' do
   def horizontal_wins(board_size, winning_mark)
     (0...board_size).each_with_object([]) do |row, winning_boards|
       board = new_board(board_size)
-      (0...board_size).each { |col| board[row, col] = winning_mark }
+      (0...board_size).each { |col| board.mark_cell(winning_mark, row, col) }
       winning_boards << board
     end
   end
@@ -80,17 +83,21 @@ RSpec.shared_context 'helper_methods' do
   def vertical_wins(board_size, winning_mark)
     (0...board_size).each_with_object([]) do |col, winning_boards|
       board = new_board(board_size)
-      (0...board_size).each { |row| board[row, col] = winning_mark }
+      (0...board_size).each { |row| board.mark_cell(winning_mark, row, col) }
       winning_boards << board
     end
   end
 
   def diagonal_wins(board_size, winning_mark)
     ldiag_board = new_board(board_size)
-    (0...board_size).each { |index| ldiag_board[index, index] = winning_mark }
+    (0...board_size).each do |index|
+      ldiag_board.mark_cell(winning_mark, index, index)
+    end
 
     rdiag_board = new_board(board_size)
-    (0...board_size).each { |index| rdiag_board[index, rdiag_board.size - index - 1] = winning_mark }
+    (0...board_size).each do |index|
+      rdiag_board.mark_cell(winning_mark, index, rdiag_board.size - index - 1)
+    end
 
     [ldiag_board, rdiag_board]
   end

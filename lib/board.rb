@@ -31,20 +31,6 @@ module TicTacToe
       @cells[row][col] = mark
     end
 
-    def []=(row, col, mark)
-      fail BoardError, 'Cell coordinates are out of bounds' if out_of_bounds?([row, col])
-      fail BoardError, 'Cannot alter a marked cell' if marked?([row, col])
-
-      @last_move_made = [row, col]
-      @cells[row][col] = mark
-    end
-
-    def [](row, col)
-      fail BoardError, 'Cell coordinates are out of bounds' if out_of_bounds?([row, col])
-
-      @cells[row][col]
-    end
-
     def lines
       (0...@size).each_with_object([left_diag, right_diag]) do |index, lines|
         lines << row_at(index) << col_at(index)
@@ -61,7 +47,7 @@ module TicTacToe
 
     def last_mark_made
       return if @last_move_made.nil?
-      self[*last_move_made]
+      self.read_cell(*last_move_made)
     end
 
     def deep_copy
@@ -69,7 +55,7 @@ module TicTacToe
     end
 
     def blank?(coordinates)
-      self[*coordinates] == BLANK_MARK
+      self.read_cell(*coordinates) == BLANK_MARK
     end
 
     def marked?(coordinates)
@@ -114,19 +100,19 @@ module TicTacToe
     end
 
     def row_at(row)
-      (0...@size).map { |col| self[row, col] }
+      (0...@size).map { |col| self.read_cell(row, col) }
     end
 
     def col_at(col)
-      (0...@size).map { |row| self[row, col] }
+      (0...@size).map { |row| self.read_cell(row, col) }
     end
 
     def left_diag
-      (0...@size).map { |index| self[index, index] }
+      (0...@size).map { |index| self.read_cell(index, index) }
     end
 
     def right_diag
-      (0...@size).map { |row| self[row, @size - row - 1] }
+      (0...@size).map { |row| self.read_cell(row, @size - row - 1) }
     end
   end
 end

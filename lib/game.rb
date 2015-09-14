@@ -37,7 +37,7 @@ module TicTacToe
     def handle_one_turn(current_player)
       @interface.show_game_board(@board)
       coordinates = get_valid_move(current_player)
-      @board[*coordinates] = current_player.player_mark
+      @board.mark_cell(current_player.player_mark, *coordinates)
       @interface.report_move(current_player.player_mark, coordinates)
     end
 

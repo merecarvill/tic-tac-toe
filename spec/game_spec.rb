@@ -128,7 +128,7 @@ module TicTacToe
         allow(game.interface).to receive(:report_move)
         game.handle_one_turn(player_stub)
 
-        expect(game.board[0, 0]).to eq @default_first_player
+        expect(game.board.read_cell(0, 0)).to eq @default_first_player
       end
 
       it 'reports the move that was just made through the interface' do
@@ -160,7 +160,7 @@ module TicTacToe
         let(:valid_coordinates) { [0, game.board.size - 1] }
 
         before do
-          game.board[0, 0] = @default_first_player
+          game.board.mark_cell(@default_first_player, 0, 0)
           allow(player_stub).to receive(:move).and_return(
             occupied_coordinates,
             out_of_bounds_coordinates,
