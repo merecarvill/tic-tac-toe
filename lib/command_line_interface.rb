@@ -1,6 +1,11 @@
 module TicTacToe
   class CommandLineInterface
 
+    def initialize(parameters)
+      @input = parameters[:input]
+      @output = parameters[:output]
+    end
+
     def game_setup_interaction(player_marks)
       puts instructions
       player_marks.map { |mark| solicit_player_type(mark) }

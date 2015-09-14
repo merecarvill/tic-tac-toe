@@ -8,8 +8,8 @@ module TicTacToe
 
     def initialize(parameters)
       @player_marks = parameters[:player_marks] || [:x, :o]
-      @board = parameters[:board] || Board.new(size: 3)
-      @interface = parameters[:interface] || CommandLineInterface.new
+      @board = parameters[:board] || create_default_board
+      @interface = parameters[:interface] || create_default_interface
       @players = []
     end
 
@@ -63,6 +63,18 @@ module TicTacToe
     end
 
     private
+
+    def create_default_board
+      Board.new(size: 3)
+    end
+
+    def create_default_interface
+      parameters = {
+        input: $stdin,
+        output: $stdout
+      }
+      CommandLineInterface.new(parameters)
+    end
 
     def create_player(mark, type)
       player_config = {
