@@ -26,7 +26,7 @@ module TicTacToe
         end
 
         it 'uses the given interface' do
-          interface = CommandLineInterface.new
+          interface = double("CommandLineInterface")
           custom_game = described_class.new(interface: interface)
 
           expect(custom_game.interface).to eq interface
