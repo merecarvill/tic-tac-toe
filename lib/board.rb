@@ -17,6 +17,20 @@ module TicTacToe
       @cells = map_configuration_to_cells(config)
     end
 
+    def read_cell(row, col)
+      fail BoardError, 'Cell coordinates are out of bounds' if out_of_bounds?([row, col])
+
+      @cells[row][col]
+    end
+
+    def mark_cell(mark, row, col)
+      fail BoardError, 'Cell coordinates are out of bounds' if out_of_bounds?([row, col])
+      fail BoardError, 'Cannot alter a marked cell' if marked?([row, col])
+
+      @last_move_made = [row, col]
+      @cells[row][col] = mark
+    end
+
     def []=(row, col, mark)
       fail BoardError, 'Cell coordinates are out of bounds' if out_of_bounds?([row, col])
       fail BoardError, 'Cannot alter a marked cell' if marked?([row, col])

@@ -73,10 +73,78 @@ module TicTacToe
       end
     end
 
+    describe '#read_cell' do
+      it 'gets the contents of cell at given row and column' do
+        mark = @default_player_marks.sample
+        config = blank_board_configuration(@default_board_size)
+        config[0] = mark
+        board = described_class.new(size: @default_board_size, config: config)
+
+        expect(board.read_cell(0, 0)).to eq mark
+      end
+
+      it 'raises error if cell coordinates are out of bounds' do
+        error_info = [board_error, 'Cell coordinates are out of bounds']
+        board = new_board(@default_board_size)
+
+        expect { board.read_cell(board.size, board.size) }.to raise_error(*error_info)
+      end
+    end
+
+    describe '#[]' do
+      let(:board) { new_board(@default_board_size) }
+      let(:coordinates) { random_coordinates(board.size) }
+      let(:mark) { @default_player_marks.sample }
+
+      it 'gets the contents of cell at given row and column' do
+        board[*coordinates] = mark
+
+        expect(board[*coordinates]).to eq mark
+      end
+
+      it 'raises error if cell coordinates are out of bounds' do
+        error_info = [board_error, 'Cell coordinates are out of bounds']
+
+        expect { board[board.size, board.size] }.to raise_error(*error_info)
+      end
+    end
+
+    describe '#mark_cell' do
+      let(:board) { new_board(@default_board_size) }
+      let(:coordinates) { random_coordinates(board.size) }
+      let(:mark) { @default_player_marks.sample }
+
+      it 'sets the contents of an empty cell at the given row and column' do
+        board.mark_cell(mark, *coordinates)
+
+        expect(board.read_cell(*coordinates)).to eq mark
+      end
+
+      it 'records the coordinates of the last mark made' do
+        board.mark_cell(mark, *coordinates)
+
+        expect(board.last_move_made).to eq coordinates
+      end
+
+      it 'raises error if cell coordinates are out of bounds' do
+        error_info = [board_error, 'Cell coordinates are out of bounds']
+        oob_coordinates = [board.size, board.size]
+
+        expect { board.mark_cell(mark, *oob_coordinates)}.to raise_error(*error_info)
+      end
+
+      it 'raises error when attempting to change contents of non-empty cell' do
+        error_info = [board_error, 'Cannot alter a marked cell']
+        board.mark_cell(mark, *coordinates)
+
+        expect { board.mark_cell(mark, *coordinates) }.to raise_error(*error_info)
+      end
+    end
+
     describe '#[]=' do
       let(:board) { new_board(@default_board_size) }
       let(:coordinates) { random_coordinates(board.size) }
-      let(:mark) { mark = @default_player_marks.sample }
+      let(:mark) { @default_player_marks.sample }
 
       it 'sets the contents of an empty cell at the given row and column' do
         board[*coordinates] = mark
@@ -102,24 +170,6 @@ module TicTacToe
         error_info = [board_error, 'Cannot alter a marked cell']
 
         expect { board[*coordinates] = mark }.to raise_error(*error_info)
-      end
-    end
-
-    describe '#[]' do
-      let(:board) { new_board(@default_board_size) }
-      let(:coordinates) { random_coordinates(board.size) }
-      let(:mark) { mark = @default_player_marks.sample }
-
-      it 'gets the contents of cell at given row and column' do
-        board[*coordinates] = mark
-
-        expect(board[*coordinates]).to eq mark
-      end
-
-      it 'raises error if cell coordinates are out of bounds' do
-        error_info = [board_error, 'Cell coordinates are out of bounds']
-
-        expect { board[board.size, board.size] }.to raise_error(*error_info)
       end
     end
 

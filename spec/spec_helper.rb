@@ -18,6 +18,10 @@ RSpec.shared_context 'default_values' do
 end
 
 RSpec.shared_context 'helper_methods' do
+  def blank_board_configuration(board_size)
+    (0...board_size**2).map { TicTacToe::Board.blank_mark }
+  end
+
   def at_least_one_repeated_line?(string)
     lines = string.split("\n")
     lines.uniq.length < lines.length
