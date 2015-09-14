@@ -31,13 +31,13 @@ module TicTacToe
     def generate_possible_successor_boards(board, mark)
       board.blank_cell_coordinates.map do |coordinates|
         successor_board = board.deep_copy
-        successor_board[*coordinates] = mark
+        successor_board.mark_cell(mark, *coordinates)
         successor_board
       end
     end
 
     def minimax(board, my_turn, best_score_so_far)
-      if board.game_over?
+      if board.has_winning_line? || board.all_marked?
         evaluate(board)
       else
         select_score_of_best_successor_board(board, my_turn, best_score_so_far.dup)

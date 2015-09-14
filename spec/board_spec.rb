@@ -7,18 +7,57 @@ module TicTacToe
 
     let(:board_error) { Board::BoardError }
 
+    describe '.blank_mark' do
+      it 'returns the mark used by board to indicate a blank cell' do
+        board = new_board(@default_board_size)
+
+        board.all_coordinates.each do |coordinates|
+          expect(board.read_cell(*coordinates)).to eq Board.blank_mark
+        end
+      end
+    end
+
     describe '#initialize' do
-      it 'takes a perameters hash' do
-        expect { described_class.new(size: @default_board_size, board: nil) }.not_to raise_error
+      it 'takes a parameters hash' do
+        expect { described_class.new(size: @default_board_size) }.not_to raise_error
       end
 
       it 'raises error if given size is less than 3' do
         error_info = [board_error, 'Given size is too small, must be 3 or greater']
 
-        expect { described_class.new(size: 2, board: nil) }.to raise_error(*error_info)
+        expect { described_class.new(size: 2) }.to raise_error(*error_info)
       end
 
-      context 'when NOT given another board to copy' do
+      context 'given the configuration of a board with preexisting marks' do
+        let(:config) do
+          _ = described_class.blank_mark
+          x, o = :x, :o
+
+          [ x, _, _,
+            _, o, _,
+            _, _, x ]
+        end
+
+        it 'generates a board with the specified marks in each cell' do
+          board = described_class.new(size: @default_board_size, config: config)
+
+          board.all_coordinates.zip(config).each do |coordinates, mark|
+            expect(board.read_cell(*coordinates)).to eq mark
+          end
+        end
+
+        it 'raises error if given configuration does not reconcile with given size' do
+          error_info = [board_error, 'Given size does not reconcile with given configuration']
+          params = {
+            size: Math.sqrt(config.size).to_i + 1,
+            config: config
+          }
+
+          expect { described_class.new(params) }.to raise_error(*error_info)
+        end
+      end
+
+      context 'when not given a configuration of a board with preexisting marks' do
         it 'generates a NxN board of the given size' do
           (3..5).each do |size|
             custom_board = described_class.new(size: size)
@@ -29,87 +68,58 @@ module TicTacToe
         end
 
         it 'leaves the generated board blank' do
-          expect(described_class.new(size: @default_board_size).blank?).to be true
-        end
-      end
-
-      context 'when given another board to copy' do
-        it 'copies the cell values to a new board in the same configuration' do
-          board = board_with_draw(@default_board_size, @default_player_marks)
-          board_copy = described_class.new(size: board.size, board: board)
-
-          board.all_coordinates.each do |coordinates|
-            expect(board_copy[*coordinates]).to eq board[*coordinates]
-          end
-        end
-
-        it 'deep copies the cells' do
-          board = new_board(@default_board_size)
-          board_copy = described_class.new(size: board.size, board: board)
-          coordinates = random_coordinates(board.size)
-          board[*coordinates] = @default_player_marks.sample
-
-          expect(board[*coordinates]).not_to eq board_copy[*coordinates]
-        end
-
-        it 'raises error if given board does not match given size' do
-          large_board = described_class.new(size: @default_board_size + 1)
-
-          params = { size: @default_board_size, board: large_board }
-          error_info = [board_error, 'Given size does not match given board']
-
-          expect { described_class.new(params) }.to raise_error(*error_info)
+          expect(described_class.new(size: @default_board_size).all_blank?).to be true
         end
       end
     end
 
-    describe '#[]=' do
+    describe '#read_cell' do
+      it 'gets the contents of cell at given row and column' do
+        mark = @default_player_marks.sample
+        config = blank_board_configuration(@default_board_size)
+        config[0] = mark
+        board = described_class.new(size: @default_board_size, config: config)
+
+        expect(board.read_cell(0, 0)).to eq mark
+      end
+
+      it 'raises error if cell coordinates are out of bounds' do
+        error_info = [board_error, 'Cell coordinates are out of bounds']
+        board = new_board(@default_board_size)
+
+        expect { board.read_cell(board.size, board.size) }.to raise_error(*error_info)
+      end
+    end
+
+    describe '#mark_cell' do
       let(:board) { new_board(@default_board_size) }
       let(:coordinates) { random_coordinates(board.size) }
-      let(:mark) { mark = @default_player_marks.sample }
+      let(:mark) { @default_player_marks.sample }
 
       it 'sets the contents of an empty cell at the given row and column' do
-        board[*coordinates] = mark
+        board.mark_cell(mark, *coordinates)
 
-        expect(board[*coordinates]).to eq mark
+        expect(board.read_cell(*coordinates)).to eq mark
       end
 
       it 'records the coordinates of the last mark made' do
-        board[*coordinates] = mark
+        board.mark_cell(mark, *coordinates)
 
         expect(board.last_move_made).to eq coordinates
       end
 
       it 'raises error if cell coordinates are out of bounds' do
         error_info = [board_error, 'Cell coordinates are out of bounds']
+        oob_coordinates = [board.size, board.size]
 
-        expect { board[board.size, board.size] =  mark }.to raise_error(*error_info)
+        expect { board.mark_cell(mark, *oob_coordinates)}.to raise_error(*error_info)
       end
 
       it 'raises error when attempting to change contents of non-empty cell' do
-        board[*coordinates] = mark
+        error_info = [board_error, 'Cannot alter a marked cell']
+        board.mark_cell(mark, *coordinates)
 
-        error_info = [board_error, 'Cannot alter marked cell']
-
-        expect { board[*coordinates] = mark }.to raise_error(*error_info)
-      end
-    end
-
-    describe '#[]' do
-      let(:board) { new_board(@default_board_size) }
-      let(:coordinates) { random_coordinates(board.size) }
-      let(:mark) { mark = @default_player_marks.sample }
-
-      it 'gets the contents of cell at given row and column' do
-        board[*coordinates] = mark
-
-        expect(board[*coordinates]).to eq mark
-      end
-
-      it 'raises error if cell coordinates are out of bounds' do
-        error_info = [board_error, 'Cell coordinates are out of bounds']
-
-        expect { board[board.size, board.size] }.to raise_error(*error_info)
+        expect { board.mark_cell(mark, *coordinates) }.to raise_error(*error_info)
       end
     end
 
@@ -146,7 +156,7 @@ module TicTacToe
       it 'returns the coordinates of all blank cells in board' do
         marked_coordinates = []
         board.size.times do |index|
-          board[index, index] = @default_player_marks.sample
+          board.mark_cell(@default_player_marks.sample, index, index)
           marked_coordinates << [index, index]
         end
         unmarked_coordinates = board.all_coordinates - marked_coordinates
@@ -156,7 +166,7 @@ module TicTacToe
 
       it 'returns empty array when no cells are blank' do
         board.all_coordinates.each do |coordinates|
-          board[*coordinates] = @default_player_marks.sample
+          board.mark_cell(@default_player_marks.sample, *coordinates)
         end
 
         expect(board.blank_cell_coordinates).to eq []
@@ -176,7 +186,7 @@ module TicTacToe
 
       context 'when board is not blank' do
         it 'returns the last mark made on the board' do
-          board[*coordinates] = mark
+          board.mark_cell(mark, *coordinates)
 
           expect(board.last_mark_made).to eq mark
         end
@@ -187,15 +197,32 @@ module TicTacToe
       let(:board) { new_board(@default_board_size) }
 
       it 'returns a new board that is a deep copy of the original' do
-        coordinate1 = random_coordinates(board.size)
-        board[*coordinate1] = @default_player_marks.sample
+        coordinates1 = random_coordinates(board.size)
+        board.mark_cell(@default_player_marks.sample, *coordinates1)
 
         board_copy = board.deep_copy
-        begin coordinate2 = random_coordinates(board.size) end until coordinate1 != coordinate2
-        board[*coordinate2] = @default_player_marks.sample
+        begin coordinates2 = random_coordinates(board.size) end until coordinates1 != coordinates2
+        board.mark_cell(@default_player_marks.sample, *coordinates2)
 
-        expect(board[*coordinate1]).to eq board_copy[*coordinate1]
-        expect(board[*coordinate2]).not_to eq board_copy[*coordinate2]
+        expect(board.read_cell(*coordinates1)).to eq board_copy.read_cell(*coordinates1)
+        expect(board.read_cell(*coordinates2)).not_to eq board_copy.read_cell(*coordinates2)
+      end
+    end
+
+    describe '#blank?' do
+      it 'returns true if cell at given coordinates is blank' do
+        blank_board = new_board(@default_board_size)
+        coordinates = random_coordinates(blank_board.size)
+
+        expect(blank_board.blank?(coordinates)).to be true
+      end
+
+      it 'returns false if cell at given coordinates is not blank' do
+        board = new_board(@default_board_size)
+        coordinates = random_coordinates(board.size)
+        board.mark_cell(@default_player_marks.sample, *coordinates)
+
+        expect(board.blank?(coordinates)).to be false
       end
     end
 
@@ -203,7 +230,7 @@ module TicTacToe
       it 'returns true if cell at given coordinates has any player\'s mark' do
         board = new_board(@default_board_size)
         coordinates = random_coordinates(board.size)
-        board[*coordinates] = @default_player_marks.sample
+        board.mark_cell(@default_player_marks.sample, *coordinates)
 
         expect(board.marked?(coordinates)).to be true
       end
@@ -233,37 +260,37 @@ module TicTacToe
       end
     end
 
-    describe '#blank?' do
+    describe '#all_blank?' do
       it 'returns true if no cell in board is marked' do
         blank_board = new_board(@default_board_size)
 
-        expect(blank_board.blank?).to be true
+        expect(blank_board.all_blank?).to be true
       end
 
       it 'returns false if any cell in board is marked' do
         board = new_board(@default_board_size)
-        board[*random_coordinates(board.size)] = @default_player_marks.sample
+        board.mark_cell(@default_player_marks.sample, *random_coordinates(board.size))
 
-        expect(board.blank?).to be false
+        expect(board.all_blank?).to be false
       end
     end
 
-    describe '#filled?' do
+    describe '#all_marked?' do
       it 'returns true if all cells in board are marked' do
         board = new_board(@default_board_size)
         board.all_coordinates.each do |coordinates|
-          board[*coordinates] = @default_player_marks.sample
+          board.mark_cell(@default_player_marks.sample, *coordinates)
         end
 
-        expect(board.filled?).to be true
+        expect(board.all_marked?).to be true
       end
 
       it 'returns false if any cell in board is blank' do
         board = new_board(@default_board_size)
         coordinates = random_coordinates(board.size)
-        board[*coordinates] = @default_player_marks.sample
+        board.mark_cell(@default_player_marks.sample, *coordinates)
 
-        expect(board.filled?).to be false
+        expect(board.all_marked?).to be false
       end
     end
 
@@ -280,27 +307,6 @@ module TicTacToe
         blank_board = new_board(@default_board_size)
 
         expect(blank_board.has_winning_line?).to be false
-      end
-    end
-
-    describe '#game_over?' do
-      it 'returns true if the game has ended in a draw' do
-        board_with_draw = board_with_draw(@default_board_size, @default_player_marks)
-
-        expect(board_with_draw.game_over?).to be true
-      end
-
-      it 'returns true if the game has been won' do
-        all_wins(@default_board_size, @default_first_player).each do |board_with_win|
-
-          expect(board_with_win.game_over?).to be true
-        end
-      end
-
-      it 'returns false if board has no win and is not filled' do
-        board = board_with_potential_win_loss_or_draw(@default_board_size, @default_player_marks)
-
-        expect(board.game_over?).to be false
       end
     end
   end
