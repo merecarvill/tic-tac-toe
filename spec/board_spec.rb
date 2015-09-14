@@ -29,34 +29,31 @@ module TicTacToe
       end
 
       context 'given the configuration of a board with preexisting marks' do
-        it 'generates a board with the specified marks in each cell' do
+        let(:config) do
           _ = described_class.blank_mark
           x, o = :x, :o
-          config = [
-            x, _, _,
+
+          [ x, _, _,
             _, o, _,
-            _, _, x
-          ]
+            _, _, x ]
+        end
+
+        it 'generates a board with the specified marks in each cell' do
           board = described_class.new(size: @default_board_size, config: config)
 
           board.all_coordinates.zip(config).each do |coordinates, mark|
             expect(board[*coordinates]).to eq mark
           end
         end
-      end
 
-      context 'when NOT given another board to copy' do
-        it 'generates a NxN board of the given size' do
-          (3..5).each do |size|
-            custom_board = described_class.new(size: size)
+        it 'raises error if given configuration does not reconcile with given size' do
+          error_info = [board_error, 'Given size does not reconcile with given configuration']
+          params = {
+            size: Math.sqrt(config.size).to_i + 1,
+            config: config
+          }
 
-            expect(custom_board.size).to eq size
-            expect(custom_board.all_coordinates.count).to eq size**2
-          end
-        end
-
-        it 'leaves the generated board blank' do
-          expect(described_class.new(size: @default_board_size).all_blank?).to be true
+          expect { described_class.new(params) }.to raise_error(*error_info)
         end
       end
 
@@ -86,6 +83,21 @@ module TicTacToe
           error_info = [board_error, 'Given size does not match given board']
 
           expect { described_class.new(params) }.to raise_error(*error_info)
+        end
+      end
+
+      context 'when not given a config or another board to copy' do
+        it 'generates a NxN board of the given size' do
+          (3..5).each do |size|
+            custom_board = described_class.new(size: size)
+
+            expect(custom_board.size).to eq size
+            expect(custom_board.all_coordinates.count).to eq size**2
+          end
+        end
+
+        it 'leaves the generated board blank' do
+          expect(described_class.new(size: @default_board_size).all_blank?).to be true
         end
       end
     end

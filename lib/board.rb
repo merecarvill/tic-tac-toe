@@ -84,6 +84,10 @@ module TicTacToe
     private
 
     def initialize_cells(config)
+      if Math.sqrt(config.size).to_i != @size
+        fail BoardError, 'Given size does not reconcile with given configuration'
+      end
+
       all_coordinates.zip(config).each do |coordinates, mark|
         self[*coordinates] = mark
       end
