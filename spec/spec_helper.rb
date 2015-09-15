@@ -6,7 +6,8 @@ require_relative '../lib/command_line_interface'
 require_relative '../lib/player_factory'
 require_relative '../lib/human_player'
 require_relative '../lib/computer_player'
-require_relative '../lib/minimax'
+require_relative '../lib/computer_player_ii'
+require_relative '../lib/negamax'
 
 RSpec.shared_context 'default_values' do
   before :all do
@@ -33,6 +34,15 @@ RSpec.shared_context 'helper_methods' do
   end
 
   def new_board(board_size)
+    TicTacToe::Board.new(size: board_size)
+  end
+
+  def build_board(config)
+    size = Math.sqrt(config.size).to_i
+    TicTacToe::Board.new(size: size, config: config)
+  end
+
+  def blank_board(board_size)
     TicTacToe::Board.new(size: board_size)
   end
 
