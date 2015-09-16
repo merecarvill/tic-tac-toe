@@ -1,15 +1,15 @@
-require 'rspec'
-require 'rspec/collection_matchers'
-require_relative '../lib/game'
-require_relative '../lib/board'
-require_relative '../lib/command_line_interface'
-require_relative '../lib/player_factory'
-require_relative '../lib/human_player'
-require_relative '../lib/computer_player'
-require_relative '../lib/computer_player_ii'
-require_relative '../lib/negamax'
+require "rspec"
+require "rspec/collection_matchers"
+require_relative "../lib/game"
+require_relative "../lib/board"
+require_relative "../lib/command_line_interface"
+require_relative "../lib/player_factory"
+require_relative "../lib/human_player"
+require_relative "../lib/computer_player"
+require_relative "../lib/computer_player_ii"
+require_relative "../lib/negamax"
 
-RSpec.shared_context 'default_values' do
+RSpec.shared_context "default_values" do
   before :all do
     @default_board_size = 3
     @default_first_player = :x
@@ -19,7 +19,7 @@ RSpec.shared_context 'default_values' do
   end
 end
 
-RSpec.shared_context 'helper_methods' do
+RSpec.shared_context "helper_methods" do
   def blank_board_configuration(board_size)
     (0...board_size**2).map { TicTacToe::Board.blank_mark }
   end
@@ -33,13 +33,17 @@ RSpec.shared_context 'helper_methods' do
     [rand(board_size), rand(board_size)]
   end
 
+  def new_board(parameters)
+    TicTacToe::Board.new(parameters)
+  end
+
   def build_board(config)
     size = Math.sqrt(config.size).to_i
-    TicTacToe::Board.new(size: size, config: config)
+    new_board(size: size, config: config)
   end
 
   def blank_board(board_size)
-    TicTacToe::Board.new(size: board_size)
+    new_board(size: board_size)
   end
 
   def board_with_potential_win_loss_or_draw(board_size, player_marks)

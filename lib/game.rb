@@ -1,6 +1,6 @@
-require_relative 'board'
-require_relative 'player_factory'
-require_relative 'command_line_interface'
+require_relative "board"
+require_relative "player_factory"
+require_relative "command_line_interface"
 
 module TicTacToe
   class Game

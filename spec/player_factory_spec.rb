@@ -1,10 +1,10 @@
-require 'spec_helper'
+require "spec_helper"
 
 module TicTacToe
   describe PlayerFactory do
-    include_context 'default_values'
+    include_context "default_values"
 
-    describe '.build' do
+    describe ".build" do
       let(:player_types) { {human: HumanPlayer, computer: ComputerPlayer} }
       let(:player_config) do
         {
@@ -13,7 +13,7 @@ module TicTacToe
         }
       end
 
-      it 'creates a player of the given type' do
+      it "creates a player of the given type" do
         player_types.each do |type, associated_class|
           player_config[:type] = type
 
@@ -21,7 +21,7 @@ module TicTacToe
         end
       end
 
-      it 'creates players that respond to #move' do
+      it "creates players that respond to #move" do
         player_types.keys.each do |type|
           player_config[:type] = type
 
@@ -29,7 +29,7 @@ module TicTacToe
         end
       end
 
-      it 'creates players that use the given mark' do
+      it "creates players that use the given mark" do
         player_types.keys.each do |type|
           player_config[:type] = type
 

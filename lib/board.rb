@@ -10,7 +10,7 @@ module TicTacToe
     end
 
     def initialize(parameters)
-      fail BoardError, 'Given size is too small, must be 3 or greater' if parameters[:size] < 3
+      fail BoardError, "Given size is too small, must be 3 or greater" if parameters[:size] < 3
 
       @size = parameters[:size]
       config = parameters[:config] || blank_board_configuration
@@ -18,14 +18,14 @@ module TicTacToe
     end
 
     def read_cell(row, col)
-      fail BoardError, 'Cell coordinates are out of bounds' if out_of_bounds?([row, col])
+      fail BoardError, "Cell coordinates are out of bounds" if out_of_bounds?([row, col])
 
       @cells[row][col]
     end
 
     def mark_cell(mark, row, col)
-      fail BoardError, 'Cell coordinates are out of bounds' if out_of_bounds?([row, col])
-      fail BoardError, 'Cannot alter a marked cell' if marked?([row, col])
+      fail BoardError, "Cell coordinates are out of bounds" if out_of_bounds?([row, col])
+      fail BoardError, "Cannot alter a marked cell" if marked?([row, col])
 
       @last_move_made = [row, col]
       @cells[row][col] = mark
@@ -85,7 +85,7 @@ module TicTacToe
 
     def map_configuration_to_cells(config)
       if Math.sqrt(config.size).to_i != @size
-        fail BoardError, 'Given size does not reconcile with given configuration'
+        fail BoardError, "Given size does not reconcile with given configuration"
       end
 
       config.each_slice(@size).to_a

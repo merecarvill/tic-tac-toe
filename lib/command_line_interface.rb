@@ -20,8 +20,8 @@ module TicTacToe
     end
 
     def show_game_board(board)
-      row_separator = '----' * board.size + "-\n"
-      col_separator = '|'
+      row_separator = "----" * board.size + "-\n"
+      col_separator = "|"
 
       @output.print assemble_board_string(board, row_separator, col_separator)
     end
@@ -31,7 +31,7 @@ module TicTacToe
       @output.puts "Enter your move coordinates in the format 'row, col' - eg. '0, 0'."
 
       cleaned_input = get_valid_input(/^\s*\d+\s*,\s*\d+\s*$/)
-      cleaned_input.split(',').map(&:to_i)
+      cleaned_input.split(",").map(&:to_i)
     end
 
     def get_valid_input(valid_input_pattern)
@@ -67,7 +67,7 @@ module TicTacToe
     end
 
     def report_draw
-      @output.puts 'The game ended in a draw.'
+      @output.puts "The game ended in a draw."
     end
 
     def instructions
@@ -86,7 +86,7 @@ EOS
       (0...board.size).each do |row|
         output_string += col_separator
         (0...board.size).each do |col|
-          output_string += " #{board.read_cell(row, col) || ' '} " + col_separator
+          output_string += " #{board.read_cell(row, col) || " "} " + col_separator
         end
         output_string += "\n" + row_separator
       end

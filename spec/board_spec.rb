@@ -5,10 +5,6 @@ module TicTacToe
     include_context "default_values"
     include_context "helper_methods"
 
-    def new_board(parameters)
-      Board.new(parameters)
-    end
-
     let(:board_error) { Board::BoardError }
     let(:_) { Board.blank_mark }
     let(:x) { @default_player_marks.first }

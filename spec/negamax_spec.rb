@@ -68,7 +68,7 @@ module TicTacToe
             ]}
           end
 
-          it 'returns the node whose children have the highest minimum score' do
+          it "returns the node whose children have the highest minimum score" do
             parameters = {
               child_node_generator: ->(node) { node[:children] },
               terminal_node_criterion: ->(node) { node[:children].nil? },
