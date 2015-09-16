@@ -6,6 +6,16 @@ module TicTacToe
       @evaluation_heuristic = parameters[:evaluation_heuristic]
     end
 
+    def apply(node)
+      if terminal_node?(node)
+        node
+      else
+        generate_child_nodes(node).max_by { |child| -score(child, -1) }
+      end
+    end
+
+    private
+
     def score(node, color)
       if terminal_node?(node)
         evaluate(node, color)
@@ -13,8 +23,6 @@ module TicTacToe
         generate_child_nodes(node).map { |child| -score(child, -color) }.max
       end
     end
-
-    private
 
     def generate_child_nodes(node)
       @child_node_generator.call(node)

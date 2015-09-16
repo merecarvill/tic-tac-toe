@@ -1,78 +1,83 @@
-require 'spec_helper'
+require "spec_helper"
 
 module TicTacToe
   describe Negamax do
-    describe '#score' do
-      context 'when given node meets the end-node criterion' do
-        let(:result) { 1 }
+    describe "#apply" do
+      context "when given node meets the end-node criterion" do
+        it "returns the given node" do
+          parameters = {
+            child_node_generator: nil,
+            terminal_node_criterion: ->(_) { true },
+            evaluation_heuristic: nil
+          }
+          negamax = described_class.new(parameters)
 
-        context 'when it is initial player\'s turn' do
-          let(:color) { 1 }
-
-          it 'returns the result of applying the evaluation scheme to given node' do
-            parameters = {
-              child_node_generator: nil,
-              terminal_node_criterion: ->(_) { true },
-              evaluation_heuristic: ->(_) { result }
-            }
-            minimax = described_class.new(parameters)
-
-            expect(minimax.score(:initial_node, color)).to eq result
-          end
-        end
-
-        context 'when it is not initial player\'s turn' do
-          let(:color) { -1 }
-
-          it 'returns the negation of applying the evaluation scheme to given node' do
-            parameters = {
-              child_node_generator: nil,
-              terminal_node_criterion: ->(_) { true },
-              evaluation_heuristic: ->(_) { result }
-            }
-            minimax = described_class.new(parameters)
-
-            expect(minimax.score(:initial_node, color)).to eq result * -1
-          end
+          expect(negamax.apply(:terminal_node)).to eq :terminal_node
         end
       end
 
-      context 'when given node does not meet the given end-node criterion' do
-        it 'applies child node generator to given node' do
+      context "when given node does not meet the given end-node criterion" do
+        it "returns the highest scoring child node" do
+          child_nodes = [{id: 1, score: 1}, {id: 2, score: 0}, {id: 3, score: -1}]
           parameters = {
-            child_node_generator: ->(_) { (0..2).map{ :child_node } },
+            child_node_generator: ->(_) { child_nodes },
+            terminal_node_criterion: ->(node) { node[:id] > 0 },
+            evaluation_heuristic: ->(node) { node[:score] }
+          }
+          negamax = described_class.new(parameters)
+
+          expect(negamax.apply({id: 0})).to eq child_nodes.max_by { |n| n[:score] }
+        end
+
+        it "applies the child node generator to obtain child nodes to score" do
+          parameters = {
+            child_node_generator: ->(_) { [:child_node] },
             terminal_node_criterion: ->(node) { node == :child_node },
             evaluation_heuristic: ->(_) { 0 }
           }
-          minimax = described_class.new(parameters)
+          negamax = described_class.new(parameters)
 
-          expect(minimax).to receive(:generate_child_nodes).once.and_call_original
-          minimax.score(:initial_node, 1)
+          expect(parameters[:child_node_generator]).to receive(:call).and_call_original
+          negamax.apply(:initial_node)
         end
 
-        it 'calls #score to evaluate every child node' do
+        it "applies the evaluation scheme to obtain a score for child nodes" do
           parameters = {
-            child_node_generator: ->(_) { (0..2).map{ :child_node } },
+            child_node_generator: ->(_) { [:child_node] },
             terminal_node_criterion: ->(node) { node == :child_node },
             evaluation_heuristic: ->(_) { 0 }
           }
-          minimax = described_class.new(parameters)
+          negamax = described_class.new(parameters)
 
-          # initial call + 3 child nodes
-          expect(minimax).to receive(:score).exactly(4).times.and_call_original
-          minimax.score(:initial_node, 1)
+          heuristic = parameters[:evaluation_heuristic]
+          expect(heuristic).to receive(:call).with(:child_node).and_call_original
+          negamax.apply(:initial_node)
         end
 
-        it 'returns the highest score resulting from evaluating the child nodes' do
-          scores = (0..2).to_a
-          parameters = {
-            child_node_generator: ->(_) { (0..2).map{ :child_node } },
-            terminal_node_criterion: ->(node) { node == :child_node },
-            evaluation_heuristic: ->(_) { scores.pop }
-          }
-          minimax = described_class.new(parameters)
+        context "when given a root node with a depth of 3" do
+          let(:root_node) do
+            {id: 0, score: nil, children: [
+              {id: 1, score: nil, children: [
+                {id: 3, score: 1, children: nil},
+                {id: 4, score: -1, children: nil}
+              ]},
+              {id: 2, score: nil, children: [
+                {id: 5, score: 0, children: nil},
+                {id: 6, score: 0, children: nil}
+              ]}
+            ]}
+          end
 
-          expect(minimax.score(:initial_node, 1)).to eq (0..2).to_a.max
+          it 'returns the node whose children have the highest minimum score' do
+            parameters = {
+              child_node_generator: ->(node) { node[:children] },
+              terminal_node_criterion: ->(node) { node[:children].nil? },
+              evaluation_heuristic: ->(node) { node[:score] }
+            }
+            negamax = described_class.new(parameters)
+
+            expect(negamax.apply(root_node)[:id]).to eq 2
+          end
         end
       end
     end
