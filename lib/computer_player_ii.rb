@@ -1,4 +1,4 @@
-require_relative 'negamax'
+require_relative "negamax"
 
 module TicTacToe
   class ComputerPlayerII

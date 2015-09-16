@@ -1,13 +1,14 @@
-require_relative 'human_player'
-require_relative 'computer_player'
+require_relative "human_player"
+require_relative "computer_player"
+require_relative "available_player_types"
 
 module TicTacToe
-  class PlayerFactory
+  module PlayerFactory
     def self.build(config)
       case config[:type]
-      when :human
+      when AvailablePlayerTypes::HUMAN
         create_human_player(config)
-      when :computer
+      when AvailablePlayerTypes::COMPUTER
         create_computer_player(config)
       end
     end

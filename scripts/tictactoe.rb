@@ -1,3 +1,3 @@
-require_relative '../lib/game'
+require_relative "../lib/game"
 
 TicTacToe::Game.new({}).run
