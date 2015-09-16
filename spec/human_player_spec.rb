@@ -6,20 +6,9 @@ module TicTacToe
 
     let(:interface) { double("CommandLineInterface") }
     let(:human_player) do
-      described_class.new(
+      HumanPlayer.new(
         interface: interface,
         player_mark: @default_first_player)
-    end
-
-    describe "#initialize" do
-      it "takes parameters containing the game interface and the player\"s mark" do
-        params = {
-          interface: interface,
-          player_mark: @default_first_player
-        }
-
-        expect { described_class.new(params) }.not_to raise_error
-      end
     end
 
     describe "#move" do

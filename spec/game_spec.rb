@@ -4,7 +4,11 @@ module TicTacToe
   describe Game do
     include_context "default_values"
 
-    let(:game) { described_class.new({}) }
+    def new_game(parameters)
+      Game.new(parameters)
+    end
+
+    let(:game) { new_game({}) }
 
     describe "#initialize" do
       it "initializes a board and stores it in an instance variable" do
@@ -14,20 +18,20 @@ module TicTacToe
       context "when given parameters" do
         it "uses the given board" do
           board = Board.new(size: 4)
-          custom_game = described_class.new(board: board)
+          custom_game = new_game(board: board)
 
           expect(custom_game.board).to eq board
         end
 
         it "uses player marks of the given type" do
-          custom_game = described_class.new(player_marks: [:F, :B])
+          custom_game = new_game(player_marks: [:F, :B])
 
           expect(custom_game.player_marks).to eq [:F, :B]
         end
 
         it "uses the given interface" do
           interface = double("CommandLineInterface")
-          custom_game = described_class.new(interface: interface)
+          custom_game = new_game(interface: interface)
 
           expect(custom_game.interface).to eq interface
         end
@@ -230,7 +234,7 @@ module TicTacToe
     end
 
     describe "integration tests" do
-      let(:game) { described_class.new({}) }
+      let(:game) { new_game({}) }
 
       before do
           allow(game.interface).to receive(:show_game_board)

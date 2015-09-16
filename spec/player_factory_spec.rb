@@ -1,4 +1,5 @@
 require "spec_helper"
+require_relative "../lib/available_player_types"
 
 module TicTacToe
   describe PlayerFactory do
@@ -13,11 +14,15 @@ module TicTacToe
         }
       end
 
+      def build_player(config)
+        PlayerFactory.build(config)
+      end
+
       it "creates a player of the given type" do
         player_types.each do |type, associated_class|
           player_config[:type] = type
 
-          expect(described_class.build(player_config)).to be_a associated_class
+          expect(build_player(player_config)).to be_a associated_class
         end
       end
 
@@ -25,7 +30,7 @@ module TicTacToe
         player_types.keys.each do |type|
           player_config[:type] = type
 
-          expect(described_class.build(player_config)).to respond_to :move
+          expect(build_player(player_config)).to respond_to :move
         end
       end
 
@@ -33,7 +38,7 @@ module TicTacToe
         player_types.keys.each do |type|
           player_config[:type] = type
 
-          expect(described_class.build(player_config).player_mark).to eq player_config[:player_mark]
+          expect(build_player(player_config).player_mark).to eq player_config[:player_mark]
         end
       end
     end

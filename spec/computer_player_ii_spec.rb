@@ -5,6 +5,10 @@ module TicTacToe
     include_context "default_values"
     include_context "helper_methods"
 
+    def new_computer_player(parameters)
+      ComputerPlayerII.new(parameters)
+    end
+
     let(:_) { Board.blank_mark }
     let(:x) { @default_first_player }
     let(:o) { @default_second_player }
@@ -22,7 +26,7 @@ module TicTacToe
           player_mark: x,
           opponent_mark: o
         }
-        computer_player = described_class.new(parameters)
+        computer_player = new_computer_player(parameters)
         coordinates = computer_player.move
 
         expect(board.out_of_bounds?(coordinates)).to be false
@@ -37,7 +41,7 @@ module TicTacToe
             player_mark: x,
             opponent_mark: o
           }
-          computer_player = described_class.new(parameters)
+          computer_player = new_computer_player(parameters)
 
           expect(computer_player.move).to eq [board_size / 2, board_size / 2]
         end

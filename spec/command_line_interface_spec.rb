@@ -8,16 +8,8 @@ module TicTacToe
     let(:input_stream) { StringIO.new }
     let(:output_stream) { StringIO.new }
     let(:interface) do
-      parameters = { input: input_stream, output: output_stream}
-      described_class.new(parameters)
-    end
-
-    describe "#intitialize" do
-      it "takes an input stream and an output stream" do
-        parameters = { input: input_stream, output: output_stream}
-
-        expect{ described_class.new(parameters) }.not_to raise_error
-      end
+      parameters = { input: input_stream, output: output_stream }
+      CommandLineInterface.new(parameters)
     end
 
     describe "#game_setup_interaction" do
