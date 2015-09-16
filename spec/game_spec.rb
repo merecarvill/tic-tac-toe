@@ -34,7 +34,7 @@ module TicTacToe
       end
 
       context 'when a given parameter is not provided' do
-        it 'creates and uses a board of default size' do
+        it 'creates a board with the default size' do
           expect(game.board.size).to eq @default_board_size
         end
 

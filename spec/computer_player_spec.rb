@@ -7,7 +7,7 @@ module TicTacToe
 
     let(:ai) do
       described_class.new(
-        board: new_board(@default_board_size),
+        board: blank_board(@default_board_size),
         player_mark: @default_first_player,
         opponent_mark: @default_second_player)
     end
@@ -17,7 +17,7 @@ module TicTacToe
     describe '#initialize' do
       it 'takes a parameters hash with the player\'s mark, opponent\'s mark, and the game board' do
         params = {
-          board: new_board(@default_board_size),
+          board: blank_board(@default_board_size),
           player_mark: @default_first_player,
           opponent_mark: @default_second_player
         }
@@ -31,7 +31,7 @@ module TicTacToe
         it 'returns the move coordinate for centermost space' do
           [3, 5, 7].each do |odd_size|
             custom_ai = described_class.new(
-              board: new_board(odd_size),
+              board: blank_board(odd_size),
               player_mark: @default_first_player,
               opponent_mark: @default_second_player)
 

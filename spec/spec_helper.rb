@@ -33,10 +33,6 @@ RSpec.shared_context 'helper_methods' do
     [rand(board_size), rand(board_size)]
   end
 
-  def new_board(board_size)
-    TicTacToe::Board.new(size: board_size)
-  end
-
   def build_board(config)
     size = Math.sqrt(config.size).to_i
     TicTacToe::Board.new(size: size, config: config)
@@ -48,7 +44,7 @@ RSpec.shared_context 'helper_methods' do
 
   def board_with_potential_win_loss_or_draw(board_size, player_marks)
     first_mark, second_mark = player_marks
-    board = new_board(board_size)
+    board = blank_board(board_size)
     (0...board_size - 1).each { |col| board.mark_cell(first_mark, 0, col) }
     (0...board_size - 1).each { |col| board.mark_cell(second_mark, 1, col) }
     (2...board_size).each do |row|
@@ -62,7 +58,7 @@ RSpec.shared_context 'helper_methods' do
 
   def board_with_draw(board_size, player_marks)
     first_mark, second_mark = player_marks
-    board = new_board(board_size)
+    board = blank_board(board_size)
     (0...board_size).each do |row|
       (0...board_size).each do |col|
         if row == 0
@@ -85,7 +81,7 @@ RSpec.shared_context 'helper_methods' do
 
   def horizontal_wins(board_size, winning_mark)
     (0...board_size).each_with_object([]) do |row, winning_boards|
-      board = new_board(board_size)
+      board = blank_board(board_size)
       (0...board_size).each { |col| board.mark_cell(winning_mark, row, col) }
       winning_boards << board
     end
@@ -93,19 +89,19 @@ RSpec.shared_context 'helper_methods' do
 
   def vertical_wins(board_size, winning_mark)
     (0...board_size).each_with_object([]) do |col, winning_boards|
-      board = new_board(board_size)
+      board = blank_board(board_size)
       (0...board_size).each { |row| board.mark_cell(winning_mark, row, col) }
       winning_boards << board
     end
   end
 
   def diagonal_wins(board_size, winning_mark)
-    ldiag_board = new_board(board_size)
+    ldiag_board = blank_board(board_size)
     (0...board_size).each do |index|
       ldiag_board.mark_cell(winning_mark, index, index)
     end
 
-    rdiag_board = new_board(board_size)
+    rdiag_board = blank_board(board_size)
     (0...board_size).each do |index|
       rdiag_board.mark_cell(winning_mark, index, rdiag_board.size - index - 1)
     end
