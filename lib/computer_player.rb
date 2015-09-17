@@ -1,6 +1,6 @@
 module TicTacToe
   class ComputerPlayer
-    attr_reader :player_mark, :opponent_mark, :board
+    attr_reader :player_mark
 
     def initialize(parameters)
       @player_mark = parameters[:player_mark]
@@ -16,6 +16,8 @@ module TicTacToe
         select_best_move
       end
     end
+
+    private
 
     def select_best_move
       best_score_so_far = {
