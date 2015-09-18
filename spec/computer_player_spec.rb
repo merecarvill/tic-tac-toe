@@ -45,7 +45,7 @@ module TicTacToe
         let(:x) { @default_first_player }
         let(:o) { @default_second_player }
 
-        def first_player(board)
+        def x_player(board)
           parameters = {
             board: board,
             player_mark: x,
@@ -54,7 +54,7 @@ module TicTacToe
           ComputerPlayer.new(parameters)
         end
 
-        def second_player(board)
+        def o_player(board)
           parameters = {
             board: board,
             player_mark: o,
@@ -79,7 +79,7 @@ module TicTacToe
             winning_moves = [[0, 1], [1, 2], [2, 0]]
             board_configs.zip(winning_moves).each do |board_config, winning_move|
               board = build_board(board_config)
-              computer_player = first_player(board)
+              computer_player = x_player(board)
 
               expect(computer_player.move).to eq winning_move
             end
@@ -102,7 +102,7 @@ module TicTacToe
             winning_moves = [[1, 0], [2, 1], [0, 2]]
             board_configs.zip(winning_moves).each do |board_config, winning_move|
               board = build_board(board_config)
-              computer_player = first_player(board)
+              computer_player = x_player(board)
 
               expect(computer_player.move).to eq winning_move
             end
@@ -122,7 +122,7 @@ module TicTacToe
             winning_moves = [[2, 2], [0, 2]]
             board_configs.zip(winning_moves).each do |board_config, winning_move|
               board = build_board(board_config)
-              computer_player = first_player(board)
+              computer_player = x_player(board)
 
               expect(computer_player.move).to eq winning_move
             end
@@ -145,7 +145,7 @@ module TicTacToe
             winning_moves = [[0, 1], [1, 2], [2, 0]]
             board_configs.zip(winning_moves).each do |board_config, winning_move|
               board = build_board(board_config)
-              computer_player = second_player(board)
+              computer_player = o_player(board)
 
               expect(computer_player.move).to eq winning_move
             end
@@ -168,7 +168,7 @@ module TicTacToe
             winning_moves = [[1, 0], [2, 1], [0, 2]]
             board_configs.zip(winning_moves).each do |board_config, winning_move|
               board = build_board(board_config)
-              computer_player = second_player(board)
+              computer_player = o_player(board)
 
               expect(computer_player.move).to eq winning_move
             end
@@ -188,9 +188,36 @@ module TicTacToe
             winning_moves = [[2, 2], [0, 2]]
             board_configs.zip(winning_moves).each do |board_config, winning_move|
               board = build_board(board_config)
-              computer_player = second_player(board)
+              computer_player = o_player(board)
 
               expect(computer_player.move).to eq winning_move
+            end
+          end
+        end
+
+        context "when opponent can make a fork next turn" do
+          it "returns the coordinates of a move that prevents that fork" do
+            board_configs = [
+              [ x, _, _,
+                _, x, _,
+                _, _, o ],
+              [ x, _, _,
+                _, o, _,
+                _, _, x ],
+              [ _, x, _,
+                _, x, _,
+                _, o, _ ]
+            ]
+            good_move_sets = [
+              [[2, 0], [0, 2]],
+              [[0, 1], [1, 0], [1, 2], [2, 1]],
+              [[0, 0], [0, 2], [2, 0], [2, 2]]
+            ]
+            board_configs.zip(good_move_sets).each do |board_config, good_moves|
+              board = build_board(board_config)
+              computer_player = o_player(board)
+
+              expect(good_moves).to include computer_player.move
             end
           end
         end
