@@ -1,5 +1,7 @@
 require "spec_helper"
-require_relative "../lib/available_player_types"
+require "player_factory"
+
+require "game"
 
 module TicTacToe
   describe PlayerFactory do

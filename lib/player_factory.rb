@@ -1,6 +1,6 @@
-require_relative "human_player"
-require_relative "computer_player"
-require_relative "available_player_types"
+require "human_player"
+require "computer_player"
+require "available_player_types"
 
 module TicTacToe
   module PlayerFactory

@@ -1,4 +1,5 @@
 require "spec_helper"
+require "board"
 
 module TicTacToe
   describe Board do

@@ -1,4 +1,5 @@
 require "spec_helper"
+require "game"
 
 module TicTacToe
   describe Game do

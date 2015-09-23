@@ -1,13 +1,5 @@
 require "rspec"
 require "rspec/collection_matchers"
-require_relative "../lib/game"
-require_relative "../lib/board"
-require_relative "../lib/command_line_interface"
-require_relative "../lib/player_factory"
-require_relative "../lib/human_player"
-require_relative "../lib/computer_player"
-require_relative "../lib/computer_player_ii"
-require_relative "../lib/negamax"
 
 RSpec.shared_context "default_values" do
   before :all do

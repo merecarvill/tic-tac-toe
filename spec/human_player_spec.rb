@@ -1,4 +1,5 @@
 require "spec_helper"
+require "human_player"
 
 module TicTacToe
   describe HumanPlayer do

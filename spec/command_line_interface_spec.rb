@@ -1,4 +1,7 @@
 require "spec_helper"
+require "command_line_interface"
+
+require "board"
 
 module TicTacToe
   describe CommandLineInterface do

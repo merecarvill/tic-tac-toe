@@ -1,4 +1,7 @@
 require "spec_helper"
+require "computer_player_ii"
+
+require "board"
 
 module TicTacToe
   describe ComputerPlayerII do
