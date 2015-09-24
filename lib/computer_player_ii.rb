@@ -2,6 +2,8 @@ require "negamax"
 
 module TicTacToe
   class ComputerPlayerII
+    attr_reader :player_mark
+
     def initialize(parameters)
       @board = parameters[:board]
       @player_mark = parameters[:player_mark]
@@ -12,7 +14,6 @@ module TicTacToe
       if @board.all_blank? && @board.size.odd?
         [:row, :col].map { @board.size / 2 }
       else
-        # @board.blank_cell_coordinates.sample
         choose_best_move
       end
     end
@@ -37,7 +38,6 @@ module TicTacToe
       {
         board: @board,
         current_player_mark: @player_mark,
-        previous_player_mark: @opponent_mark,
         last_move_made: nil
       }
     end
@@ -50,8 +50,7 @@ module TicTacToe
         board.blank_cell_coordinates.map do |coordinates|
           child_node = {
             board: board.deep_copy,
-            current_player_mark: node.fetch(:previous_player_mark),
-            previous_player_mark: current_player_mark,
+            current_player_mark: toggle_mark(current_player_mark),
             last_move_made: coordinates
           }
           child_node[:board].mark_cell(current_player_mark, *coordinates)
@@ -73,8 +72,8 @@ module TicTacToe
         board = node.fetch(:board)
 
         board.lines.each do |line|
-          return 1 if line.all? { |cell|  cell == node.fetch(:current_player_mark) }
-          return -1 if line.all? { |cell|  cell == node.fetch(:previous_player_mark) }
+          return 1 if line.all? { |cell|  cell == @player_mark }
+          return -1 if line.all? { |cell|  cell == @opponent_mark }
         end
         0
       end

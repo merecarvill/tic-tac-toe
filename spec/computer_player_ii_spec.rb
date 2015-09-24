@@ -16,11 +16,20 @@ module TicTacToe
       ComputerPlayerII.new(parameters)
     end
 
-    def first_player(board)
+    def x_player(board)
       parameters = {
         board: board,
         player_mark: x,
         opponent_mark: o
+      }
+      new_computer_player(parameters)
+    end
+
+    def o_player(board)
+      parameters = {
+        board: board,
+        player_mark: o,
+        opponent_mark: x
       }
       new_computer_player(parameters)
     end
@@ -34,7 +43,7 @@ module TicTacToe
         ]
         board = build_board(board_config)
         board.mark_cell(o, *[2, 1])
-        computer_player = first_player(board)
+        computer_player = x_player(board)
         coordinates = computer_player.move
 
         expect(board.out_of_bounds?(coordinates)).to be false
@@ -44,24 +53,168 @@ module TicTacToe
       context "when game board has a center space and it is blank" do
         it "returns the center coordinates" do
           board_size = @default_board_size.odd? ? @default_board_size : 3
-          computer_player = first_player(blank_board(board_size))
+          computer_player = x_player(blank_board(board_size))
 
           expect(computer_player.move).to eq [board_size / 2, board_size / 2]
         end
       end
 
-      context "when computer player can make a winning move" do
-        it 'returns the coordinates of the winning move' do
-          board_config = [
-            x, o, x,
-            x, _, o,
-            _, _, _
+      context "when computer player can make a horizontal winning move" do
+        it "returns the coordinates of the winning move" do
+          board_configs = [
+            [ x, _, x,
+              _, o, _,
+              o, x, o ],
+            [ o, _, _,
+              x, x, _,
+              o, o, x ],
+            [ _, o, _,
+              x, o, o,
+              _, x, x ]
           ]
-          board = build_board(board_config)
-          board.mark_cell(o, *[1, 1])
-          computer_player = first_player(board)
+          winning_moves = [[0, 1], [1, 2], [2, 0]]
+          board_configs.zip(winning_moves).each do |board_config, winning_move|
+            board = build_board(board_config)
+            computer_player = x_player(board)
 
-          expect(computer_player.move).to eq [2, 0]
+            expect(computer_player.move).to eq winning_move
+          end
+        end
+      end
+
+      context "when computer player can make a vertical winning move" do
+        it "returns the coordinates of the winning move" do
+          board_configs = [
+            [ x, _, o,
+              _, o, x,
+              x, _, o ],
+            [ o, x, o,
+              o, x, _,
+              x, _, _ ],
+            [ _, o, _,
+              _, o, x,
+              o, x, x ]
+          ]
+          winning_moves = [[1, 0], [2, 1], [0, 2]]
+          board_configs.zip(winning_moves).each do |board_config, winning_move|
+            board = build_board(board_config)
+            computer_player = x_player(board)
+
+            expect(computer_player.move).to eq winning_move
+          end
+        end
+      end
+
+      context "when computer player can make a diagonal winning move" do
+        it "returns the coordinates of the winning move" do
+          board_configs = [
+            [ x, _, o,
+              o, x, _,
+              x, o, _ ],
+            [ o, x, _,
+              o, x, _,
+              x, o, _ ]
+          ]
+          winning_moves = [[2, 2], [0, 2]]
+          board_configs.zip(winning_moves).each do |board_config, winning_move|
+            board = build_board(board_config)
+            computer_player = x_player(board)
+
+            expect(computer_player.move).to eq winning_move
+          end
+        end
+      end
+
+      context "when opponent can make a horizontal winning move next turn" do
+        it "returns the coordinates of the move that blocks the opponent from winning" do
+          board_configs = [
+            [ x, _, x,
+              _, o, _,
+              o, x, o ],
+            [ o, _, _,
+              x, x, _,
+              o, o, x ],
+            [ _, o, _,
+              x, o, o,
+              _, x, x ]
+          ]
+          winning_moves = [[0, 1], [1, 2], [2, 0]]
+          board_configs.zip(winning_moves).each do |board_config, winning_move|
+            board = build_board(board_config)
+            computer_player = o_player(board)
+
+            expect(computer_player.move).to eq winning_move
+          end
+        end
+      end
+
+      context "when opponent can make a vertical winning move next turn" do
+        it "returns the coordinates of the move that blocks the opponent from winning" do
+          board_configs = [
+            [ x, _, o,
+              _, o, x,
+              x, _, o ],
+            [ o, x, o,
+              o, x, _,
+              x, _, _ ],
+            [ _, o, _,
+              _, o, x,
+              o, x, x ]
+          ]
+          winning_moves = [[1, 0], [2, 1], [0, 2]]
+          board_configs.zip(winning_moves).each do |board_config, winning_move|
+            board = build_board(board_config)
+            computer_player = o_player(board)
+
+            expect(computer_player.move).to eq winning_move
+          end
+        end
+      end
+
+      context "when opponent can make a diagonal winning move next turn" do
+        it "returns the coordinates of the move that blocks the opponent from winning" do
+          board_configs = [
+            [ x, _, o,
+              o, x, _,
+              x, o, _ ],
+            [ o, x, _,
+              o, x, _,
+              x, o, _ ]
+          ]
+          winning_moves = [[2, 2], [0, 2]]
+          board_configs.zip(winning_moves).each do |board_config, winning_move|
+            board = build_board(board_config)
+            computer_player = o_player(board)
+
+            expect(computer_player.move).to eq winning_move
+          end
+        end
+      end
+
+      context "when opponent can make a fork next turn" do
+        it "returns the coordinates of a move that prevents that fork" do
+          board_configs = [
+            [ x, _, _,
+              _, x, _,
+              _, _, o ],
+            [ x, _, _,
+              _, o, _,
+              _, _, x ],
+            [ _, x, _,
+              _, x, _,
+              _, o, _ ]
+          ]
+          good_move_sets = [
+            [[2, 0], [0, 2]],
+            [[0, 1], [1, 0], [1, 2], [2, 1]],
+            [[0, 0], [0, 2], [2, 0], [2, 2]]
+          ]
+          board_configs.zip(good_move_sets).each do |board_config, good_moves|
+            board = build_board(board_config)
+            computer_player = o_player(board)
+
+            expect(good_moves).to include computer_player.move
+          end
         end
       end
     end
