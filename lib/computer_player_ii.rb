@@ -21,7 +21,7 @@ module TicTacToe
 
     def choose_best_move
       @negamax ||= create_negamax
-      @negamax.apply(@board).last_move_made
+      @negamax.apply(initial_node).fetch(:last_move_made)
     end
 
     def create_negamax
@@ -33,31 +33,55 @@ module TicTacToe
       Negamax.new(parameters)
     end
 
+    def initial_node
+      {
+        board: @board,
+        current_player_mark: @player_mark,
+        previous_player_mark: @opponent_mark,
+        last_move_made: nil
+      }
+    end
+
     def create_child_node_generator
-      lambda do |board|
-        mark = ([@player_mark, @opponent_mark] - [board.last_mark_made]).pop
+      lambda do |node|
+        board = node.fetch(:board)
+        current_player_mark = node.fetch(:current_player_mark)
+
         board.blank_cell_coordinates.map do |coordinates|
-          child = board.deep_copy
-          child.mark_cell(mark, *coordinates)
-          child
+          child_node = {
+            board: board.deep_copy,
+            current_player_mark: node.fetch(:previous_player_mark),
+            previous_player_mark: current_player_mark,
+            last_move_made: coordinates
+          }
+          child_node[:board].mark_cell(current_player_mark, *coordinates)
+          child_node
         end
       end
     end
 
     def create_terminal_node_criterion
-      lambda do |board|
+      lambda do |node|
+        board = node.fetch(:board)
+
         board.has_winning_line? || board.all_marked?
       end
     end
 
     def create_evaluation_heuristic
-      lambda do |board|
+      lambda do |node|
+        board = node.fetch(:board)
+
         board.lines.each do |line|
-          return 1 if line.all? { |cell|  cell == @player_mark }
-          return -1 if line.all? { |cell|  cell == @opponent_mark }
+          return 1 if line.all? { |cell|  cell == node.fetch(:current_player_mark) }
+          return -1 if line.all? { |cell|  cell == node.fetch(:previous_player_mark) }
         end
         0
       end
+    end
+
+    def toggle_mark(mark)
+      mark == @player_mark ? @opponent_mark : @player_mark
     end
   end
 end
