@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require "tactical_tic_tac_toe"
+
+TicTacToe::Game.new({}).run
