@@ -3,12 +3,11 @@ module TicTacToe
     attr_reader :player_mark
 
     def initialize(parameters)
-      @player_mark = parameters[:player_mark]
-      @interface = parameters[:interface]
+      @player_mark = parameters.fetch(:player_mark)
     end
 
-    def move
-      @interface.solicit_move(@player_mark)
+    def move(game)
+      game.interface.solicit_move(@player_mark)
     end
   end
 end

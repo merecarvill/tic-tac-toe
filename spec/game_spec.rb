@@ -4,6 +4,7 @@ require "game"
 module TicTacToe
   describe Game do
     include_context "default_values"
+    include_context "helper_methods"
 
     def new_game(parameters)
       Game.new(parameters)
@@ -165,7 +166,6 @@ module TicTacToe
         let(:valid_coordinates) { [0, game.board.size - 1] }
 
         before do
-          game.board.mark_cell(@default_first_player, 0, 0)
           allow(player_stub).to receive(:move).and_return(
             occupied_coordinates,
             out_of_bounds_coordinates,
@@ -173,12 +173,16 @@ module TicTacToe
         end
 
         it "complains through the interface" do
+          _ = Board::BLANK_MARK
+          game = Game.new(board: build_board([0, _, _, _, _, _, _, _, _]))
           expect(game.interface).to receive(:report_invalid_move).exactly(2).times
 
           game.get_valid_move(player_stub)
         end
 
         it "gets another move from player until it receives valid coordinates" do
+          _ = Board::BLANK_MARK
+          game = Game.new(board: build_board([0, _, _, _, _, _, _, _, _]))
           allow(game.interface).to receive(:report_invalid_move)
 
           expect(game.get_valid_move(player_stub)).to eq valid_coordinates

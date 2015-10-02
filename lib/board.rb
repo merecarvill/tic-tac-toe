@@ -14,6 +14,7 @@ module TicTacToe
 
       @size = parameters[:size]
       config = parameters[:config] || blank_board_configuration
+      @last_move_made = parameters[:last_move_made]
       @cells = map_configuration_to_cells(config)
     end
 
@@ -27,8 +28,9 @@ module TicTacToe
       fail BoardError, "Cell coordinates are out of bounds" if out_of_bounds?([row, col])
       fail BoardError, "Cannot alter a marked cell" if marked?([row, col])
 
-      @last_move_made = [row, col]
-      @cells[row][col] = mark
+      config = map_cells_to_configuration(@cells)
+      config[row * @size + col] = mark
+      Board.new(size: @size, config: config, last_move_made: [row, col])
     end
 
     def lines
@@ -48,10 +50,6 @@ module TicTacToe
     def last_mark_made
       return if @last_move_made.nil?
       self.read_cell(*last_move_made)
-    end
-
-    def deep_copy
-      Board.new(size: @size, config: map_cells_to_configuration(@cells))
     end
 
     def blank?(coordinates)

@@ -37,13 +37,13 @@ module TicTacToe
     def handle_one_turn(current_player)
       @interface.show_game_board(@board)
       coordinates = get_valid_move(current_player)
-      @board.mark_cell(current_player.player_mark, *coordinates)
+      @board = @board.mark_cell(current_player.player_mark, *coordinates)
       @interface.report_move(current_player.player_mark, coordinates)
     end
 
     def get_valid_move(player)
       loop do
-        coordinates = player.move
+        coordinates = player.move(self)
         if @board.out_of_bounds?(coordinates) || @board.marked?(coordinates)
           @interface.report_invalid_move(coordinates)
         else

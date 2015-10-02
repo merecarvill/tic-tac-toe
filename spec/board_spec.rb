@@ -94,16 +94,24 @@ module TicTacToe
       let(:coordinates) { random_coordinates(board.size) }
       let(:mark) { @default_player_marks.sample }
 
-      it "sets the contents of an empty cell at the given row and column" do
+      it "returns a new board with the given coordinates played" do
+        board = blank_board(@default_board_size)
+
+        expect(board.mark_cell(mark, *coordinates).read_cell(*coordinates)).to eq(mark)
+      end
+
+      it "does not mutate the board" do
+        board = blank_board(@default_board_size)
+
         board.mark_cell(mark, *coordinates)
 
-        expect(board.read_cell(*coordinates)).to eq mark
+        expect(board).to be_all_blank
       end
 
       it "records the coordinates of the last mark made" do
-        board.mark_cell(mark, *coordinates)
+        returned_board = board.mark_cell(mark, *coordinates)
 
-        expect(board.last_move_made).to eq coordinates
+        expect(returned_board.last_move_made).to eq coordinates
       end
 
       it "raises error if cell coordinates are out of bounds" do
@@ -115,9 +123,9 @@ module TicTacToe
 
       it "raises error when attempting to change contents of non-empty cell" do
         error_info = [board_error, "Cannot alter a marked cell"]
-        board.mark_cell(mark, *coordinates)
+        returned_board = board.mark_cell(mark, *coordinates)
 
-        expect { board.mark_cell(mark, *coordinates) }.to raise_error(*error_info)
+        expect { returned_board.mark_cell(mark, *coordinates) }.to raise_error(*error_info)
       end
     end
 
@@ -178,38 +186,10 @@ module TicTacToe
         it "returns the last mark made on the board" do
           board = blank_board(@default_board_size)
           mark = @default_player_marks.sample
-          board.mark_cell(mark, *random_coordinates(board.size))
+          returned_board = board.mark_cell(mark, *random_coordinates(board.size))
 
-          expect(board.last_mark_made).to eq mark
+          expect(returned_board.last_mark_made).to eq mark
         end
-      end
-    end
-
-    describe "#deep_copy" do
-      it "returns a new board" do
-        board = blank_board(@default_board_size)
-        board_copy = board.deep_copy
-
-        expect(board).not_to eq board_copy
-      end
-
-      it "returns a board that has the same marks as called board" do
-        config = [x, o, x, o, x, o, _, _, _].shuffle
-        board = build_board(config)
-        board_copy = board.deep_copy
-
-        board.all_coordinates.each do |coordinates|
-          expect(board.read_cell(*coordinates)).to eq board_copy.read_cell(*coordinates)
-        end
-      end
-
-      it "returns a board which references cells that are not those of called board" do
-        board = blank_board(@default_board_size)
-        board_copy = board.deep_copy
-        coordinates = random_coordinates(board.size)
-        board.mark_cell(@default_player_marks.first, *coordinates)
-
-        expect(board.read_cell(*coordinates)).not_to eq board_copy.read_cell(*coordinates)
       end
     end
 
@@ -223,9 +203,9 @@ module TicTacToe
       it "returns false if cell at given coordinates is not blank" do
         board = blank_board(@default_board_size)
         coordinates = random_coordinates(board.size)
-        board.mark_cell(@default_player_marks.sample, *coordinates)
+        returned_board = board.mark_cell(@default_player_marks.sample, *coordinates)
 
-        expect(board.blank?(coordinates)).to be false
+        expect(returned_board.blank?(coordinates)).to be false
       end
     end
 
@@ -233,9 +213,9 @@ module TicTacToe
       it "returns true if cell at given coordinates has any player's mark" do
         board = blank_board(@default_board_size)
         coordinates = random_coordinates(board.size)
-        board.mark_cell(@default_player_marks.sample, *coordinates)
+        returned_board = board.mark_cell(@default_player_marks.sample, *coordinates)
 
-        expect(board.marked?(coordinates)).to be true
+        expect(returned_board.marked?(coordinates)).to be true
       end
 
       it "returns false if cell at given coordinates does not have a player's mark" do
