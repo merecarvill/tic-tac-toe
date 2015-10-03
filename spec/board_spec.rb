@@ -42,16 +42,6 @@ module TicTacToe
             expect(board.read_cell(*coordinates)).to eq mark
           end
         end
-
-        it "raises error if given configuration does not reconcile with given size" do
-          error_info = [board_error, "Given size does not reconcile with given configuration"]
-          params = {
-            size: Math.sqrt(config.size).to_i + 1,
-            config: config
-          }
-
-          expect { new_board(params) }.to raise_error(*error_info)
-        end
       end
 
       context "when not given a configuration of a board with preexisting marks" do
