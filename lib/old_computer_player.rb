@@ -32,9 +32,7 @@ module TicTacToe
 
     def generate_possible_successor_boards(board, mark)
       board.blank_cell_coordinates.map do |coordinates|
-        successor_board = board.deep_copy
-        successor_board.mark_cell(mark, *coordinates)
-        successor_board
+        board.mark_cell(mark, *coordinates)
       end
     end
 

@@ -2,6 +2,7 @@ require "spec_helper"
 require "computer_player"
 
 require "board"
+require "game"
 
 module TicTacToe
   describe ComputerPlayer do
@@ -41,10 +42,10 @@ module TicTacToe
           x, x, o,
           o, _, _
         ]
-        board = build_board(board_config)
-        board.mark_cell(o, *[2, 1])
+        board = build_board(board_config).mark_cell(o, *[2, 1])
+        game = Game.new(board: board)
         computer_player = x_player(board)
-        coordinates = computer_player.move
+        coordinates = computer_player.move(game)
 
         expect(board.out_of_bounds?(coordinates)).to be false
         expect(board.blank?(coordinates)).to be true
@@ -53,9 +54,11 @@ module TicTacToe
       context "when game board has a center space and it is blank" do
         it "returns the center coordinates" do
           board_size = @default_board_size.odd? ? @default_board_size : 3
+          game = Game.new(board: blank_board(board_size))
+
           computer_player = x_player(blank_board(board_size))
 
-          expect(computer_player.move).to eq [board_size / 2, board_size / 2]
+          expect(computer_player.move(game)).to eq [board_size / 2, board_size / 2]
         end
       end
 
@@ -75,9 +78,10 @@ module TicTacToe
           winning_moves = [[0, 1], [1, 2], [2, 0]]
           board_configs.zip(winning_moves).each do |board_config, winning_move|
             board = build_board(board_config)
+            game = Game.new(board: board)
             computer_player = x_player(board)
 
-            expect(computer_player.move).to eq winning_move
+            expect(computer_player.move(game)).to eq winning_move
           end
         end
       end
@@ -98,9 +102,10 @@ module TicTacToe
           winning_moves = [[1, 0], [2, 1], [0, 2]]
           board_configs.zip(winning_moves).each do |board_config, winning_move|
             board = build_board(board_config)
+            game = Game.new(board: board)
             computer_player = x_player(board)
 
-            expect(computer_player.move).to eq winning_move
+            expect(computer_player.move(game)).to eq winning_move
           end
         end
       end
@@ -119,8 +124,9 @@ module TicTacToe
           board_configs.zip(winning_moves).each do |board_config, winning_move|
             board = build_board(board_config)
             computer_player = x_player(board)
+            game = Game.new(board: board)
 
-            expect(computer_player.move).to eq winning_move
+            expect(computer_player.move(game)).to eq winning_move
           end
         end
       end
@@ -142,8 +148,9 @@ module TicTacToe
           board_configs.zip(winning_moves).each do |board_config, winning_move|
             board = build_board(board_config)
             computer_player = o_player(board)
+            game = Game.new(board: board)
 
-            expect(computer_player.move).to eq winning_move
+            expect(computer_player.move(game)).to eq winning_move
           end
         end
       end
@@ -165,8 +172,9 @@ module TicTacToe
           board_configs.zip(winning_moves).each do |board_config, winning_move|
             board = build_board(board_config)
             computer_player = o_player(board)
+            game = Game.new(board: board)
 
-            expect(computer_player.move).to eq winning_move
+            expect(computer_player.move(game)).to eq winning_move
           end
         end
       end
@@ -185,8 +193,9 @@ module TicTacToe
           board_configs.zip(winning_moves).each do |board_config, winning_move|
             board = build_board(board_config)
             computer_player = o_player(board)
+            game = Game.new(board: board)
 
-            expect(computer_player.move).to eq winning_move
+            expect(computer_player.move(game)).to eq winning_move
           end
         end
       end
@@ -212,8 +221,9 @@ module TicTacToe
           board_configs.zip(good_move_sets).each do |board_config, good_moves|
             board = build_board(board_config)
             computer_player = o_player(board)
+            game = Game.new(board: board)
 
-            expect(good_moves).to include computer_player.move
+            expect(good_moves).to include computer_player.move(game)
           end
         end
       end

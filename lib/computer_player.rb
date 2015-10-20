@@ -5,12 +5,12 @@ module TicTacToe
     attr_reader :player_mark
 
     def initialize(parameters)
-      @board = parameters[:board]
       @player_mark = parameters[:player_mark]
       @opponent_mark = parameters[:opponent_mark]
     end
 
-    def move
+    def move(game)
+      @board = game.board
       if @board.all_blank? && @board.size.odd?
         [:row, :col].map { @board.size / 2 }
       else
@@ -49,11 +49,10 @@ module TicTacToe
 
         board.blank_cell_coordinates.map do |coordinates|
           child_node = {
-            board: board.deep_copy,
+            board: board.mark_cell(current_player_mark, *coordinates),
             current_player_mark: toggle_mark(current_player_mark),
             last_move_made: coordinates
           }
-          child_node[:board].mark_cell(current_player_mark, *coordinates)
           child_node
         end
       end
