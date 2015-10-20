@@ -38,20 +38,6 @@ RSpec.shared_context "helper_methods" do
     new_board(size: board_size)
   end
 
-  def board_with_potential_win_loss_or_draw(board_size, player_marks)
-    first_mark, second_mark = player_marks
-    board = blank_board(board_size)
-    (0...board_size - 1).each { |col| board.mark_cell(first_mark, 0, col) }
-    (0...board_size - 1).each { |col| board.mark_cell(second_mark, 1, col) }
-    (2...board_size).each do |row|
-      (0...board_size - 1).each do |col|
-        mark = col.even? ? first_mark : second_mark
-        board.mark_cell(mark, row, col)
-      end
-    end
-    board
-  end
-
   def board_with_draw(board_size, player_marks)
     first_mark, second_mark = player_marks
     blank_board(board_size).blank_cell_coordinates.reduce(blank_board(board_size)) do |board, (row, col)|
@@ -63,41 +49,5 @@ RSpec.shared_context "helper_methods" do
           board.mark_cell(mark, row, col)
         end
     end
-  end
-
-  def all_wins(board_size, winning_mark)
-    winning_boards = horizontal_wins(board_size, winning_mark)
-    winning_boards.concat vertical_wins(board_size, winning_mark)
-    winning_boards.concat diagonal_wins(board_size, winning_mark)
-  end
-
-  def horizontal_wins(board_size, winning_mark)
-    (0...board_size).each_with_object([]) do |row, winning_boards|
-      board = blank_board(board_size)
-      (0...board_size).each { |col| board.mark_cell(winning_mark, row, col) }
-      winning_boards << board
-    end
-  end
-
-  def vertical_wins(board_size, winning_mark)
-    (0...board_size).each_with_object([]) do |col, winning_boards|
-      board = blank_board(board_size)
-      (0...board_size).each { |row| board.mark_cell(winning_mark, row, col) }
-      winning_boards << board
-    end
-  end
-
-  def diagonal_wins(board_size, winning_mark)
-    ldiag_board = blank_board(board_size)
-    (0...board_size).each do |index|
-      ldiag_board.mark_cell(winning_mark, index, index)
-    end
-
-    rdiag_board = blank_board(board_size)
-    (0...board_size).each do |index|
-      rdiag_board.mark_cell(winning_mark, index, rdiag_board.size - index - 1)
-    end
-
-    [ldiag_board, rdiag_board]
   end
 end
