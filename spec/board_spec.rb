@@ -6,7 +6,6 @@ module TicTacToe
     include_context "default_values"
     include_context "helper_methods"
 
-    let(:board_error) { Board::BoardError }
     let(:_) { Board.blank_mark }
     let(:x) { @default_player_marks.first }
     let(:o) { @default_player_marks.last }
@@ -22,12 +21,6 @@ module TicTacToe
     end
 
     describe "#initialize" do
-      it "raises error if given size is less than 3" do
-        error_info = [board_error, "Given size is too small, must be 3 or greater"]
-
-        expect { new_board(size: 2) }.to raise_error(*error_info)
-      end
-
       context "given the configuration of a board with preexisting marks" do
         let(:config) do
           [ x, _, _,
@@ -69,14 +62,6 @@ module TicTacToe
 
         expect(board.read_cell(0, 0)).to eq mark
       end
-
-      it "raises error if cell coordinates are out of bounds" do
-        error_info = [board_error, "Cell coordinates are out of bounds"]
-        board = blank_board(@default_board_size)
-        oob_coordinates = [board.size, board.size]
-
-        expect { board.read_cell(*oob_coordinates) }.to raise_error(*error_info)
-      end
     end
 
     describe "#mark_cell" do
@@ -102,20 +87,6 @@ module TicTacToe
         returned_board = board.mark_cell(mark, *coordinates)
 
         expect(returned_board.last_move_made).to eq coordinates
-      end
-
-      it "raises error if cell coordinates are out of bounds" do
-        error_info = [board_error, "Cell coordinates are out of bounds"]
-        oob_coordinates = [board.size, board.size]
-
-        expect { board.mark_cell(mark, *oob_coordinates)}.to raise_error(*error_info)
-      end
-
-      it "raises error when attempting to change contents of non-empty cell" do
-        error_info = [board_error, "Cannot alter a marked cell"]
-        returned_board = board.mark_cell(mark, *coordinates)
-
-        expect { returned_board.mark_cell(mark, *coordinates) }.to raise_error(*error_info)
       end
     end
 
