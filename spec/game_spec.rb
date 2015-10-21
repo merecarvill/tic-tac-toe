@@ -84,7 +84,9 @@ module TicTacToe
 
     describe "#set_up" do
       it "uses information from the interface to create the players" do
-        allow(game.interface).to receive(:game_setup_interaction).and_return([:human, :computer])
+        allow(game.interface).to receive(:game_setup_interaction) do
+          [AvailablePlayerTypes::HUMAN, AvailablePlayerTypes::COMPUTER]
+        end
         game.set_up
 
         game.players.each_with_index do |player, index|
@@ -96,7 +98,9 @@ module TicTacToe
 
     describe "#handle_turns" do
       it "executes turns until the game is over" do
-        allow(game.interface).to receive(:game_setup_interaction).and_return([:human, :computer])
+        allow(game.interface).to receive(:game_setup_interaction) do
+          [AvailablePlayerTypes::HUMAN, AvailablePlayerTypes::COMPUTER]
+        end
         game.set_up
         allow(game).to receive(:over?).and_return(false, false, false, false, true)
         allow(game).to receive(:handle_one_turn)
@@ -251,7 +255,9 @@ module TicTacToe
 
       context "in a game with two computer players" do
         before do
-          allow(game.interface).to receive(:game_setup_interaction).and_return([:computer, :computer])
+          allow(game.interface).to receive(:game_setup_interaction) do
+            [AvailablePlayerTypes::COMPUTER, AvailablePlayerTypes::COMPUTER]
+          end
         end
 
         it "should end the game in a draw" do
@@ -264,7 +270,9 @@ module TicTacToe
 
       context "in a game with a human player and a computer player" do
         before do
-          allow(game.interface).to receive(:game_setup_interaction).and_return([:human, :computer])
+          allow(game.interface).to receive(:game_setup_interaction) do
+            [AvailablePlayerTypes::HUMAN, AvailablePlayerTypes::COMPUTER]
+          end
         end
 
         it "should end in a win for the computer player against an unskilled human player" do

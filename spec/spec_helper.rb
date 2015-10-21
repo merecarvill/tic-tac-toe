@@ -7,7 +7,10 @@ RSpec.shared_context "default_values" do
     @default_first_player = :x
     @default_second_player = :o
     @default_player_marks = [:x, :o]
-    @default_player_types = [:human, :computer]
+    @default_player_types = [
+      TicTacToe::AvailablePlayerTypes::HUMAN,
+      TicTacToe::AvailablePlayerTypes::COMPUTER
+    ]
   end
 end
 
