@@ -9,7 +9,7 @@ module TicTacToe
     include_context "default_values"
     include_context "helper_methods"
 
-    let(:_) { Board.blank_mark }
+    let(:_) { Board::BLANK_MARK }
     let(:x) { @default_first_player }
     let(:o) { @default_second_player }
 

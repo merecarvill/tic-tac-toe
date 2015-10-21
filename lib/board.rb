@@ -1,13 +1,8 @@
 module TicTacToe
   class Board
-    BoardError = Class.new(StandardError)
     BLANK_MARK = nil
 
     attr_reader :size, :last_move_made
-
-    def self.blank_mark
-      BLANK_MARK
-    end
 
     def initialize(parameters)
       @size = parameters[:size]

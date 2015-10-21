@@ -6,19 +6,9 @@ module TicTacToe
     include_context "default_values"
     include_context "helper_methods"
 
-    let(:_) { Board.blank_mark }
+    let(:_) { Board::BLANK_MARK }
     let(:x) { @default_player_marks.first }
     let(:o) { @default_player_marks.last }
-
-    describe ".blank_mark" do
-      it "returns the mark used by board to indicate a blank cell" do
-        board = blank_board(@default_board_size)
-
-        board.all_coordinates.each do |coordinates|
-          expect(board.read_cell(*coordinates)).to eq Board.blank_mark
-        end
-      end
-    end
 
     describe "#initialize" do
       context "given the configuration of a board with preexisting marks" do

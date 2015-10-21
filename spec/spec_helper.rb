@@ -16,7 +16,7 @@ end
 
 RSpec.shared_context "helper_methods" do
   def blank_board_configuration(board_size)
-    (0...board_size**2).map { TicTacToe::Board.blank_mark }
+    (0...board_size**2).map { TicTacToe::Board::BLANK_MARK }
   end
 
   def at_least_one_repeated_line?(string)
