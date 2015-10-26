@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name              = "tactical_tic_tac_toe"
-  s.version           = "0.1.1"
+  s.version           = "0.2.0"
   s.date              = Time.now.strftime('%Y-%m-%d')
   s.summary           = "Command line tic tac toe."
   s.description       = "Command line tic tac toe! Run with command 'ttt'"
