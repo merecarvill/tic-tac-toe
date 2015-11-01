@@ -6,22 +6,24 @@ module TicTacToe
 
     def initialize(parameters)
       @size = parameters[:size]
-      @spaces = parameters[:config] || blank_board_configuration
+      @spaces = parameters[:marked_spaces] || blank_spaces
       @last_move_made = parameters[:last_move_made]
     end
 
     def read_space(coordinates)
-      row, col = coordinates
-
-      @spaces[row * @size + col]
+      @spaces[coordinates_to_flat_index(coordinates)]
     end
 
     def mark_space(mark, coordinates)
-      row, col = coordinates
-      config = @spaces.dup
+      marked_spaces = @spaces.dup
+      marked_spaces[coordinates_to_flat_index(coordinates)] = mark
 
-      config[row * @size + col] = mark
-      Board.new(size: @size, config: config, last_move_made: [row, col])
+      Board.new(size: @size, marked_spaces: marked_spaces, last_move_made: coordinates)
+    end
+
+    def last_mark_made
+      return if @last_move_made.nil?
+      self.read_space(last_move_made)
     end
 
     def lines
@@ -38,9 +40,8 @@ module TicTacToe
       all_coordinates.reject { |coordinates| marked?(coordinates) }
     end
 
-    def last_mark_made
-      return if @last_move_made.nil?
-      self.read_space(last_move_made)
+    def out_of_bounds?(coordinates)
+      coordinates.any? { |i| !i.between?(0, @size - 1) }
     end
 
     def blank?(coordinates)
@@ -49,10 +50,6 @@ module TicTacToe
 
     def marked?(coordinates)
       !blank?(coordinates)
-    end
-
-    def out_of_bounds?(coordinates)
-      coordinates.any? { |i| !i.between?(0, @size - 1) }
     end
 
     def all_blank?
@@ -72,7 +69,12 @@ module TicTacToe
 
     private
 
-    def blank_board_configuration
+    def coordinates_to_flat_index(coordinates)
+      row, col = coordinates
+      row * @size + col
+    end
+
+    def blank_spaces
       Array.new(@size**2) { BLANK_MARK }
     end
 

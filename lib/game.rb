@@ -77,12 +77,12 @@ module TicTacToe
     end
 
     def create_player(mark, type)
-      player_config = {
+      player_parameters = {
         type: type,
         game: self,
         player_mark: mark
       }
-      PlayerFactory.build(player_config)
+      PlayerFactory.build(player_parameters)
     end
   end
 end

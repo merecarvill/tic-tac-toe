@@ -11,23 +11,23 @@ module TicTacToe
     let(:o) { @default_player_marks.last }
 
     describe "#initialize" do
-      context "given the configuration of a board with preexisting marks" do
-        let(:config) do
+      context "given a set of preexisting marks" do
+        let(:marked_spaces) do
           [ x, _, _,
             _, o, _,
             _, _, x ]
         end
 
         it "generates a board with the specified marks in each space" do
-          board = new_board(size: Math.sqrt(config.size).to_i, config: config)
+          board = new_board(size: Math.sqrt(marked_spaces.size).to_i, marked_spaces: marked_spaces)
 
-          board.all_coordinates.zip(config).each do |coordinates, mark|
+          board.all_coordinates.zip(marked_spaces).each do |coordinates, mark|
             expect(board.read_space(coordinates)).to eq mark
           end
         end
       end
 
-      context "when not given a configuration of a board with preexisting marks" do
+      context "when not given a a set of preexisting marks" do
         it "generates a NxN board of the given size" do
           (3..5).each do |size|
             custom_board = new_board(size: size)
@@ -45,12 +45,10 @@ module TicTacToe
 
     describe "#read_space" do
       it "gets the contents of space at given row and column" do
-        mark = @default_player_marks.sample
-        config = blank_board_configuration(@default_board_size)
-        config[0] = mark
-        board = build_board(config)
+        marked_spaces = [x, _, _, _, _, _, _, _, _]
+        board = build_board(marked_spaces)
 
-        expect(board.read_space([0, 0])).to eq mark
+        expect(board.read_space([0, 0])).to eq x
       end
     end
 
@@ -111,16 +109,16 @@ module TicTacToe
       end
 
       it "returns the coordinates of all blank spaces in board" do
-        config = [x, o, _, _, _, _, _, _, _].shuffle
-        board = build_board(config)
+        marked_spaces = [x, o, _, _, _, _, _, _, _].shuffle
+        board = build_board(marked_spaces)
         unmarked_coordinates = board.all_coordinates.reject { |coords| board.marked?(coords) }
 
         expect(board.blank_space_coordinates).to match_array unmarked_coordinates
       end
 
       it "returns no coordinates when no spaces are blank" do
-        config = [x, o, x, o, x, o, x, o, x].shuffle
-        board = build_board(config)
+        marked_spaces = [x, o, x, o, x, o, x, o, x].shuffle
+        board = build_board(marked_spaces)
 
         expect(board.blank_space_coordinates.count).to eq 0
       end
@@ -202,8 +200,8 @@ module TicTacToe
       end
 
       it "returns false if any space in board is marked" do
-        config = [x, _, _, _, _, _, _, _, _].shuffle
-        board = build_board(config)
+        marked_spaces = [x, _, _, _, _, _, _, _, _].shuffle
+        board = build_board(marked_spaces)
 
         expect(board.all_blank?).to be false
       end
@@ -211,15 +209,15 @@ module TicTacToe
 
     describe "#all_marked?" do
       it "returns true if all spaces in board are marked" do
-        config = [x, x, x, x, x, o, o, o, o].shuffle
-        board = build_board(config)
+        marked_spaces = [x, x, x, x, x, o, o, o, o].shuffle
+        board = build_board(marked_spaces)
 
         expect(board.all_marked?).to be true
       end
 
       it "returns false if any space in board is blank" do
-        config = [x, x, x, x, _, o, o, o, o].shuffle
-        board = build_board(config)
+        marked_spaces = [x, x, x, x, _, o, o, o, o].shuffle
+        board = build_board(marked_spaces)
 
         expect(board.all_marked?).to be false
       end
@@ -227,7 +225,7 @@ module TicTacToe
 
     describe "#has_winning_line?" do
       it "returns true if board has a horizontal winning line" do
-        winning_configs = [
+        winning_configurations = [
           [ x, x, x,
             _, _, _,
             _, _, _ ],
@@ -239,13 +237,13 @@ module TicTacToe
             x, x, x ]
         ]
 
-        winning_configs.each do |config|
-          expect(build_board(config).has_winning_line?).to be true
+        winning_configurations.each do |marked_spaces|
+          expect(build_board(marked_spaces).has_winning_line?).to be true
         end
       end
 
       it "returns true if board has a vertical winning line" do
-        winning_configs = [
+        winning_configurations = [
           [ x, _, _,
             x, _, _,
             x, _, _ ],
@@ -257,13 +255,13 @@ module TicTacToe
             _, _, x ]
         ]
 
-        winning_configs.each do |config|
-          expect(build_board(config).has_winning_line?).to be true
+        winning_configurations.each do |marked_spaces|
+          expect(build_board(marked_spaces).has_winning_line?).to be true
         end
       end
 
       it "returns true if board has a diagonal winning line" do
-        winning_configs = [
+        winning_configurations = [
           [ x, _, _,
             _, x, _,
             _, _, x ],
@@ -272,13 +270,13 @@ module TicTacToe
             x, _, _ ]
         ]
 
-        winning_configs.each do |config|
-          expect(build_board(config).has_winning_line?).to be true
+        winning_configurations.each do |marked_spaces|
+          expect(build_board(marked_spaces).has_winning_line?).to be true
         end
       end
 
       it "returns false if board has no winning line" do
-        non_winning_configs = [
+        non_winning_configurations = [
           [ _, _, _,
             _, _, _,
             _, _, _ ],
@@ -296,8 +294,8 @@ module TicTacToe
             o, x, o ]
         ]
 
-        non_winning_configs.each do |config|
-          expect(build_board(config).has_winning_line?).to be false
+        non_winning_configurations.each do |marked_spaces|
+          expect(build_board(marked_spaces).has_winning_line?).to be false
         end
       end
     end

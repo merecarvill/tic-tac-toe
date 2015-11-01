@@ -32,9 +32,9 @@ RSpec.shared_context "helper_methods" do
     TicTacToe::Board.new(parameters)
   end
 
-  def build_board(config)
-    size = Math.sqrt(config.size).to_i
-    new_board(size: size, config: config)
+  def build_board(marked_spaces)
+    size = Math.sqrt(marked_spaces.size).to_i
+    new_board(size: size, marked_spaces: marked_spaces)
   end
 
   def blank_board(board_size)

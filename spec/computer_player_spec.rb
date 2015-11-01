@@ -37,12 +37,12 @@ module TicTacToe
 
     describe "#move" do
       it "returns the coordinates of a valid move" do
-        board_config = [
+        marked_spaces = [
           x, o, x,
           x, x, o,
           o, _, _
         ]
-        board = build_board(board_config).mark_space(o, [2, 1])
+        board = build_board(marked_spaces).mark_space(o, [2, 1])
         game = Game.new(board: board)
         computer_player = x_player(board)
         coordinates = computer_player.move(game)
@@ -64,7 +64,7 @@ module TicTacToe
 
       context "when computer player can make a horizontal winning move" do
         it "returns the coordinates of the winning move" do
-          board_configs = [
+          board_configurations = [
             [ x, _, x,
               _, o, _,
               o, x, o ],
@@ -76,8 +76,8 @@ module TicTacToe
               _, x, x ]
           ]
           winning_moves = [[0, 1], [1, 2], [2, 0]]
-          board_configs.zip(winning_moves).each do |board_config, winning_move|
-            board = build_board(board_config)
+          board_configurations.zip(winning_moves).each do |marked_spaces, winning_move|
+            board = build_board(marked_spaces)
             game = Game.new(board: board)
             computer_player = x_player(board)
 
@@ -88,7 +88,7 @@ module TicTacToe
 
       context "when computer player can make a vertical winning move" do
         it "returns the coordinates of the winning move" do
-          board_configs = [
+          board_configurations = [
             [ x, _, o,
               _, o, x,
               x, _, o ],
@@ -100,8 +100,8 @@ module TicTacToe
               o, x, x ]
           ]
           winning_moves = [[1, 0], [2, 1], [0, 2]]
-          board_configs.zip(winning_moves).each do |board_config, winning_move|
-            board = build_board(board_config)
+          board_configurations.zip(winning_moves).each do |marked_spaces, winning_move|
+            board = build_board(marked_spaces)
             game = Game.new(board: board)
             computer_player = x_player(board)
 
@@ -112,7 +112,7 @@ module TicTacToe
 
       context "when computer player can make a diagonal winning move" do
         it "returns the coordinates of the winning move" do
-          board_configs = [
+          board_configurations = [
             [ x, _, o,
               o, x, _,
               x, o, _ ],
@@ -121,8 +121,8 @@ module TicTacToe
               x, o, _ ]
           ]
           winning_moves = [[2, 2], [0, 2]]
-          board_configs.zip(winning_moves).each do |board_config, winning_move|
-            board = build_board(board_config)
+          board_configurations.zip(winning_moves).each do |marked_spaces, winning_move|
+            board = build_board(marked_spaces)
             computer_player = x_player(board)
             game = Game.new(board: board)
 
@@ -133,7 +133,7 @@ module TicTacToe
 
       context "when opponent can make a horizontal winning move next turn" do
         it "returns the coordinates of the move that blocks the opponent from winning" do
-          board_configs = [
+          board_configurations = [
             [ x, _, x,
               _, o, _,
               o, x, o ],
@@ -145,8 +145,8 @@ module TicTacToe
               _, x, x ]
           ]
           winning_moves = [[0, 1], [1, 2], [2, 0]]
-          board_configs.zip(winning_moves).each do |board_config, winning_move|
-            board = build_board(board_config)
+          board_configurations.zip(winning_moves).each do |marked_spaces, winning_move|
+            board = build_board(marked_spaces)
             computer_player = o_player(board)
             game = Game.new(board: board)
 
@@ -157,7 +157,7 @@ module TicTacToe
 
       context "when opponent can make a vertical winning move next turn" do
         it "returns the coordinates of the move that blocks the opponent from winning" do
-          board_configs = [
+          board_configurations = [
             [ x, _, o,
               _, o, x,
               x, _, o ],
@@ -169,8 +169,8 @@ module TicTacToe
               o, x, x ]
           ]
           winning_moves = [[1, 0], [2, 1], [0, 2]]
-          board_configs.zip(winning_moves).each do |board_config, winning_move|
-            board = build_board(board_config)
+          board_configurations.zip(winning_moves).each do |marked_spaces, winning_move|
+            board = build_board(marked_spaces)
             computer_player = o_player(board)
             game = Game.new(board: board)
 
@@ -181,7 +181,7 @@ module TicTacToe
 
       context "when opponent can make a diagonal winning move next turn" do
         it "returns the coordinates of the move that blocks the opponent from winning" do
-          board_configs = [
+          board_configurations = [
             [ x, _, o,
               o, x, _,
               x, o, _ ],
@@ -190,8 +190,8 @@ module TicTacToe
               x, o, _ ]
           ]
           winning_moves = [[2, 2], [0, 2]]
-          board_configs.zip(winning_moves).each do |board_config, winning_move|
-            board = build_board(board_config)
+          board_configurations.zip(winning_moves).each do |marked_spaces, winning_move|
+            board = build_board(marked_spaces)
             computer_player = o_player(board)
             game = Game.new(board: board)
 
@@ -202,7 +202,7 @@ module TicTacToe
 
       context "when opponent can make a fork next turn" do
         it "returns the coordinates of a move that prevents that fork" do
-          board_configs = [
+          board_configurations = [
             [ x, _, _,
               _, x, _,
               _, _, o ],
@@ -218,8 +218,8 @@ module TicTacToe
             [[0, 1], [1, 0], [1, 2], [2, 1]],
             [[0, 0], [0, 2], [2, 0], [2, 2]]
           ]
-          board_configs.zip(good_move_sets).each do |board_config, good_moves|
-            board = build_board(board_config)
+          board_configurations.zip(good_move_sets).each do |marked_spaces, good_moves|
+            board = build_board(marked_spaces)
             computer_player = o_player(board)
             game = Game.new(board: board)
 
