@@ -18,11 +18,11 @@ module TicTacToe
             _, _, x ]
         end
 
-        it "generates a board with the specified marks in each cell" do
+        it "generates a board with the specified marks in each space" do
           board = new_board(size: Math.sqrt(config.size).to_i, config: config)
 
           board.all_coordinates.zip(config).each do |coordinates, mark|
-            expect(board.read_cell(*coordinates)).to eq mark
+            expect(board.read_space(coordinates)).to eq mark
           end
         end
       end
@@ -43,18 +43,18 @@ module TicTacToe
       end
     end
 
-    describe "#read_cell" do
-      it "gets the contents of cell at given row and column" do
+    describe "#read_space" do
+      it "gets the contents of space at given row and column" do
         mark = @default_player_marks.sample
         config = blank_board_configuration(@default_board_size)
         config[0] = mark
         board = build_board(config)
 
-        expect(board.read_cell(0, 0)).to eq mark
+        expect(board.read_space([0, 0])).to eq mark
       end
     end
 
-    describe "#mark_cell" do
+    describe "#mark_space" do
       let(:board) { blank_board(@default_board_size) }
       let(:coordinates) { random_coordinates(board.size) }
       let(:mark) { @default_player_marks.sample }
@@ -62,19 +62,19 @@ module TicTacToe
       it "returns a new board with the given coordinates played" do
         board = blank_board(@default_board_size)
 
-        expect(board.mark_cell(mark, *coordinates).read_cell(*coordinates)).to eq(mark)
+        expect(board.mark_space(mark, coordinates).read_space(coordinates)).to eq(mark)
       end
 
       it "does not mutate the board" do
         board = blank_board(@default_board_size)
 
-        board.mark_cell(mark, *coordinates)
+        board.mark_space(mark, coordinates)
 
         expect(board).to be_all_blank
       end
 
       it "records the coordinates of the last mark made" do
-        returned_board = board.mark_cell(mark, *coordinates)
+        returned_board = board.mark_space(mark, coordinates)
 
         expect(returned_board.last_move_made).to eq coordinates
       end
@@ -96,33 +96,33 @@ module TicTacToe
     describe "#all_coordinates" do
       let(:board) { blank_board(@default_board_size) }
 
-      it "returns the coordinates of every cell in board" do
+      it "returns the coordinates of every space in board" do
         all_coordinates = (0...board.size).to_a.repeated_permutation(2).to_a
 
         expect(board.all_coordinates).to match_array all_coordinates
       end
     end
 
-    describe "#blank_cell_coordinates" do
-      it "returns all cell coordinates when board is blank" do
+    describe "#blank_space_coordinates" do
+      it "returns all space coordinates when board is blank" do
         board = blank_board(@default_board_size)
 
-        expect(board.blank_cell_coordinates).to match_array board.all_coordinates
+        expect(board.blank_space_coordinates).to match_array board.all_coordinates
       end
 
-      it "returns the coordinates of all blank cells in board" do
+      it "returns the coordinates of all blank spaces in board" do
         config = [x, o, _, _, _, _, _, _, _].shuffle
         board = build_board(config)
         unmarked_coordinates = board.all_coordinates.reject { |coords| board.marked?(coords) }
 
-        expect(board.blank_cell_coordinates).to match_array unmarked_coordinates
+        expect(board.blank_space_coordinates).to match_array unmarked_coordinates
       end
 
-      it "returns no coordinates when no cells are blank" do
+      it "returns no coordinates when no spaces are blank" do
         config = [x, o, x, o, x, o, x, o, x].shuffle
         board = build_board(config)
 
-        expect(board.blank_cell_coordinates.count).to eq 0
+        expect(board.blank_space_coordinates.count).to eq 0
       end
     end
 
@@ -137,7 +137,7 @@ module TicTacToe
         it "returns the last mark made on the board" do
           board = blank_board(@default_board_size)
           mark = @default_player_marks.sample
-          returned_board = board.mark_cell(mark, *random_coordinates(board.size))
+          returned_board = board.mark_space(mark, random_coordinates(board.size))
 
           expect(returned_board.last_mark_made).to eq mark
         end
@@ -145,31 +145,31 @@ module TicTacToe
     end
 
     describe "#blank?" do
-      it "returns true if cell at given coordinates is blank" do
+      it "returns true if space at given coordinates is blank" do
         board = blank_board(@default_board_size)
 
         expect(board.blank?(random_coordinates(board.size))).to be true
       end
 
-      it "returns false if cell at given coordinates is not blank" do
+      it "returns false if space at given coordinates is not blank" do
         board = blank_board(@default_board_size)
         coordinates = random_coordinates(board.size)
-        returned_board = board.mark_cell(@default_player_marks.sample, *coordinates)
+        returned_board = board.mark_space(@default_player_marks.sample, coordinates)
 
         expect(returned_board.blank?(coordinates)).to be false
       end
     end
 
     describe "#marked?" do
-      it "returns true if cell at given coordinates has any player's mark" do
+      it "returns true if space at given coordinates has any player's mark" do
         board = blank_board(@default_board_size)
         coordinates = random_coordinates(board.size)
-        returned_board = board.mark_cell(@default_player_marks.sample, *coordinates)
+        returned_board = board.mark_space(@default_player_marks.sample, coordinates)
 
         expect(returned_board.marked?(coordinates)).to be true
       end
 
-      it "returns false if cell at given coordinates does not have a player's mark" do
+      it "returns false if space at given coordinates does not have a player's mark" do
         blank_board = blank_board(@default_board_size)
         coordinates = random_coordinates(blank_board.size)
 
@@ -195,13 +195,13 @@ module TicTacToe
     end
 
     describe "#all_blank?" do
-      it "returns true if no cell in board is marked" do
+      it "returns true if no space in board is marked" do
         board = blank_board(@default_board_size)
 
         expect(board.all_blank?).to be true
       end
 
-      it "returns false if any cell in board is marked" do
+      it "returns false if any space in board is marked" do
         config = [x, _, _, _, _, _, _, _, _].shuffle
         board = build_board(config)
 
@@ -210,14 +210,14 @@ module TicTacToe
     end
 
     describe "#all_marked?" do
-      it "returns true if all cells in board are marked" do
+      it "returns true if all spaces in board are marked" do
         config = [x, x, x, x, x, o, o, o, o].shuffle
         board = build_board(config)
 
         expect(board.all_marked?).to be true
       end
 
-      it "returns false if any cell in board is blank" do
+      it "returns false if any space in board is blank" do
         config = [x, x, x, x, _, o, o, o, o].shuffle
         board = build_board(config)
 

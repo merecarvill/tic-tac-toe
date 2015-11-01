@@ -72,9 +72,9 @@ module TicTacToe
         interface.show_game_board(board)
 
         board_characters = output_stream.string.split("")
-        cell_count = board.size**2
-        expected_first_mark_count = cell_count.odd? ? cell_count / 2 + 1 : cell_count / 2
-        expected_second_mark_count = cell_count / 2
+        space_count = board.size**2
+        expected_first_mark_count = space_count.odd? ? space_count / 2 + 1 : space_count / 2
+        expected_second_mark_count = space_count / 2
 
         expect(board_characters.count(@default_first_player.to_s)).to eq expected_first_mark_count
         expect(board_characters.count(@default_second_player.to_s)).to eq expected_second_mark_count

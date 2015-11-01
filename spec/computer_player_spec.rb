@@ -42,7 +42,7 @@ module TicTacToe
           x, x, o,
           o, _, _
         ]
-        board = build_board(board_config).mark_cell(o, *[2, 1])
+        board = build_board(board_config).mark_space(o, [2, 1])
         game = Game.new(board: board)
         computer_player = x_player(board)
         coordinates = computer_player.move(game)

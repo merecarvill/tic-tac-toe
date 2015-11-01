@@ -6,16 +6,20 @@ module TicTacToe
 
     def initialize(parameters)
       @size = parameters[:size]
-      @cells = parameters[:config] || blank_board_configuration
+      @spaces = parameters[:config] || blank_board_configuration
       @last_move_made = parameters[:last_move_made]
     end
 
-    def read_cell(row, col)
-      @cells[row * @size + col]
+    def read_space(coordinates)
+      row, col = coordinates
+
+      @spaces[row * @size + col]
     end
 
-    def mark_cell(mark, row, col)
-      config = @cells.dup
+    def mark_space(mark, coordinates)
+      row, col = coordinates
+      config = @spaces.dup
+
       config[row * @size + col] = mark
       Board.new(size: @size, config: config, last_move_made: [row, col])
     end
@@ -30,17 +34,17 @@ module TicTacToe
       (0...@size).to_a.repeated_permutation(2).to_a
     end
 
-    def blank_cell_coordinates
+    def blank_space_coordinates
       all_coordinates.reject { |coordinates| marked?(coordinates) }
     end
 
     def last_mark_made
       return if @last_move_made.nil?
-      self.read_cell(*last_move_made)
+      self.read_space(last_move_made)
     end
 
     def blank?(coordinates)
-      self.read_cell(*coordinates) == BLANK_MARK
+      self.read_space(coordinates) == BLANK_MARK
     end
 
     def marked?(coordinates)
@@ -61,7 +65,7 @@ module TicTacToe
 
     def has_winning_line?
       lines.each do |line|
-        return true if line.first != BLANK_MARK && line.all? { |cell| cell == line.first }
+        return true if line.first != BLANK_MARK && line.all? { |mark| mark == line.first }
       end
       false
     end
@@ -73,19 +77,19 @@ module TicTacToe
     end
 
     def row_at(row)
-      (0...@size).map { |col| self.read_cell(row, col) }
+      (0...@size).map { |col| self.read_space([row, col]) }
     end
 
     def col_at(col)
-      (0...@size).map { |row| self.read_cell(row, col) }
+      (0...@size).map { |row| self.read_space([row, col]) }
     end
 
     def left_diag
-      (0...@size).map { |index| self.read_cell(index, index) }
+      (0...@size).map { |index| self.read_space([index, index]) }
     end
 
     def right_diag
-      (0...@size).map { |row| self.read_cell(row, @size - row - 1) }
+      (0...@size).map { |row| self.read_space([row, @size - row - 1]) }
     end
   end
 end

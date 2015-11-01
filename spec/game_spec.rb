@@ -138,7 +138,7 @@ module TicTacToe
         allow(game.interface).to receive(:report_move)
         game.handle_one_turn(player_stub)
 
-        expect(game.board.read_cell(0, 0)).to eq @default_first_player
+        expect(game.board.read_space([0, 0])).to eq @default_first_player
       end
 
       it "reports the move that was just made through the interface" do
@@ -277,7 +277,7 @@ module TicTacToe
 
         it "should end in a win for the computer player against an unskilled human player" do
           allow(game.interface).to receive(:solicit_move) do
-            game.board.blank_cell_coordinates.first
+            game.board.blank_space_coordinates.first
           end
           computer_player_mark = :o
           game.run

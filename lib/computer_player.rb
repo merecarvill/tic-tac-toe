@@ -47,9 +47,9 @@ module TicTacToe
         board = node.fetch(:board)
         current_player_mark = node.fetch(:current_player_mark)
 
-        board.blank_cell_coordinates.map do |coordinates|
+        board.blank_space_coordinates.map do |coordinates|
           child_node = {
-            board: board.mark_cell(current_player_mark, *coordinates),
+            board: board.mark_space(current_player_mark, coordinates),
             current_player_mark: toggle_mark(current_player_mark),
             last_move_made: coordinates
           }
@@ -71,8 +71,8 @@ module TicTacToe
         board = node.fetch(:board)
 
         board.lines.each do |line|
-          return 1 if line.all? { |cell|  cell == @player_mark }
-          return -1 if line.all? { |cell|  cell == @opponent_mark }
+          return 1 if line.all? { |mark|  mark == @player_mark }
+          return -1 if line.all? { |mark|  mark == @opponent_mark }
         end
         0
       end

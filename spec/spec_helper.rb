@@ -43,13 +43,13 @@ RSpec.shared_context "helper_methods" do
 
   def board_with_draw(board_size, player_marks)
     first_mark, second_mark = player_marks
-    blank_board(board_size).blank_cell_coordinates.reduce(blank_board(board_size)) do |board, (row, col)|
+    blank_board(board_size).blank_space_coordinates.reduce(blank_board(board_size)) do |board, (row, col)|
         if row == 0
           mark = col.odd? ? first_mark : second_mark
-          board.mark_cell(mark, row, col)
+          board.mark_space(mark, [row, col])
         else
           mark = col.even? ? first_mark : second_mark
-          board.mark_cell(mark, row, col)
+          board.mark_space(mark, [row, col])
         end
     end
   end
