@@ -8,8 +8,7 @@ module TicTacToe
     let(:interface) { double("CommandLineInterface") }
     let(:human_player) do
       HumanPlayer.new(
-        # interface: interface,
-        player_mark: @default_first_player)
+        player_mark: @default_player_marks.first)
     end
 
     describe "#move" do

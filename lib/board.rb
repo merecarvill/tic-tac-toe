@@ -5,7 +5,7 @@ module TicTacToe
     attr_reader :size, :last_move_made
 
     def initialize(parameters)
-      @size = parameters[:size]
+      @size = parameters[:size] || infer_size(parameters[:marked_spaces])
       @spaces = parameters[:marked_spaces] || blank_spaces
       @last_move_made = parameters[:last_move_made]
     end
@@ -18,7 +18,7 @@ module TicTacToe
       marked_spaces = @spaces.dup
       marked_spaces[coordinates_to_flat_index(coordinates)] = mark
 
-      Board.new(size: @size, marked_spaces: marked_spaces, last_move_made: coordinates)
+      Board.new(marked_spaces: marked_spaces, last_move_made: coordinates)
     end
 
     def last_mark_made
@@ -68,6 +68,11 @@ module TicTacToe
     end
 
     private
+
+    def infer_size(marked_spaces)
+      return if marked_spaces.nil?
+      Math.sqrt(marked_spaces.count).to_i
+    end
 
     def coordinates_to_flat_index(coordinates)
       row, col = coordinates

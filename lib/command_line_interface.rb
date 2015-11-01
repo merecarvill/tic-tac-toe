@@ -1,6 +1,5 @@
 module TicTacToe
   class CommandLineInterface
-
     def initialize(parameters)
       @input = parameters[:input]
       @output = parameters[:output]

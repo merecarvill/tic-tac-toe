@@ -10,8 +10,8 @@ module TicTacToe
     include_context "helper_methods"
 
     let(:_) { Board::BLANK_MARK }
-    let(:x) { @default_first_player }
-    let(:o) { @default_second_player }
+    let(:x) { @default_player_marks.first }
+    let(:o) { @default_player_marks.last }
 
     def new_computer_player(parameters)
       ComputerPlayer.new(parameters)

@@ -15,6 +15,11 @@ module TicTacToe
       CommandLineInterface.new(parameters)
     end
 
+    def at_least_one_repeated_line?(string)
+      lines = string.split("\n")
+      lines.uniq.length < lines.length
+    end
+
     describe "#game_setup_interaction" do
       before do
         input_stream.string = %w(human computer).join("\n")
@@ -41,7 +46,7 @@ module TicTacToe
 
       it "prints a prompt to the command line" do
         input_stream.string = valid_input
-        interface.solicit_player_type(@default_first_player)
+        interface.solicit_player_type(@default_player_marks.first)
 
         expect(output_stream.string).not_to eq ""
       end
@@ -50,7 +55,7 @@ module TicTacToe
         it "returns the player type input by user" do
           input_stream.string = valid_input
 
-          expect(interface.solicit_player_type(@default_first_player)).to eq valid_input.to_sym
+          expect(interface.solicit_player_type(@default_player_marks.first)).to eq valid_input.to_sym
         end
       end
 
@@ -59,7 +64,7 @@ module TicTacToe
 
         it "prompts the user until given valid input" do
           input_stream.string = invalid_input + "\n" + invalid_input + "\n" + valid_input
-          interface.solicit_player_type(@default_first_player)
+          interface.solicit_player_type(@default_player_marks.first)
 
           expect(at_least_one_repeated_line?(output_stream.string)).to be true
         end
@@ -67,17 +72,17 @@ module TicTacToe
     end
 
     describe "#show_game_board" do
+      let(:_) { Board::BLANK_MARK }
+      let(:x) { @default_player_marks.first }
+      let(:o) { @default_player_marks.last }
+
       it "prints a respresentation of the given board to the command line" do
-        board = board_with_draw(@default_board_size, @default_player_marks)
+        board = build_board([x, x, x, o, o, o, _, _, _])
         interface.show_game_board(board)
-
         board_characters = output_stream.string.split("")
-        space_count = board.size**2
-        expected_first_mark_count = space_count.odd? ? space_count / 2 + 1 : space_count / 2
-        expected_second_mark_count = space_count / 2
 
-        expect(board_characters.count(@default_first_player.to_s)).to eq expected_first_mark_count
-        expect(board_characters.count(@default_second_player.to_s)).to eq expected_second_mark_count
+        expect(board_characters.count(x.to_s)).to eq 3
+        expect(board_characters.count(o.to_s)).to eq 3
       end
     end
 
@@ -86,7 +91,7 @@ module TicTacToe
 
       it "prints a prompt to the command line" do
         input_stream.string = valid_input
-        interface.solicit_move(@default_first_player)
+        interface.solicit_move(@default_player_marks.first)
 
         expect(output_stream.string).not_to eq ""
       end
@@ -96,7 +101,7 @@ module TicTacToe
           input_stream.string = valid_input
           valid_coordinate = valid_input.split(",").map(&:to_i)
 
-          expect(interface.solicit_move(@default_first_player)).to eq valid_coordinate
+          expect(interface.solicit_move(@default_player_marks.first)).to eq valid_coordinate
         end
       end
 
@@ -105,7 +110,7 @@ module TicTacToe
 
         it "prompts the user until given valid input" do
           input_stream.string = invalid_input + "\n" + invalid_input + "\n" + valid_input
-          interface.solicit_move(@default_first_player)
+          interface.solicit_move(@default_player_marks.first)
 
           expect(at_least_one_repeated_line?(output_stream.string)).to be true
         end
@@ -122,10 +127,10 @@ module TicTacToe
 
     describe "#report_move" do
       it "prints a notification of the move made by the given mark at the given coordinates" do
-        interface.report_move(@default_first_player, [0, 0])
+        interface.report_move(@default_player_marks.first, [0, 0])
         interface_output = output_stream.string
 
-        expect(interface_output).to include @default_first_player.to_s
+        expect(interface_output).to include @default_player_marks.first.to_s
         expect(interface_output.split("").count("0")).to eq 2
       end
     end
@@ -133,8 +138,8 @@ module TicTacToe
     describe "#report_game_over" do
       context "when given the mark of a winning player" do
         it "prints a notification that the player has won" do
-          expect(interface).to receive(:report_win).with(@default_first_player)
-          interface.report_game_over(@default_first_player)
+          expect(interface).to receive(:report_win).with(@default_player_marks.first)
+          interface.report_game_over(@default_player_marks.first)
         end
       end
 
@@ -148,10 +153,10 @@ module TicTacToe
 
     describe "#report_win" do
       it "prints a notification that the player using the given mark has won" do
-        interface.report_win(@default_first_player)
+        interface.report_win(@default_player_marks.first)
         interface_output = output_stream.string
 
-        expect(interface_output).to include @default_first_player.to_s
+        expect(interface_output).to include @default_player_marks.first.to_s
         expect(interface_output).to include "wins"
       end
     end

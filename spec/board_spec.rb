@@ -19,7 +19,7 @@ module TicTacToe
         end
 
         it "generates a board with the specified marks in each space" do
-          board = new_board(size: Math.sqrt(marked_spaces.size).to_i, marked_spaces: marked_spaces)
+          board = build_board(marked_spaces)
 
           board.all_coordinates.zip(marked_spaces).each do |coordinates, mark|
             expect(board.read_space(coordinates)).to eq mark
@@ -30,7 +30,7 @@ module TicTacToe
       context "when not given a a set of preexisting marks" do
         it "generates a NxN board of the given size" do
           (3..5).each do |size|
-            custom_board = new_board(size: size)
+            custom_board = blank_board(size)
 
             expect(custom_board.size).to eq size
             expect(custom_board.all_coordinates.count).to eq size**2
@@ -38,7 +38,7 @@ module TicTacToe
         end
 
         it "leaves the generated board blank" do
-          expect(new_board(size: @default_board_size).all_blank?).to be true
+          expect(blank_board(@default_board_size).all_blank?).to be true
         end
       end
     end
